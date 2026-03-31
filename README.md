@@ -45,100 +45,89 @@
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
-## 구조
+## 설계 구조
+
+### 워크스페이스 아키텍처
 
 ```
 yoona-workspace/
-├── CLAUDE.md                    # 전체 규칙 (자동 로드)
-├── clients/{name}/CLAUDE.md     # 고객사별 컨텍스트 (톤, 도메인, 담당자)
-├── glossary/{name}.md           # 고객사별 용어집 (KR↔EN)
-├── templates/                   # 문서 구조 템플릿
+├── CLAUDE.md                    # 전체 규칙 — 역할, 번역 원칙, Notion DB 연결
+├── clients/{name}/CLAUDE.md     # 고객사별 컨텍스트 — 톤, 도메인, 담당자 성향
+├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
+├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
 └── .claude/commands/            # 14개 스킬 파일
 ```
 
-## 시작하기
-
-### 1. Claude Code 설치
-
-```bash
-curl -fsSL https://claude.ai/install.sh | bash
-```
-
-### 2. 저장소 Fork & Clone
-
-1. 이 저장소 우측 상단 **Fork** 클릭
-2. 본인 계정에서 Clone:
-
-```bash
-cd ~/Documents
-git clone https://github.com/본인계정/yoona-workspace.git
-cd yoona-workspace
-```
-
-### 3. Claude Code 실행
-
-```bash
-claude
-```
-
-### 4. MCP 연결
-
-```bash
-# Notion
-claude mcp add --transport http notion https://mcp.notion.com/mcp
-
-# Linear (선택)
-claude mcp add --transport http linear https://mcp.linear.app/sse
-```
-
-### 5. 고객사 세팅
-
-Fork 직후에는 고객사 파일이 없습니다 (보안상 제외). 담당 고객사를 등록하세요:
+### 레이어드 컨텍스트 자동 로드
 
 ```
-/new-project --client 고객사명 --project 프로젝트명
+CLAUDE.md (전체 규칙)           → 항상 자동 로드
+  └── clients/CLAUDE.md         → clients/ 진입 시 로드
+      └── clients/{name}/CLAUDE.md → 해당 고객사 작업 시 로드
 ```
 
-### 6. 테스트
+스킬 실행 시 `--client` 옵션으로 고객사를 지정하면, 해당 고객사의 톤/용어/도메인이 자동 적용됩니다. PM이 매번 설명할 필요 없이 한 번 세팅하면 모든 스킬에 반영됩니다.
 
-```
-/dev-chat --client 고객사명 테스트 메시지입니다
-```
+### Notion DB 구조
 
-영어 Teams 메시지가 출력되면 세팅 완료.
-
-## 연동 서비스
-
-| 서비스 | 용도 | MCP |
+| DB | 용도 | 사용 스킬 |
 |---|---|---|
-| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub, Daily Scrum | notion |
-| **Linear** | 이슈 티켓 | linear |
-| **Google Workspace** | 스프레드시트, 드라이브 | google-workspace |
+| 프로젝트 문서 | SRS, 킥오프, 핸드오프 | `/srs-translate`, `/kickoff-prep` |
+| 커뮤니케이션 | 미팅노트, 주간리포트, 스펙 | `/meeting-note`, `/weekly-report`, `/to-spec` |
+| 태스크 | 개발팀 구현 태스크 | `/to-spec` |
+| Daily Scrum Log | 프로젝트별 일일 체크인 | `/daily-scrum` |
+| PM Action Hub | PM 운영 액션 (투두) | `/todo`, `/today-brief` |
+
+### 스킬 간 관계
+
+```
+/meeting-note = source of truth
+  → /dev-chat (개발팀 전달)은 여기서 추출
+  → /client-chat (고객 전달)은 여기서 추출
+
+/to-spec = 큰 요청 처리
+  → 스펙 페이지 + 태스크 DB 동시 생성
+
+/today-brief = 아침 브리핑
+  → PM Action Hub + Daily Scrum blocker 자동 수집
+```
 
 ## 설계 원칙
 
-- **언어 자동 분리** — 고객: 한국어 / 개발팀: 영어
+- **언어 자동 분리** — 고객: 한국어(존댓말) / 개발팀: 영어(간결체)
 - **모호함 플래그** — 임의 해석 없이 "Ambiguities" 섹션에 표시
-- **번역 ≠ 추론** — 원문 번역과 Claude 추론을 절대 섞지 않음
+- **번역 ≠ 추론** — 원문 번역과 Claude 추론을 명확히 분리 (`[추론]` 태그)
 - **용어 일관성** — 고객사별 glossary 기반, 동의어 금지
 - **복붙 가능** — 출력물을 그대로 Teams/카톡에 붙여넣기
+- **PM Action ≠ Dev Task** — PM 운영 액션(회신, follow-up)과 개발 태스크 분리
 
-## 커스텀하기
+## 고도화 운영 방식
 
-이 워크스페이스를 본인 팀에 맞게 조정하려면:
+이 워크스페이스의 모든 개선은 3단계 프로세스로 진행됩니다:
 
-1. **CLAUDE.md** — 팀 역할, 번역 규칙, Notion DB ID 수정
-2. **clients/{name}/CLAUDE.md** — 고객사 컨텍스트 (톤, 도메인, 담당자 성향)
-3. **glossary/{name}.md** — 도메인 용어 매핑 (KR↔EN)
-4. **.claude/commands/*.md** — 스킬 수정/추가
-5. **templates/*.md** — 출력 구조 변경
+### 1. Planning
+- 현재 상태 진단 + 문제 정의
+- PM 실제 업무 흐름 기준으로 병목/중복/누락 점검
+- "지금 바꿔야 하는 것" vs "나중에 해도 되는 것" 구분
+- 외주 개발사 PM 운영 전문가 관점에서 판단 — 기술적으로 가능해 보이는 것보다, 팀이 바로 도입할 수 있는지를 우선
 
-## 기술 스택
+### 2. Execution
+- 승인된 범위만 수정
+- 파일/문서/스킬/DB 변경 사항 명확히 보고
+- 문서 3개 (guide.md / Notion Guide / Notion Construction) 항상 동기화
 
-- [Claude Code](https://claude.ai/code) — CLI/Desktop 앱
-- [Notion MCP](https://mcp.notion.com) — 문서 읽기/쓰기
-- [Linear MCP](https://mcp.linear.app) — 이슈 관리
-- Notion-flavored Markdown — 페이지 생성/수정
+### 3. Evaluation
+- 목표 달성 여부 냉정하게 검토
+- 실제 테스트된 것과 설계 가정을 구분
+- 다음 라운드 개선 항목 정리
+
+## 연동 서비스
+
+| 서비스 | 용도 | 연결 방식 |
+|---|---|---|
+| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | MCP (브라우저 인증) |
+| **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
+| **Google Workspace** | 스프레드시트, 드라이브 | MCP (서비스 계정) |
 
 ## License
 
