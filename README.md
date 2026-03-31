@@ -45,7 +45,7 @@ yoona-workspace/
 
 ## 연동 서비스
 
-- **Notion** — 문서, 미팅노트, 리포트, 태스크, Daily Scrum, PM Action Hub
+- **Notion** — 프로젝트 문서 DB / 커뮤니케이션 DB / 태스크 DB / Daily Scrum Log DB / PM Action Hub DB
 - **Linear** — 이슈 티켓
 - **Google Workspace** — 스프레드시트, 드라이브, 캘린더
 
