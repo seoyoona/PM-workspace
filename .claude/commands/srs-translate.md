@@ -1,6 +1,6 @@
 ---
 description: SRS/기획서를 한국어에서 영어로 번역 및 구조화
-argument-hint: <Notion 링크 또는 텍스트> --client <client-name>
+argument-hint: --client <name> [Notion 링크 또는 텍스트]
 allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 ---
 

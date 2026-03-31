@@ -1,6 +1,6 @@
 ---
 description: 킥오프 미팅 안건 및 내부 준비 자료 작성
-argument-hint: --client <client-name> [SRS Notion 링크]
+argument-hint: --client <name> [SRS Notion 링크]
 allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 ---
 

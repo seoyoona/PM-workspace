@@ -1,6 +1,6 @@
 ---
 description: QA/검수 요청 메시지 생성 — 서비스 링크, 계정, 파일, 테스트 안내를 포함한 고객 전달용 카톡 메시지
-argument-hint: --client <name> [전달물 정보 + 맥락]
+argument-hint: --client <name> [전달물 정보]
 allowed-tools: Read, Glob, Grep
 ---
 

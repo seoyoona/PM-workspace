@@ -1,6 +1,6 @@
 ---
 description: 클라이언트 요청/변경사항을 개발팀 티켓으로 변환
-argument-hint: <한국어 요청 텍스트 또는 Notion 링크> --client <client-name>
+argument-hint: --client <name> [요청 내용 또는 Notion 링크]
 allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
 ---
 

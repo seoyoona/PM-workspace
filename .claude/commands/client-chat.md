@@ -1,6 +1,6 @@
 ---
 description: 개발팀 메시지 → 클라이언트 카톡 메시지 생성 (질문/업데이트 자동 감지)
-argument-hint: <client-name> <English dev message>
+argument-hint: --client <name> [개발팀 메시지]
 allowed-tools: Read, Glob, Grep
 ---
 

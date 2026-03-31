@@ -1,6 +1,6 @@
 ---
 description: 미팅 녹취/메모 → 미팅노트(Notion) + 개발팀 메시지 + 고객사 카톡 한번에 생성
-argument-hint: --client <name> --attendee <names> --location <place> [notes or file path]
+argument-hint: --client <name> [미팅 메모 또는 녹취 파일]
 allowed-tools: Read, Glob, Grep, Bash, mcp__notion__notion-fetch, mcp__notion__notion-create-pages, mcp__notion__notion-update-data-source
 ---
 

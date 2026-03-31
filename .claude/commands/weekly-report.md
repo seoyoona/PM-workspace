@@ -1,6 +1,6 @@
 ---
 description: 클라이언트용 주간 리포트 작성
-argument-hint: --client <client-name> [이번 주 업데이트 내용]
+argument-hint: --client <name> [이번 주 업데이트]
 allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude_ai_Linear__list_issues, mcp__claude_ai_Linear__get_issue
 ---
 

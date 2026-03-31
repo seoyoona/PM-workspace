@@ -1,6 +1,6 @@
 ---
 description: PM 액션 빠르게 추가 → PM Action Hub DB 저장
-argument-hint: [프로젝트] [할 일 내용]
+argument-hint: [프로젝트] [할 일]
 allowed-tools: Read, Glob, Grep, mcp__notion__*
 ---
 

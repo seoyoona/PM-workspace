@@ -1,6 +1,6 @@
 ---
 description: 요청/버그를 Linear 이슈 티켓으로 생성
-argument-hint: <요청 내용> --client <client-name> [--priority <urgent|high|medium|low>]
+argument-hint: --client <name> [요청 내용] --priority <high|medium|low>
 allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Linear__save_issue, mcp__claude_ai_Linear__list_teams, mcp__claude_ai_Linear__list_issue_labels, mcp__claude_ai_Linear__list_issue_statuses
 ---
 

@@ -1,6 +1,6 @@
 ---
 description: 고객 요청 → 개발팀 Teams 채팅 메시지 생성
-argument-hint: <client-name> <request content>
+argument-hint: --client <name> [요청 내용]
 allowed-tools: Read, Glob, Grep
 ---
 

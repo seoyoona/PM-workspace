@@ -1,6 +1,6 @@
 ---
 description: 새 프로젝트 셋업 (로컬 파일 + Notion 뷰)
-argument-hint: --client <client-name> --project <project-name>
+argument-hint: --client <name> --project <project-name>
 allowed-tools: Read, Write, Glob, Grep, Bash(mkdir:*), mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude_ai_Notion__notion-create-view, mcp__claude_ai_Notion__notion-update-view, mcp__claude_ai_Notion__notion-update-data-source
 ---
 

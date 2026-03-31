@@ -1,6 +1,6 @@
 ---
 description: 내부 sync 미팅 → 개발팀 Teams 메시지 생성
-argument-hint: --client <client-name> [sync meeting content]
+argument-hint: --client <name> [싱크 미팅 내용]
 allowed-tools: Read, Glob, Grep
 ---
 

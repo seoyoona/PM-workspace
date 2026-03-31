@@ -1,6 +1,6 @@
 ---
 description: 프로젝트별 daily scrum 로그 → Notion DB 저장
-argument-hint: --client <client-name> [today's update]
+argument-hint: --client <name> [오늘 업데이트]
 allowed-tools: Read, Glob, Grep, mcp__notion__*
 ---
 
