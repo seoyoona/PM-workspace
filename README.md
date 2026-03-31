@@ -26,7 +26,7 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 14개 스킬
+## 15개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
@@ -35,6 +35,7 @@
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
+| QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
 | SRS 번역 | `/srs-translate` | 영어 구조화 번역 (Notion) |
 | 킥오프 준비 | `/kickoff-prep` | 고객 안건(KR) + 내부 노트(EN) |
@@ -55,7 +56,7 @@ yoona-workspace/
 ├── clients/{name}/CLAUDE.md     # 고객사별 컨텍스트 — 톤, 도메인, 담당자 성향
 ├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
 ├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
-└── .claude/commands/            # 14개 스킬 파일
+└── .claude/commands/            # 15개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드
@@ -74,7 +75,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 |---|---|---|
 | 프로젝트 문서 | SRS, 킥오프, 핸드오프 | `/srs-translate`, `/kickoff-prep` |
 | 커뮤니케이션 | 미팅노트, 주간리포트, 스펙 | `/meeting-note`, `/weekly-report`, `/to-spec` |
-| 태스크 | 개발팀 구현 태스크 | `/to-spec` |
+| 태스크 | 개발팀 구현 태스크 (스펙 출처 relation으로 스펙 페이지와 연결) | `/to-spec`, `/qa-feedback` |
 | Daily Scrum Log | 프로젝트별 일일 체크인 | `/daily-scrum` |
 | PM Action Hub | PM 운영 액션 (투두) | `/todo`, `/today-brief` |
 
@@ -90,6 +91,9 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 
 /today-brief = 아침 브리핑
   → PM Action Hub + Daily Scrum blocker 자동 수집
+
+/qa-feedback = 고객 QA DB → 내부 티켓
+  → 고객 피드백 읽기 → 번역 + 분류 → 내부 Tasks DB 생성
 ```
 
 ## 설계 원칙

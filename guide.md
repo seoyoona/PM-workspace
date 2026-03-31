@@ -24,6 +24,7 @@ SRS 번역          → /srs-translate
 내부 싱크 미팅     → /sync-note
 오늘 뭐하지?      → /today-brief
 할 일 추가        → /todo
+QA 피드백 전달     → /qa-feedback
 ```
 
 모든 스킬 공통: `/스킬명 [내용] --client [고객사명]`
@@ -44,11 +45,12 @@ SRS 번역          → /srs-translate
 - **dev-chat**: Light (단순 전달) / Standard (복잡한 내용) 자동 감지
 - **client-chat**: 질문형 / 업데이트형 / 혼합형 자동 감지
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
-- **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB
+- **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 (dev-chat과 동일 톤)
 - **today-brief**: 아침 브리핑 — PM Action Hub + Daily Scrum blocker + 캘린더
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
+- **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 
 ---
 
@@ -62,7 +64,7 @@ yoona-workspace/
 ├── glossary/{name}.md           # 고객사별 용어집
 ├── templates/                   # 문서 구조 템플릿
 ├── handoffs/CLAUDE.md           # 개발팀 전달 체크리스트
-└── .claude/commands/            # 스킬 파일 (14개)
+└── .claude/commands/            # 스킬 파일 (15개)
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
@@ -76,7 +78,8 @@ yoona-workspace/
     ├── daily-scrum.md
     ├── sync-note.md
     ├── today-brief.md
-    └── todo.md
+    ├── todo.md
+    └── qa-feedback.md
 ```
 
 ---
