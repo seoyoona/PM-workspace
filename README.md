@@ -132,6 +132,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 | **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | MCP (브라우저 인증) |
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
 | **Google Workspace** | 스프레드시트, 드라이브 | MCP (서비스 계정) |
+| **Microsoft Teams** | 개발팀 그룹채팅 직접 전송 | Power Automate (HTTP trigger) |
 
 ## License
 

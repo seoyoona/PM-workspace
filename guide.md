@@ -42,12 +42,12 @@ QA 피드백 전달     → /qa-feedback
 ## 핵심 구조
 
 - **meeting-note** = source of truth → dev-chat / client-chat은 downstream
-- **dev-chat**: Light (단순 전달) / Standard (복잡한 내용) 자동 감지
+- **dev-chat**: Light / Standard 자동 감지 + Teams 직접 전송 (선택)
 - **client-chat**: 질문형 / 업데이트형 / 혼합형 자동 감지
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
-- **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 (dev-chat과 동일 톤)
+- **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
 - **today-brief**: 아침 브리핑 — PM Action Hub + Daily Scrum blocker + 캘린더
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
@@ -89,3 +89,10 @@ yoona-workspace/
 - PM Workspace: https://www.notion.so/32c3aae9a8948001bf49fba5b9c4c34a
 - 프로젝트 문서 DB / 커뮤니케이션 DB / 태스크 DB / Daily Scrum Log DB / PM Action Hub DB
 - MCP 연결: `/mcp` → Notion 인증
+
+## Teams 연동
+
+- Power Automate flow로 그룹채팅 직접 전송 (선택)
+- 설정: `.env.teams`에 flow URL + 프로젝트별 chat ID
+- 대상 스킬: `/dev-chat`, `/sync-note`
+- 미설정 시 기존처럼 복사 모드로 동작

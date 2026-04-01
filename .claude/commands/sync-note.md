@@ -1,7 +1,7 @@
 ---
 description: 내부 sync 미팅 → 개발팀 Teams 메시지 생성
 argument-hint: --client <name> [싱크 미팅 내용]
-allowed-tools: Read, Glob, Grep
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Sync Note Message
@@ -67,7 +67,30 @@ Let me know if anything needs clarification.
    - `glossary/{client-name}.md` — 용어 일관성
 3. **무게 감지**: Light / Standard 자동 판단
 4. **메시지 작성**: 영어, Teams 복붙용
-5. **터미널 출력**: 바로 복사 가능한 형태
+5. **출력**: 터미널에 메시지 출력
+6. **Teams 전송 (선택)**:
+   - `.env.teams` 파일에서 `TEAMS_FLOW_URL`과 `TEAMS_CHAT_{CLIENT}_DEV` 로드
+   - 클라이언트 디렉토리명 → 대문자 변환 → `TEAMS_CHAT_{CLIENT}_DEV` 키 조합
+   - chat_id가 없으면 → 복사 fallback (전송 옵션 표시하지 않음)
+   - chat_id가 있으면 사용자에게 확인:
+     ```
+     [Teams 전송]
+     1. 전송
+     2. 복사만
+     3. 취소
+     추천: 1
+     ```
+   - 1 선택 시: 메시지를 JSON 파일로 저장 후 curl POST
+     ```bash
+     cat > /tmp/teams_msg.json << 'EOF'
+     {"chat_id":"<chat_id>","message":"<메시지 내용>"}
+     EOF
+     curl -s -o /tmp/teams_resp.txt -w "%{http_code}" \
+       -X POST -H 'Content-Type: application/json' \
+       -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>'
+     ```
+   - 202면 "전송 완료", 그 외면 에러 출력 + 메시지 복사 안내
+   - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유
 
 ## Rules
 
