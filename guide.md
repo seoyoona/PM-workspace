@@ -48,7 +48,7 @@ QA 피드백 전달     → /qa-feedback
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중"만 조회 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행)
+- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행)
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 
@@ -89,6 +89,12 @@ yoona-workspace/
 - PM Workspace: https://www.notion.so/32c3aae9a8948001bf49fba5b9c4c34a
 - 프로젝트 문서 DB / 커뮤니케이션 DB / 태스크 DB / Daily Scrum Log DB / PM Action Hub DB
 - MCP 연결: `/mcp` → Notion 인증
+
+## Google Calendar 연동
+
+- `/today-brief`에서 오늘 미팅 자동 조회
+- Teams 캘린더를 Google Calendar에 ICS 구독하면 Teams 일정도 포함
+- MCP 연결: Google Workspace MCP (서비스 계정)
 
 ## Teams 연동
 

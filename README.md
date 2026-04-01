@@ -42,7 +42,7 @@
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
 | 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
-| 아침 브리핑 | `/today-brief` | 오늘 할 일 + blocker 요약 (평일 10:30 자동) |
+| 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 (평일 10:30 자동) |
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
@@ -90,7 +90,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → 스펙 페이지 + 태스크 DB 동시 생성
 
 /today-brief = 아침 브리핑
-  → PM Action Hub "오늘" + "진행 중"만 조회 (평일 10:30 자동)
+  → PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동)
 
 /qa-feedback = 고객 QA DB → 내부 티켓
   → 고객 피드백 읽기 → 번역 + 분류 → 내부 Tasks DB 생성
@@ -131,8 +131,8 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 |---|---|---|
 | **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | MCP (브라우저 인증) |
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
-| **Google Workspace** | 스프레드시트, 드라이브 | MCP (서비스 계정) |
-| **Microsoft Teams** | 개발팀 그룹채팅 직접 전송 | Power Automate (HTTP trigger) |
+| **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
+| **Microsoft Teams** | 개발팀 그룹채팅 직접 전송, **캘린더 (Google Calendar 구독)** | Power Automate (HTTP trigger) + ICS 구독 |
 
 ## License
 

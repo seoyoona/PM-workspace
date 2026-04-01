@@ -22,8 +22,10 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
    - 상태 = "오늘" → 오늘 처리할 액션
    - 상태 = "진행 중" → 현재 진행 중인 액션
    - **다른 상태값(미착수, 완료, 대기)은 가져오지 않음**
-2. **Google Calendar** (가능한 경우)
-   - 오늘 미팅 목록
+2. **Google Calendar**
+   - 오늘 미팅 목록 (primary 캘린더 + Teams 구독 캘린더 포함)
+   - `mcp__google-workspace__getCalendarEvents` 사용
+   - timeMin: 오늘 00:00 KST, timeMax: 오늘 23:59 KST (RFC3339, Asia/Seoul → UTC 변환)
 
 ## Output Structure
 
@@ -52,10 +54,13 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
    - 상태 = "진행 중" 인 항목 전체 가져오기
    - **이 2개 상태만 조회. 미착수/완료/대기 등 다른 상태는 무시**
 
-2. **Google Calendar 조회** (연결되어 있는 경우):
-   - 오늘 날짜 이벤트 목록
-   - 시간순 정렬
-   - 연결 안 되어 있으면 미팅 섹션 생략 (에러 표시 안 함)
+2. **Google Calendar 조회**:
+   - `mcp__google-workspace__getCalendarEvents` 호출
+     - timeMin: 오늘 00:00 KST (UTC 변환), timeMax: 내일 00:00 KST (UTC 변환)
+     - orderBy: startTime, singleEvents: true
+   - primary 캘린더 기본 조회 (Teams 구독 캘린더는 Google Calendar에 추가되면 자동 포함)
+   - 시간순 정렬, HH:MM 형식으로 표시
+   - 조회 실패 시 미팅 섹션 생략 (에러 표시 안 함)
 
 3. **출력 구성**:
    - 📋 오늘: 상태 = "오늘" 항목
