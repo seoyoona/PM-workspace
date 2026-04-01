@@ -90,7 +90,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → 스펙 페이지 + 태스크 DB 동시 생성
 
 /today-brief = 아침 브리핑
-  → PM Action Hub + Daily Scrum blocker 자동 수집
+  → PM Action Hub "오늘" + "진행 중"만 조회 (평일 10:30 자동)
 
 /qa-feedback = 고객 QA DB → 내부 티켓
   → 고객 피드백 읽기 → 번역 + 분류 → 내부 Tasks DB 생성
