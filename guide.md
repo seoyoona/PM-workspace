@@ -48,7 +48,7 @@ QA 피드백 전달     → /qa-feedback
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub + Daily Scrum blocker + 캘린더
+- **today-brief**: 아침 브리핑 — PM Action Hub + Daily Scrum blocker + 캘린더 (평일 10:30 자동 실행)
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 

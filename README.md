@@ -42,7 +42,7 @@
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
 | 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
-| 아침 브리핑 | `/today-brief` | 오늘 할 일 + blocker 요약 |
+| 아침 브리핑 | `/today-brief` | 오늘 할 일 + blocker 요약 (평일 10:30 자동) |
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
