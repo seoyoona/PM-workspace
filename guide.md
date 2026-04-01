@@ -64,6 +64,7 @@ yoona-workspace/
 ├── glossary/{name}.md           # 고객사별 용어집
 ├── templates/                   # 문서 구조 템플릿
 ├── handoffs/CLAUDE.md           # 개발팀 전달 체크리스트
+├── telegram-bot/                # Telegram 봇 (AWS Lambda, 선택)
 └── .claude/commands/            # 스킬 파일 (15개)
     ├── meeting-note.md
     ├── dev-chat.md
@@ -102,3 +103,14 @@ yoona-workspace/
 - 설정: `.env.teams`에 flow URL + 프로젝트별 chat ID
 - 대상 스킬: `/dev-chat`, `/sync-note`
 - 미설정 시 기존처럼 복사 모드로 동작
+
+## Telegram Bot (선택)
+
+- 모바일에서 핵심 5개 스킬 사용 가능 (이동 중 시나리오 커버)
+- AWS Lambda + API Gateway + Claude API 기반
+- 대상 스킬: `/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`
+- Teams 전송: `/dev_chat`, `/sync_note` 결과에 inline 버튼으로 전송 가능
+- 코드: `telegram-bot/` 디렉토리
+- 배포: SAM CLI (`template.yaml` + `deploy.sh`)
+- Phase 1 (활성): dev_chat, client_chat, sync_note + Teams 전송
+- Phase 2 (대기): todo, today_brief — Notion Integration 토큰 필요

@@ -46,6 +46,8 @@
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
+> **모바일:** 핵심 5개 스킬은 Telegram Bot으로도 사용 가능 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`)
+
 ## 설계 구조
 
 ### 워크스페이스 아키텍처
@@ -56,6 +58,7 @@ yoona-workspace/
 ├── clients/{name}/CLAUDE.md     # 고객사별 컨텍스트 — 톤, 도메인, 담당자 성향
 ├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
 ├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
+├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
 └── .claude/commands/            # 15개 스킬 파일
 ```
 
@@ -133,6 +136,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
 | **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
 | **Microsoft Teams** | 개발팀 그룹채팅 직접 전송, **캘린더 (Google Calendar 구독)** | Power Automate (HTTP trigger) + ICS 구독 |
+| **Telegram Bot** | 모바일에서 핵심 스킬 사용 (dev_chat, client_chat, sync_note, todo, today_brief) | AWS Lambda + API Gateway + Claude API |
 
 ## License
 

@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: PM Telegram Bot — Lambda + API Gateway
+
+Globals:
+  Function:
+    Timeout: 90
+    Runtime: python3.9
+    MemorySize: 256
+
+Resources:
+  BotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.lambda_handler
+      CodeUri: .
+      Architectures:
+        - arm64
+      Environment:
+        Variables:
+          TELEGRAM_TOKEN: !Ref TelegramToken
+          ALLOWED_USER_IDS: !Ref AllowedUserIds
+          ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+          CLAUDE_MODEL: claude-sonnet-4-20250514
+          NOTION_TOKEN: !Ref NotionToken
+          NOTION_PM_ACTION_HUB_DB: 7ab5868799c1451792da062d4c8fff37
+          GOOGLE_CLIENT_ID: !Ref GoogleClientId
+          GOOGLE_CLIENT_SECRET: !Ref GoogleClientSecret
+          GOOGLE_REFRESH_TOKEN: !Ref GoogleRefreshToken
+          TEAMS_FLOW_URL: !Ref TeamsFlowUrl
+          TEAMS_CHAT_KOBOOM_DEV: !Ref TeamsChatKoboomDev
+          TEAMS_CHAT_RCK_DEV: !Ref TeamsChatRckDev
+          TEAMS_CHAT_21GRAM_DEV: !Ref TeamsChat21gramDev
+          TEAMS_CHAT_BOOKTAILS_DEV: !Ref TeamsChatBooktailsDev
+          TEAMS_CHAT_EVERYTALK_DEV: !Ref TeamsChatEverytalkDev
+      Events:
+        WebhookPost:
+          Type: Api
+          Properties:
+            Path: /webhook
+            Method: post
+
+Parameters:
+  TelegramToken:
+    Type: String
+    NoEcho: true
+  AllowedUserIds:
+    Type: String
+    Default: ""
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+  NotionToken:
+    Type: String
+    NoEcho: true
+    Default: ""
+  GoogleClientId:
+    Type: String
+    Default: ""
+  GoogleClientSecret:
+    Type: String
+    NoEcho: true
+    Default: ""
+  GoogleRefreshToken:
+    Type: String
+    NoEcho: true
+    Default: ""
+  TeamsFlowUrl:
+    Type: String
+    Default: ""
+  TeamsChatKoboomDev:
+    Type: String
+    Default: ""
+  TeamsChatRckDev:
+    Type: String
+    Default: ""
+  TeamsChat21gramDev:
+    Type: String
+    Default: ""
+  TeamsChatBooktailsDev:
+    Type: String
+    Default: ""
+  TeamsChatEverytalkDev:
+    Type: String
+    Default: ""
+
+Outputs:
+  WebhookUrl:
+    Description: Telegram webhook URL (set via BotFather)
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/webhook"
