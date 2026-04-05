@@ -1,7 +1,7 @@
 ---
 description: 프로젝트별 daily scrum 로그 → Notion DB 저장
 argument-hint: --client <name> [오늘 업데이트]
-allowed-tools: Read, Glob, Grep, mcp__notion__*
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Daily Scrum Log
@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*
 - 매일 1건씩 누적되어 프로젝트별 히스토리 형성
 
 ## Output Destination
-- **Notion**: Daily Scrum Log DB (collection://eb2f7df2-0359-4c2c-85bb-6e12e3d73afc)
+- **Notion**: Daily Scrum Log DB (`339823375b0c81908969c064880c8113`) — Bash curl API
 - **터미널**: 저장된 내용 요약 출력 (본인 확인용)
 
 ## Instructions

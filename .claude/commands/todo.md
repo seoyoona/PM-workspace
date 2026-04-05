@@ -1,7 +1,7 @@
 ---
 description: PM 액션 빠르게 추가 → PM Action Hub DB 저장
 argument-hint: [프로젝트] [할 일]
-allowed-tools: Read, Glob, Grep, mcp__notion__*
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Quick Todo Add
@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*
 - 러프하게 입력해도 프로젝트/우선순위/액션 유형을 자동 감지
 
 ## Output Destination
-- **Notion**: PM Action Hub DB (collection://3a13db31-882c-4a6c-bddf-660e15ea9cdd)
+- **Notion**: PM Action Hub DB (`339823375b0c812db048e6a022c3b405`) — Bash curl API
 - **터미널**: 추가된 항목 확인
 
 ## Instructions
@@ -29,13 +29,16 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*
      - "등록", "업데이트", "정리", "작성" → 운영 체크
    - 나머지 = 제목
 
-2. **Notion 저장**:
+2. **Notion 저장** (Bash curl — DB ID: `339823375b0c812db048e6a022c3b405`):
    - 제목: **반드시 `[ProjectName] short description` 형태**. 프로젝트명은 대괄호, 설명은 짧고 명확하게.
-   - 프로젝트: 감지된 프로젝트
-   - 상태: 기본 "미착수" / "오늘"이 감지되면 "오늘"
-   - 우선순위: 감지된 우선순위
-   - 액션 유형: 감지된 유형 / 감지 안 되면 비움
-   - 출처: "manual"
+   - 프로퍼티:
+     - `제목` (title): `[ProjectName] short description`
+     - `프로젝트` (select): 감지된 프로젝트
+     - `상태` (select): "미착수" (항상 미착수로 저장)
+     - `우선순위` (select): 감지된 우선순위
+     - `액션 유형` (select): 감지된 유형 / 없으면 생략
+     - `출처` (select): "manual"
+   - POST to `https://api.notion.com/v1/pages` with `$NOTION_API_KEY`
 
 3. **터미널 출력**:
    ```
@@ -56,7 +59,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*
 ```
 /todo 급함 [RCK] 타임라인 정리해서 고객에게 공유
 → 제목: [RCK] 타임라인 정리해서 고객에게 공유
-→ 프로젝트: RCK, 상태: 오늘, 우선순위: High, 액션 유형: 고객 커뮤니케이션
+→ 프로젝트: RCK, 상태: 미착수, 우선순위: High, 액션 유형: 고객 커뮤니케이션
 ```
 
 **여러 개 한번에:**

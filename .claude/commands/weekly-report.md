@@ -1,7 +1,7 @@
 ---
 description: 클라이언트용 주간 리포트 작성
 argument-hint: --client <name> [이번 주 업데이트]
-allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude_ai_Linear__list_issues, mcp__claude_ai_Linear__get_issue
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Weekly Status Report
@@ -29,7 +29,7 @@ allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claud
    - 클라이언트 확인 요청 사항
 5. **톤**: 클라이언트 CLAUDE.md 기반 — 한국어 존댓말, 해요체
 6. **날짜 기준**: 오늘 날짜 기준으로 "~주차" 자동 표기
-7. **Notion에 저장**: 커뮤니케이션 DB에 페이지 생성
+7. **Notion에 저장**: 커뮤니케이션 DB (`339823375b0c8121a8dff7225284bbad`) — Bash curl API로 페이지 생성
    - 유형: 주간 리포트
    - 방향: Dev→Client
    - 상태: 진행 중

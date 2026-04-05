@@ -1,7 +1,7 @@
 ---
 description: 아침 브리핑 — 오늘 할 일, 진행 중 현황 요약 (평일 10:30 자동 실행)
 argument-hint: (인자 없이 실행 또는 "오늘 뭐해야돼")
-allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
+allowed-tools: Read, Glob, Grep, Bash, mcp__google-workspace__*
 ---
 
 # Today Brief
@@ -18,10 +18,11 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
 
 ## Data Sources
 
-1. **PM Action Hub DB** (collection://3a13db31-882c-4a6c-bddf-660e15ea9cdd)
+1. **PM Action Hub DB** (`339823375b0c812db048e6a022c3b405`)
    - 상태 = "오늘" → 오늘 처리할 액션
    - 상태 = "진행 중" → 현재 진행 중인 액션
    - **다른 상태값(미착수, 완료, 대기)은 가져오지 않음**
+   - API: `Bash` → `curl -s -X POST "https://api.notion.com/v1/databases/339823375b0c812db048e6a022c3b405/query" -H "Authorization: Bearer $NOTION_API_KEY" -H "Notion-Version: 2022-06-28" -H "Content-Type: application/json"`
 2. **Google Calendar**
    - 오늘 미팅 목록 (primary 캘린더 + Teams 구독 캘린더 포함)
    - `mcp__google-workspace__getCalendarEvents` 사용
@@ -32,7 +33,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
 ```
 ☀️ {YYYY-MM-DD} ({요일}) — 오늘 브리핑
 
-📋 오늘 ({n}건)
+📋 미착수 ({n}건)
 - [BaraeCNP] 문의내용 회신
 - [RCK] timeline 정리
 - [Koboom] admin figma update
@@ -49,10 +50,11 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
 
 ## Instructions
 
-1. **PM Action Hub 조회**:
-   - 상태 = "오늘" 인 항목 전체 가져오기
-   - 상태 = "진행 중" 인 항목 전체 가져오기
-   - **이 2개 상태만 조회. 미착수/완료/대기 등 다른 상태는 무시**
+1. **PM Action Hub 조회** (Bash curl):
+   - DB ID: `339823375b0c812db048e6a022c3b405`
+   - 상태 = "미착수" 필터로 query, 상태 = "진행 중" 필터로 query (각각 별도 호출)
+   - 필터 (select 타입): `{"filter": {"property": "상태", "select": {"equals": "미착수"}}}`
+   - **이 2개 상태만 조회. 완료는 무시**
 
 2. **Google Calendar 조회**:
    - `mcp__google-workspace__getCalendarEvents` 호출
@@ -63,14 +65,14 @@ allowed-tools: Read, Glob, Grep, mcp__notion__*, mcp__google-workspace__*
    - 조회 실패 시 미팅 섹션 생략 (에러 표시 안 함)
 
 3. **출력 구성**:
-   - 📋 오늘: 상태 = "오늘" 항목
+   - 📋 미착수: 상태 = "미착수" 항목
    - 🔄 진행 중: 상태 = "진행 중" 항목
    - 📅 오늘 미팅: Google Calendar 오늘 일정
 
 ## Rules
 
 ### 필수
-- **"오늘"과 "진행 중" 상태만 가져온다** — 미착수, 완료, 대기 등 다른 상태는 절대 포함하지 않음
+- **"미착수"와 "진행 중" 상태만 가져온다** — 완료는 절대 포함하지 않음
 - **우선순위로 섹션을 나누지 않는다** — High/Medium/Low 구분 없이 상태별로만 분류
 - 각 섹션에 항목이 없으면 해당 섹션 생략
 - 항목이 하나도 없으면 "오늘은 등록된 액션이 없습니다. /todo로 추가하거나 PM Action Hub를 확인하세요." 출력

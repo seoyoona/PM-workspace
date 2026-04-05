@@ -1,7 +1,7 @@
 ---
 description: 고객 QA 피드백 → 내부 개발팀 티켓 자동 생성 (번역 + 분류 + Notion 연동)
 argument-hint: --qa-db <고객 QA DB 링크> --project <프로젝트명> [--internal <내부 QA 페이지 링크>]
-allowed-tools: Read, Glob, Grep, mcp__notion__notion-fetch, mcp__notion__notion-create-pages, mcp__notion__notion-update-page, mcp__notion__notion-search, mcp__notion__notion-update-data-source
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # QA Feedback → Dev Ticket

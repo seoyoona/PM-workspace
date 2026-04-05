@@ -1,7 +1,7 @@
 ---
 description: 클라이언트 요청/변경사항을 개발팀 티켓으로 변환
 argument-hint: --client <name> [요청 내용 또는 Notion 링크]
-allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Client Request → Dev Ticket
@@ -18,7 +18,7 @@ allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claud
 2. **컨텍스트 로드**:
    - `glossary/{client-name}.md` 용어집
    - `clients/{client-name}/CLAUDE.md` 클라이언트 컨텍스트 (도메인 이해용)
-3. **소스 가져오기**: Notion 링크면 fetch, 텍스트면 그대로 사용
+3. **소스 가져오기**: Notion 링크면 Bash curl로 blocks 읽기 (`GET https://api.notion.com/v1/blocks/{page_id}/children`), 텍스트면 그대로 사용
 4. **요청 분석**:
    - 클라이언트가 실제로 원하는 것 추출 (불만/맥락과 요청 분리)
    - 암묵적 요구사항 식별
@@ -39,7 +39,7 @@ allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claud
    - Type: Scope change / Scope clarification / New requirement
    - SRS가 없거나 영향 없으면 "No SRS impact" 표기
    - SRS를 직접 수정하지 않음 — PM 판단 후 직접 실행
-7. **Notion에 저장**: 커뮤니케이션 DB (collection://f3ea2e0c-f3d3-40a5-8dd5-364723c2f0fb)에 페이지 생성
+7. **Notion에 저장**: 커뮤니케이션 DB (`339823375b0c8121a8dff7225284bbad`) — Bash curl API로 페이지 생성
    - 유형: 개발 스펙
    - 방향: Client→Dev
    - 상태: 진행 중
@@ -50,7 +50,7 @@ allowed-tools: Read, Glob, Grep, mcp__claude_ai_Notion__notion-fetch, mcp__claud
 8. **태스크 분리**: Scope의 각 구현 항목을 개별 태스크로 분리
    - 한 태스크 = 개발자가 독립적으로 완료할 수 있는 단위
    - 너무 크면 쪼개고, 너무 작으면 합침
-9. **태스크 DB에 생성**: 태스크 DB (collection://6406d6c7-99c8-4465-880a-40c95b94eafc)에 각 태스크를 페이지로 생성
+9. **태스크 DB에 생성**: 태스크 DB (`339823375b0c81afb0c0c76b4e1c6146`) — Bash curl API로 각 태스크를 페이지로 생성
    - 태스크: 구체적 구현 항목 (한 줄, 영어)
    - 상태: 시작 전
    - 우선순위: High / Medium / Low (요청 맥락에서 판단)

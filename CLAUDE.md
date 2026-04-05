@@ -70,40 +70,43 @@ Never mix these. Developers and clients must be able to distinguish between conf
 ## Notion Output Destinations
 All document outputs go to Notion, not local files. Local workspace is for templates and glossaries only.
 
-### PM Workspace (hub page) — cigro workspace
-- Page: https://www.notion.so/32c3aae9a8948001bf49fba5b9c4c34a
-- Workspace: cigroio (yoona@litmers.com)
-- MCP: use `mcp__notion__*` tools
+### PM Workspace (hub page) — personal workspace
+- Page: https://www.notion.so/339823375b0c8001ab28d33783105b8b
+- Workspace: Yoona, 서유나님의 워크스페이스
+- API: `NOTION_API_KEY` env var + Bash curl (no MCP required)
+- Integration: yoona-workspace (workspace bot)
 
 ### 프로젝트 문서 DB
-- Database: https://www.notion.so/61294fbea27f486bb94207ecdf17b62e
-- Data source: collection://58f9b49c-dd24-4ae5-a827-b954072c4b8b
+- Database: https://www.notion.so/339823375b0c8182a853f7695648de84
+- DB ID: `339823375b0c8182a853f7695648de84`
 - Use for: SRS 번역, Kickoff 자료, 기획 확인, 디자인 확인, Handoff
-- Properties: 문서명, 클라이언트, 프로젝트, 유형, 상태, 단계, 언어, 작성일, 전달일
+- Properties: 문서명(title), 클라이언트(select), 프로젝트(select), 유형(select), 상태(select), 단계(select), 언어(select), 작성일(date), 전달일(date)
 
 ### 커뮤니케이션 DB
-- Database: https://www.notion.so/28d4b205c79a421ebd18c293e1231dbc
-- Data source: collection://f3ea2e0c-f3d3-40a5-8dd5-364723c2f0fb
-- Use for: 주간 리포트, 클라이언트 업데이트, 개발 스펙, 이슈 티켓, 질의응답
-- Properties: 제목, 클라이언트, 프로젝트, 유형, 상태, 방향, 작성일
+- Database: https://www.notion.so/339823375b0c8121a8dff7225284bbad
+- DB ID: `339823375b0c8121a8dff7225284bbad`
+- Use for: 주간 리포트, 클라이언트 업데이트, 개발 스펙, 이슈 티켓, 질의응답, 미팅 노트
+- Properties: 제목(title), 클라이언트(select), 프로젝트(select), 유형(select), 상태(select), 방향(select), 작성일(date)
+- **필수**: 페이지 생성 시 반드시 `클라이언트`와 `프로젝트` 둘 다 세팅
 
 ### 태스크 DB
-- Database: https://www.notion.so/12807535d78c4cf89bc8777e2fa90703
-- Data source: collection://6406d6c7-99c8-4465-880a-40c95b94eafc
+- Database: https://www.notion.so/339823375b0c81afb0c0c76b4e1c6146
+- DB ID: `339823375b0c81afb0c0c76b4e1c6146`
 - Use for: /to-spec에서 생성된 개별 구현 태스크 관리
-- Properties: 태스크, 상태, 우선순위, 클라이언트, 프로젝트, 스펙 출처, AC, 비고
+- Properties: 태스크(title), 상태(select), 우선순위(select), 클라이언트(select), 프로젝트(select), 스펙 출처(url), AC(rich_text), 비고(rich_text)
 
 ### Daily Scrum Log DB
-- Database: https://www.notion.so/a0b985721843431a819468f072c42962
-- Data source: collection://eb2f7df2-0359-4c2c-85bb-6e12e3d73afc
+- Database: https://www.notion.so/339823375b0c81908969c064880c8113
+- DB ID: `339823375b0c81908969c064880c8113`
 - Use for: /daily-scrum에서 생성된 일일 스크럼 로그
-- Properties: 제목, 클라이언트, 프로젝트, 날짜, 상태
+- Properties: 제목(title), 클라이언트(select), 프로젝트(select), 날짜(date), 상태(select)
 
 ### PM Action Hub DB
-- Database: https://www.notion.so/7ab5868799c1451792da062d4c8fff37
-- Data source: collection://3a13db31-882c-4a6c-bddf-660e15ea9cdd
+- Database: https://www.notion.so/339823375b0c812db048e6a022c3b405
+- DB ID: `339823375b0c812db048e6a022c3b405`
 - Use for: PM 운영 액션 관리 (/todo, /today-brief에서 사용)
-- Properties: 제목, 프로젝트, 상태, 우선순위, 액션 유형, 출처, 메모
+- Properties: 제목(title), 프로젝트(select), 상태(select: 미착수/진행 중/완료), 우선순위(select), 액션 유형(select), 출처(select), 메모(rich_text)
+- **중요**: 상태 필드는 `select` 타입 — filter 시 `"select": {"equals": "미착수"}` 사용
 
 ## Output Quality Rules (공통)
 모든 스킬 출력에 적용:
