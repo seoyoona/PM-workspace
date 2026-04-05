@@ -2,8 +2,8 @@
 
 > **이 파일은 로컬 백업입니다. 최신 가이드는 Notion을 참고하세요.**
 >
-> 📖 세팅 가이드: https://www.notion.so/339823375b0c81c3be3afa64bb62c4e9
-> 🏗️ 설계 문서 (구조/규칙): https://www.notion.so/339823375b0c818cac44ce3afb9e2038
+> 📖 세팅 가이드: https://www.notion.so/339823375b0c804785bed2fc0da702a4
+> 🏗️ 설계 문서 (구조/규칙): https://www.notion.so/339823375b0c80fe9a02f02713ac32be
 
 ---
 
