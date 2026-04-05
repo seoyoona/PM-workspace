@@ -48,8 +48,8 @@ QA 피드백 전달     → /qa-feedback
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행)
-- **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
+- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 조회 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행). Calendar: OAuth2 Lambda 환경변수로 연동
+- **todo**: PM 액션 빠르게 추가 → PM Action Hub DB — 제목만 저장 (속성 없음)
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 
 ---
@@ -96,7 +96,8 @@ yoona-workspace/
 
 - `/today-brief`에서 오늘 미팅 자동 조회
 - Teams 캘린더를 Google Calendar에 ICS 구독하면 Teams 일정도 포함
-- MCP 연결: Google Workspace MCP (서비스 계정)
+- Claude Code 운영: Google Workspace MCP
+- Telegram Bot: OAuth2 (GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN Lambda 환경변수 — MCP 토큰 파일에서 소싱)
 
 ## Teams 연동
 
@@ -113,5 +114,5 @@ yoona-workspace/
 - Teams 전송: `/dev_chat`, `/sync_note` 결과에 inline 버튼으로 전송 가능
 - 코드: `telegram-bot/` 디렉토리
 - 배포: SAM CLI (`template.yaml` + `deploy.sh`)
-- Phase 1 (활성): dev_chat, client_chat, sync_note + Teams 전송
-- Phase 2 (대기): todo, today_brief — Notion Integration 토큰 필요
+- 전체 활성: dev_chat, client_chat, sync_note, todo, today_brief + Teams 전송
+- todo: 제목만 저장 / today_brief: Notion + Google Calendar 연동 완료
