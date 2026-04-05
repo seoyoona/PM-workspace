@@ -32,45 +32,16 @@ def _request(method: str, url: str, data=None) -> dict:
         return json.loads(resp.read().decode())
 
 
-def create_todo(
-    title: str,
-    project: str = "",
-    status: str = "미착수",
-    priority: str = "Medium",
-    action_type: str = "",
-    source: str = "telegram",
-) -> dict:
-    """Create a page in PM Action Hub DB."""
-    properties = {
-        "제목": {
-            "title": [{"text": {"content": title}}]
-        },
-        "상태": {
-            "select": {"name": status}
-        },
-        "우선순위": {
-            "select": {"name": priority}
-        },
-        "출처": {
-            "select": {"name": source}
-        },
-    }
-
-    if project:
-        properties["프로젝트"] = {
-            "select": {"name": project}
-        }
-
-    if action_type:
-        properties["액션 유형"] = {
-            "select": {"name": action_type}
-        }
-
+def create_todo(title: str) -> dict:
+    """Create a page in PM Action Hub DB with title only."""
     data = {
         "parent": {"database_id": PM_ACTION_HUB_DB},
-        "properties": properties,
+        "properties": {
+            "제목": {
+                "title": [{"text": {"content": title}}]
+            },
+        },
     }
-
     return _request("POST", f"{NOTION_API}/pages", data)
 
 

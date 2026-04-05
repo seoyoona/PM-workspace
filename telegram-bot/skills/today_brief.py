@@ -44,7 +44,7 @@ def handle(args: str) -> str:
         lines.append(f"\n📋 오늘 ({len(today_todos)}건)")
         for t in today_todos:
             prefix = f"[{t['project']}] " if t["project"] else ""
-            lines.append(f"- {prefix}{t['title']}" if not prefix else f"- {t['title']}")
+            lines.append(f"- {prefix}{t['title']}")
 
     # 🔄 진행 중
     if progress_todos:
