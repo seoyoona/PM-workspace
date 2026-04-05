@@ -23,7 +23,7 @@ Resources:
           ANTHROPIC_API_KEY: !Ref AnthropicApiKey
           CLAUDE_MODEL: claude-sonnet-4-20250514
           NOTION_TOKEN: !Ref NotionToken
-          NOTION_PM_ACTION_HUB_DB: 7ab5868799c1451792da062d4c8fff37
+          NOTION_PM_ACTION_HUB_DB: 339823375b0c812db048e6a022c3b405
           GOOGLE_CLIENT_ID: !Ref GoogleClientId
           GOOGLE_CLIENT_SECRET: !Ref GoogleClientSecret
           GOOGLE_REFRESH_TOKEN: !Ref GoogleRefreshToken

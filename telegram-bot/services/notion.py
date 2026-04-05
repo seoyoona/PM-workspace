@@ -46,7 +46,7 @@ def create_todo(
             "title": [{"text": {"content": title}}]
         },
         "상태": {
-            "status": {"name": status}
+            "select": {"name": status}
         },
         "우선순위": {
             "select": {"name": priority}
@@ -79,7 +79,7 @@ def query_action_hub(status_filter: str):
     data = {
         "filter": {
             "property": "상태",
-            "status": {"equals": status_filter},
+            "select": {"equals": status_filter},
         },
         "page_size": 50,
     }
