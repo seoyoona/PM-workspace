@@ -105,8 +105,8 @@ All document outputs go to Notion, not local files. Local workspace is for templ
 - Database: https://www.notion.so/339823375b0c812db048e6a022c3b405
 - DB ID: `339823375b0c812db048e6a022c3b405`
 - Use for: PM 운영 액션 관리 (/todo, /today-brief에서 사용)
-- Properties: 제목(title), 프로젝트(select), 상태(select: 미착수/진행 중/완료), 우선순위(select), 액션 유형(select), 출처(select), 메모(rich_text)
-- **중요**: 상태 필드는 `select` 타입 — filter 시 `"select": {"equals": "미착수"}` 사용
+- Properties: 제목(title), 프로젝트(select), 상태(select: 미착수/오늘/진행 중/완료), 우선순위(select), 액션 유형(select), 출처(select), 메모(rich_text)
+- **중요**: 상태 필드는 `select` 타입 — filter 시 `"select": {"equals": "오늘"}` 사용
 
 ## Output Quality Rules (공통)
 모든 스킬 출력에 적용:

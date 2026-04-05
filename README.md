@@ -132,11 +132,11 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 
 | 서비스 | 용도 | 연결 방식 |
 |---|---|---|
-| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | MCP (브라우저 인증) |
+| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | API key (`NOTION_API_KEY`) + Bash curl / MCP (`@notionhq/notion-mcp-server`) |
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
 | **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
 | **Microsoft Teams** | 개발팀 그룹채팅 직접 전송, **캘린더 (Google Calendar 구독)** | Power Automate (HTTP trigger) + ICS 구독 |
-| **Telegram Bot** | 모바일에서 핵심 스킬 사용 (dev_chat, client_chat, sync_note, todo, today_brief) | AWS Lambda + API Gateway + Claude API |
+| **Telegram Bot** | 모바일에서 핵심 5개 스킬 사용 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`) | AWS Lambda + API Gateway + Claude API |
 
 ## License
 

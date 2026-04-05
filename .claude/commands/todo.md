@@ -34,7 +34,7 @@ allowed-tools: Read, Glob, Grep, Bash
    - 프로퍼티:
      - `제목` (title): `[ProjectName] short description`
      - `프로젝트` (select): 감지된 프로젝트
-     - `상태` (select): "미착수" (항상 미착수로 저장)
+     - `상태` (select): "미착수" 기본 / "오늘"이 감지되면 "오늘"
      - `우선순위` (select): 감지된 우선순위
      - `액션 유형` (select): 감지된 유형 / 없으면 생략
      - `출처` (select): "manual"
@@ -59,7 +59,7 @@ allowed-tools: Read, Glob, Grep, Bash
 ```
 /todo 급함 [RCK] 타임라인 정리해서 고객에게 공유
 → 제목: [RCK] 타임라인 정리해서 고객에게 공유
-→ 프로젝트: RCK, 상태: 미착수, 우선순위: High, 액션 유형: 고객 커뮤니케이션
+→ 프로젝트: RCK, 상태: 오늘, 우선순위: High, 액션 유형: 고객 커뮤니케이션
 ```
 
 **여러 개 한번에:**

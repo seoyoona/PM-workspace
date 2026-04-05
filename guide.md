@@ -2,8 +2,8 @@
 
 > **이 파일은 로컬 백업입니다. 최신 가이드는 Notion을 참고하세요.**
 >
-> 📖 가이드 (사용법): https://www.notion.so/32c3aae9a8948142a142e7e95a77b9a8
-> 🏗️ 설계 문서 (구조/규칙): https://www.notion.so/32c3aae9a89480a9b71cead34358cc0f
+> 📖 세팅 가이드: https://www.notion.so/339823375b0c81c3be3afa64bb62c4e9
+> 🏗️ 설계 문서 (구조/규칙): https://www.notion.so/339823375b0c818cac44ce3afb9e2038
 
 ---
 
@@ -48,7 +48,7 @@ QA 피드백 전달     → /qa-feedback
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행)
+- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 (평일 10:30 자동 실행, "오늘 뭐해야돼"로도 실행)
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 
@@ -87,9 +87,10 @@ yoona-workspace/
 
 ## Notion 연동
 
-- PM Workspace: https://www.notion.so/32c3aae9a8948001bf49fba5b9c4c34a
+- PM Workspace: https://www.notion.so/339823375b0c8001ab28d33783105b8b
 - 프로젝트 문서 DB / 커뮤니케이션 DB / 태스크 DB / Daily Scrum Log DB / PM Action Hub DB
-- MCP 연결: `/mcp` → Notion 인증
+- 연결 방식: `NOTION_API_KEY` 환경변수 (yoona-workspace 개인 통합) + Bash curl API
+- Claude Code 운영 작업: `mcp__notion__*` MCP 툴 (설정 가이드 참고)
 
 ## Google Calendar 연동
 
