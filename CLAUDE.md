@@ -64,6 +64,10 @@ Never mix these. Developers and clients must be able to distinguish between conf
 
 ## Tools
 - **Notion**: SRS documents, client docs, meeting notes, specs → read source material, write outputs
+  - `notion-cigro` MCP: cigro 워크스페이스 접근 (프로젝트, QA, 내부 Tasks DB 등)
+  - `notion-yoona` MCP: yoona 개인 워크스페이스 접근 (PM Workspace, 프로젝트 문서/커뮤니케이션 DB 등)
+  - `notion` / `notion-v1` MCP: yoona 워크스페이스 접근 (npm 패키지 기반, `notion-v1`은 view filter용)
+  - REST API (`NOTION_API_KEY` env + curl): DB option 관리, 블록 조작 등 MCP 미지원 작업
 - **Linear**: Issue tracking → create tickets from translated specs, check status
 - **Google Sheets**: Timelines, dashboards → update status for client visibility
 

@@ -31,7 +31,7 @@
 | 상황 | 스킬 | 출력 |
 |------|------|------|
 | 미팅 끝남 | `/meeting-note` | Notion 미팅노트 + Teams(EN) + 카톡(KR) |
-| 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 |
+| 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 번역만 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
@@ -42,7 +42,7 @@
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
 | 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
-| 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 (평일 10:30 자동) |
+| 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 (평일 10:30 텔레그램 자동 푸시) |
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
@@ -132,11 +132,11 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 
 | 서비스 | 용도 | 연결 방식 |
 |---|---|---|
-| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub | API key (`NOTION_API_KEY`) + Bash curl / MCP (`@notionhq/notion-mcp-server`) |
+| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub, 프로젝트/QA/Tasks | 4-tier: `notion-cigro` MCP (cigro 워크스페이스) + `notion-yoona` MCP (yoona 워크스페이스) — Notion 공식 HTTP MCP / `notion` 2.x + `notion-v1` 1.9.1 (npm, view filter) / REST API (`NOTION_API_KEY` + curl) |
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
 | **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
 | **Microsoft Teams** | 개발팀 그룹채팅 직접 전송, **캘린더 (Google Calendar 구독)** | Power Automate (HTTP trigger) + ICS 구독 |
-| **Telegram Bot** | 모바일에서 핵심 5개 스킬 사용 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`) — 전체 활성, Google Calendar OAuth2 연동 완료 | AWS Lambda + API Gateway + Claude API |
+| **Telegram Bot** | 모바일에서 핵심 5개 스킬 사용 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`) — 전체 활성, Google Calendar OAuth2 연동 완료. `/today_brief`는 평일 10:30 EventBridge 스케줄로 자동 푸시 | AWS Lambda + API Gateway + Claude API + EventBridge |
 
 ## License
 
