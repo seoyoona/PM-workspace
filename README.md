@@ -26,7 +26,7 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 15개 스킬
+## 16개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
@@ -44,6 +44,7 @@
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
 | 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 (평일 10:30 텔레그램 자동 푸시) |
 | 할 일 추가 | `/todo` | PM Action Hub DB |
+| SRS 초안 생성 | `/create-srs` | 한국어 SRS/기능명세 초안 (Notion) |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
 > **모바일:** 핵심 5개 스킬은 Telegram Bot으로도 사용 가능 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`)
@@ -59,7 +60,7 @@ yoona-workspace/
 ├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
 ├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
 ├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
-└── .claude/commands/            # 15개 스킬 파일
+└── .claude/commands/            # 16개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드
@@ -88,6 +89,10 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 /meeting-note = source of truth
   → /dev-chat (개발팀 전달)은 여기서 추출
   → /client-chat (고객 전달)은 여기서 추출
+
+/create-srs = SRS 초안 생성
+  → 여러 소스 → 한국어 SRS/기능명세 초안
+  → /srs-translate, /kickoff-prep의 upstream
 
 /to-spec = 큰 요청 처리
   → 스펙 페이지 + 태스크 DB 동시 생성

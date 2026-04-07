@@ -25,6 +25,7 @@ SRS 번역          → /srs-translate
 오늘 뭐하지?      → /today-brief
 할 일 추가        → /todo
 QA 피드백 전달     → /qa-feedback
+SRS 초안 생성      → /create-srs
 ```
 
 모든 스킬 공통: `/스킬명 [내용] --client [고객사명]`
@@ -51,6 +52,7 @@ QA 피드백 전달     → /qa-feedback
 - **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 조회. 평일 10:30 AWS EventBridge → Lambda → 텔레그램 자동 푸시 (Claude Code 꺼져 있어도 동작). "오늘 뭐해야돼"로 수동 실행도 가능. Calendar: OAuth2 Lambda 환경변수로 연동
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB — 제목만 저장 (속성 없음)
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
+- **create-srs**: 여러 소스 자료 → 한국어 SRS/기능명세 초안 생성 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 기능 추가 금지). 미리보기 필수
 
 ---
 
@@ -65,7 +67,7 @@ yoona-workspace/
 ├── templates/                   # 문서 구조 템플릿
 ├── handoffs/CLAUDE.md           # 개발팀 전달 체크리스트
 ├── telegram-bot/                # Telegram 봇 (AWS Lambda, 선택)
-└── .claude/commands/            # 스킬 파일 (15개)
+└── .claude/commands/            # 스킬 파일 (16개)
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
@@ -80,7 +82,8 @@ yoona-workspace/
     ├── sync-note.md
     ├── today-brief.md
     ├── todo.md
-    └── qa-feedback.md
+    ├── qa-feedback.md
+    └── create-srs.md
 ```
 
 ---
