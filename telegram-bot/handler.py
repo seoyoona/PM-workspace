@@ -257,6 +257,23 @@ def handle_callback(body):
 
 def lambda_handler(event, context):
     """AWS Lambda entry point."""
+    # EventBridge scheduled push (10:30 KST daily)
+    if event.get("source") == "aws.events":
+        owner_chat_id = os.environ.get("TELEGRAM_OWNER_CHAT_ID", "")
+        if not owner_chat_id and ALLOWED_USERS:
+            owner_chat_id = str(min(ALLOWED_USERS))
+        if not owner_chat_id:
+            logger.error("Scheduled push skipped: TELEGRAM_OWNER_CHAT_ID not set.")
+            return {"statusCode": 200, "body": "OK"}
+        try:
+            from skills.today_brief import handle
+            result = handle("")
+            send_telegram(int(owner_chat_id), result)
+            logger.info(f"Scheduled today_brief sent to {owner_chat_id}.")
+        except Exception:
+            logger.error(f"Scheduled push error: {traceback.format_exc()}")
+        return {"statusCode": 200, "body": "OK"}
+
     try:
         body = json.loads(event.get("body", "{}"))
     except (json.JSONDecodeError, TypeError):
@@ -277,6 +294,8 @@ def lambda_handler(event, context):
     chat_id = message["chat"]["id"]
     user_id = message.get("from", {}).get("id")
     text = message.get("text", "").strip()
+
+    logger.info(f"Incoming: chat_id={chat_id} user_id={user_id}")
 
     # Auth check
     if ALLOWED_USERS and user_id not in ALLOWED_USERS:
