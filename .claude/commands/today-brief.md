@@ -56,19 +56,16 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__google-workspace__*
    - 필터 (select 타입): `{"filter": {"property": "상태", "select": {"equals": "오늘"}}}`
    - **이 2개 상태만 조회. 미착수/완료는 무시**
 
-2. **Google Calendar 조회** (2개 캘린더 모두 조회):
+2. **Google Calendar 조회** (primary 캘린더만):
    - **방법 1 (MCP):** `mcp__google-workspace__getCalendarEvents` 호출
-     - primary 캘린더와 Teams 캘린더 각각 호출 (병렬)
+     - calendarId: `primary` (구독/공유 캘린더 제외)
      - timeMin: 오늘 00:00 KST (UTC 변환), timeMax: 내일 00:00 KST (UTC 변환)
      - orderBy: startTime, singleEvents: true
    - **방법 2 (MCP 실패 시 fallback):** Bash curl로 Google Calendar API 직접 호출
      - tokens.json에서 access_token 읽어서 Authorization 헤더에 사용
-     - primary + Teams 캘린더 모두 조회
-   - **캘린더 ID:**
-     - primary: `primary`
-     - Teams 구독: `75cn970oqdaki304qbehm43ehlgcguc0@import.calendar.google.com`
-   - 두 캘린더 결과를 합쳐서 시간순 정렬, HH:MM (KST) 형식으로 표시
-   - 중복 제거: 같은 시간 + 같은 제목이면 하나만 표시
+     - `calendars/primary/events` 만 조회
+   - **"내 일정" 정의:** primary calendar = 내가 직접 만든 일정 + 초대 수락 일정. ICS 구독(Teams 등), 공유 캘린더, 공휴일 캘린더는 제외
+   - 시간순 정렬, HH:MM (KST) 형식으로 표시
    - 조회 실패 시 미팅 섹션 생략 (에러 표시 안 함)
 
 3. **출력 구성**:
