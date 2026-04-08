@@ -38,8 +38,14 @@ def _get_access_token() -> str:
     return result["access_token"]
 
 
+CALENDAR_IDS = [
+    "primary",
+    "75cn970oqdaki304qbehm43ehlgcguc0@import.calendar.google.com",
+]
+
+
 def get_today_events() -> list[dict]:
-    """Get today's calendar events (KST timezone)."""
+    """Get today's calendar events from all calendars (KST timezone)."""
     try:
         token = _get_access_token()
     except Exception:
@@ -49,39 +55,48 @@ def get_today_events() -> list[dict]:
     time_min = now_kst.replace(hour=0, minute=0, second=0, microsecond=0)
     time_max = time_min + timedelta(days=1)
 
-    params = urlencode({
+    base_params = {
         "timeMin": time_min.isoformat(),
         "timeMax": time_max.isoformat(),
         "singleEvents": "true",
         "orderBy": "startTime",
         "timeZone": "Asia/Seoul",
-    })
-
-    url = f"https://www.googleapis.com/calendar/v3/calendars/primary/events?{params}"
-    req = Request(url, headers={"Authorization": f"Bearer {token}"}, method="GET")
-
-    try:
-        with urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-    except Exception:
-        return []
+    }
 
     events = []
-    for item in data.get("items", []):
-        start = item.get("start", {})
-        # All-day events have "date", timed events have "dateTime"
-        start_time = start.get("dateTime", start.get("date", ""))
+    seen = set()
 
-        if "T" in start_time:
-            # Parse and format time
-            dt = datetime.fromisoformat(start_time)
-            time_str = dt.strftime("%H:%M")
-        else:
-            time_str = "종일"
+    for cal_id in CALENDAR_IDS:
+        params = urlencode(base_params)
+        url = f"https://www.googleapis.com/calendar/v3/calendars/{cal_id}/events?{params}"
+        req = Request(url, headers={"Authorization": f"Bearer {token}"}, method="GET")
 
-        events.append({
-            "time": time_str,
-            "summary": item.get("summary", "(제목 없음)"),
-        })
+        try:
+            with urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode())
+        except Exception:
+            continue
 
+        for item in data.get("items", []):
+            start = item.get("start", {})
+            start_time = start.get("dateTime", start.get("date", ""))
+            summary = item.get("summary", "(제목 없음)")
+
+            if "T" in start_time:
+                dt = datetime.fromisoformat(start_time)
+                time_str = dt.strftime("%H:%M")
+            else:
+                time_str = "종일"
+
+            # Deduplicate by time + summary
+            key = f"{time_str}:{summary}"
+            if key not in seen:
+                seen.add(key)
+                events.append({
+                    "time": time_str,
+                    "summary": summary,
+                })
+
+    # Sort by time
+    events.sort(key=lambda e: e["time"])
     return events
