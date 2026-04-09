@@ -75,10 +75,10 @@ Never mix these. Developers and clients must be able to distinguish between conf
 All document outputs go to Notion, not local files. Local workspace is for templates and glossaries only.
 
 ### PM Workspace (hub page) — personal workspace
-- Page: https://www.notion.so/339823375b0c8001ab28d33783105b8b
-- Workspace: Yoona, 서유나님의 워크스페이스
-- API: MCP 사용 (notion / notion-v1)
-- Integration: yoona-workspace (workspace bot)
+- Page: https://www.notion.so/cigroio/8163aae9a894838296b881e9d7952bf5
+- Workspace: cigro (cigroio)
+- API: MCP 사용 (notion-cigro)
+- Integration: cigro OAuth MCP
 
 ### 프로젝트 문서 DB (cigro workspace)
 - Database: https://www.notion.so/cigroio/d7f3aae9a894831a96b2013549196181

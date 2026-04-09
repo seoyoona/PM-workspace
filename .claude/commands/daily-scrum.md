@@ -1,7 +1,7 @@
 ---
 description: 프로젝트별 daily scrum 로그 → Notion DB 저장
 argument-hint: --client <name> [오늘 업데이트]
-allowed-tools: Read, Glob, Grep, Bash
+allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__notion-cigro__notion-fetch
 ---
 
 # Daily Scrum Log
@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep, Bash
 - 매일 1건씩 누적되어 프로젝트별 히스토리 형성
 
 ## Output Destination
-- **Notion**: Daily Scrum Log DB (`339823375b0c81908969c064880c8113`) — Bash curl API
+- **Notion**: Daily Scrum Log DB (data_source_id: `9e03aae9-a894-8377-bbaf-0717f5d7f2ef`) — `mcp__notion-cigro__notion-create-pages`
 - **터미널**: 저장된 내용 요약 출력 (본인 확인용)
 
 ## Instructions
@@ -26,7 +26,7 @@ allowed-tools: Read, Glob, Grep, Bash
    - `clients/{client-name}/CLAUDE.md` — 프로젝트명 확인
    - `glossary/{client-name}.md` — 용어 일관성
 3. **내용 분류**: 입력을 아래 섹션으로 자동 분류
-4. **Notion 저장**: Daily Scrum Log DB에 새 페이지 생성
+4. **Notion 저장**: `mcp__notion-cigro__notion-create-pages`로 Daily Scrum Log DB (data_source_id: `9e03aae9-a894-8377-bbaf-0717f5d7f2ef`)에 새 페이지 생성
 5. **터미널 출력**: 저장된 내용 요약
 
 ## Notion Page Structure

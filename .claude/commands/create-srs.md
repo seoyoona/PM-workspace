@@ -1,7 +1,7 @@
 ---
 description: 여러 소스 자료를 읽고 한국어 SRS/기능명세 초안을 생성
 argument-hint: --client <name> --project <name> [텍스트 또는 Notion 링크]
-allowed-tools: Read, Glob, Grep, Bash
+allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__notion-cigro__notion-fetch
 ---
 
 # Create SRS (한국어 SRS/기능명세 초안 생성)
@@ -182,7 +182,7 @@ Notion 프로젝트 문서 DB에 저장할까요?
 ```
 
 저장 시:
-- DB: 프로젝트 문서 DB (`339823375b0c8182a853f7695648de84`) — Bash curl API
+- DB: 프로젝트 문서 DB (`d7f3aae9a894831a96b2013549196181`) — `mcp__notion-cigro__notion-create-pages`
 - 문서명(title): `SRS 초안`
 - 클라이언트: `--client` 값
 - 프로젝트: `--project` 값

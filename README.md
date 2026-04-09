@@ -26,7 +26,7 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 16개 스킬
+## 17개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
@@ -42,12 +42,13 @@
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
 | 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
-| 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 (평일 10:30 텔레그램 자동 푸시) |
+| 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 |
 | 할 일 추가 | `/todo` | PM Action Hub DB |
 | SRS 초안 생성 | `/create-srs` | 한국어 SRS/기능명세 초안 (Notion) |
+| Nexus 일별 기록 | `/nexus-daily` | Nexus OS row별 hours/memo 자동 입력 |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
 
-> **모바일:** 핵심 5개 스킬은 Telegram Bot으로도 사용 가능 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`)
+> **모바일:** Telegram Bot은 현재 Notion 연동 비활성 (cigro API 토큰 미발급)
 
 ## 설계 구조
 
@@ -60,7 +61,9 @@ yoona-workspace/
 ├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
 ├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
 ├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
-└── .claude/commands/            # 16개 스킬 파일
+├── scripts/migrate-pm.sh        # PM 온보딩 마이그레이션 스크립트
+├── docs/pm-onboarding.md        # PM 온보딩 가이드
+└── .claude/commands/            # 17개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드
@@ -100,6 +103,10 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 /today-brief = 아침 브리핑
   → PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동)
 
+/nexus-daily = Nexus OS 일별 기록
+  → Notion 활동 자동 수집 → 프로젝트/시간/메모 생성 → Nexus row별 저장
+  → 계층형 매칭 + alias registry (.claude/nexus-alias.md)
+
 /qa-feedback = 고객 QA DB → 내부 티켓
   → 고객 피드백 읽기 → 번역 + 분류 → 내부 Tasks DB 생성
 ```
@@ -137,11 +144,12 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 
 | 서비스 | 용도 | 연결 방식 |
 |---|---|---|
-| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub, 프로젝트/QA/Tasks | 4-tier: `notion-cigro` MCP (cigro 워크스페이스) + `notion-yoona` MCP (yoona 워크스페이스) — Notion 공식 HTTP MCP / `notion` 2.x + `notion-v1` 1.9.1 (npm, view filter) / REST API (`NOTION_API_KEY` + curl) |
+| **Notion** | 문서, 미팅노트, 리포트, PM Action Hub, 프로젝트/QA/Tasks | `notion-cigro` MCP 단일 경로 (cigro 워크스페이스, OAuth) — 모든 DB가 cigro에 위치 |
 | **Linear** | 이슈 티켓 | MCP (브라우저 인증) |
 | **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
-| **Microsoft Teams** | 개발팀 그룹채팅 직접 전송, **캘린더 (Google Calendar 구독)** | Power Automate (HTTP trigger) + ICS 구독 |
-| **Telegram Bot** | 모바일에서 핵심 5개 스킬 사용 (`/dev_chat`, `/client_chat`, `/sync_note`, `/todo`, `/today_brief`) — 전체 활성, Google Calendar OAuth2 연동 완료. `/today_brief`는 평일 10:30 EventBridge 스케줄로 자동 푸시 | AWS Lambda + API Gateway + Claude API + EventBridge |
+| **Nexus OS** | 일별 근무시간 기록 | MCP (HTTP) + curl fallback |
+| **Microsoft Teams** | 개발팀 그룹채팅 직접 전송 | Power Automate (HTTP trigger) |
+| **Telegram Bot** | 비활성 — cigro API 토큰 미발급으로 Notion 연동 불가 | AWS Lambda (아카이브) |
 
 ## License
 
