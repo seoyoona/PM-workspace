@@ -111,7 +111,9 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동)
 
 /nexus-daily = Nexus OS 일별 기록
-  → Notion 활동 자동 수집 → 프로젝트/시간/메모 생성 → Nexus row별 저장
+  → Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log 자동 수집
+  → Activity Log = dev-chat/client-chat/sync-note 사용 시 자동 기록 (.claude/activity-log.jsonl)
+  → 프로젝트/시간/메모 생성 → Nexus row별 저장
   → 계층형 매칭 + alias registry (.claude/nexus-alias.md)
 
 /qa-feedback = 고객 QA DB → 내부 티켓

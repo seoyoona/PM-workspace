@@ -54,7 +54,7 @@ Nexus 일별 기록    → /nexus-daily
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB — 제목만 저장 (속성 없음)
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
 - **create-srs**: 여러 소스 자료 → 한국어 SRS/기능명세 초안 생성 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 기능 추가 금지). 미리보기 필수
-- **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑
+- **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log(dev-chat/client-chat/sync-note 사용 기록) 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑
 
 ---
 
@@ -126,6 +126,7 @@ yoona-workspace/
 ```
 .claude/
 ├── nexus-alias.md               # 프로젝트 약칭 → Nexus projectName 매핑 (PM별)
+├── activity-log.jsonl           # 스킬 사용 로그 (nexus-daily 보조 소스, gitignored)
 └── commands/nexus-daily.md      # /nexus-daily 스킬
 ```
 
@@ -157,6 +158,7 @@ yoona-workspace/
 - Nexus MCP 파싱 이슈로 Bash + curl fallback 사용
 - 프로젝트 매핑: `.claude/nexus-alias.md` — 약칭 → Nexus projectName 1:1 매핑
 - 계층형 매칭: alias(자동확정) → exact(자동확정) → normalized(자동확정) → substring(확인요청) → 실패(선택요청)
+- Activity Log: `.claude/activity-log.jsonl` — Notion에 기록이 안 남는 스킬(dev-chat/client-chat/sync-note) 사용 시 자동 기록 → nexus-daily 보조 소스로 활용
 - PM 온보딩: `scripts/migrate-pm.sh` + `docs/pm-onboarding.md`
 
 ## Teams 연동
