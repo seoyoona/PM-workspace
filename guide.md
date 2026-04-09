@@ -58,6 +58,37 @@ Nexus 일별 기록    → /nexus-daily
 
 ---
 
+## 프로젝트 구분 방식
+
+프로젝트가 시스템 전체에서 어떻게 구분되고 관리되는지 설명합니다.
+
+### 클라이언트 vs 프로젝트
+- **클라이언트** = 고객사 (회사 단위). 예: Koboom, RCK, 21gram
+- **프로젝트** = 해당 고객사의 개발 건 (서비스 단위). 예: Koboom, CareerPlan
+- 현재 **1:1 매핑**이지만, 구조적으로 1:N 가능 (1:N 시 `--project`로 명시)
+
+### 프로젝트가 등록되는 곳
+
+| 위치 | 역할 | 등록 방법 |
+|---|---|---|
+| `clients/{name}/CLAUDE.md` | 톤·도메인·담당자 컨텍스트 | `/new-project` 자동 |
+| `glossary/{name}.md` | 용어집 (KR↔EN) | `/new-project` 자동 |
+| Notion DB 3개 (프로젝트 SELECT) | 페이지 생성 시 프로젝트 태깅 | `/new-project` 자동 |
+| PM Workspace 토글 | 프로젝트별 linked view 모음 | `/new-project` 자동 |
+| `.claude/nexus-alias.md` | Nexus OS 프로젝트 매핑 | 수동 추가 |
+| `.env.teams` | Teams 그룹채팅 ID | `/new-project` 안내 (선택) |
+
+### 스킬에서의 프로젝트 라우팅
+- `--client koboom` → `clients/koboom/CLAUDE.md` + `glossary/koboom.md` 자동 로드
+- Notion 페이지 생성 시 `클라이언트` + `프로젝트` 속성 자동 세팅
+- 프로젝트명 미지정 시 CLAUDE.md의 `프로젝트명` 사용
+- **페이지 생성 시 클라이언트·프로젝트 둘 다 필수** — 하나라도 빠지면 linked view에서 누락
+
+### 새 프로젝트 추가
+`/new-project --client acme --project acme-v2` → 위 항목 자동 생성. Nexus alias + Teams chat ID만 수동.
+
+---
+
 ## 폴더 구조
 
 ```

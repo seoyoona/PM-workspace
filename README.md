@@ -86,6 +86,13 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 | Daily Scrum Log | 프로젝트별 일일 체크인 | `/daily-scrum` |
 | PM Action Hub | PM 운영 액션 (투두) | `/todo`, `/today-brief` |
 
+### 프로젝트 구분 방식
+
+- **클라이언트**(고객사) vs **프로젝트**(개발 건) 2계층 — 현재 1:1 매핑, 구조적 1:N 가능
+- 모든 DB에 `클라이언트` + `프로젝트` 필드 → linked view 필터로 프로젝트별 분리 표시
+- `--client`로 스킬 실행 시 `clients/{name}/CLAUDE.md` + `glossary/{name}.md` 자동 로드
+- `/new-project` 한 번으로 로컬 파일 + DB 옵션 + PM Workspace 토글 자동 생성
+
 ### 스킬 간 관계
 
 ```
