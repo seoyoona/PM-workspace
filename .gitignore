@@ -9,6 +9,9 @@ handoffs/*.docx
 # Local settings (per-user permissions, paths)
 .claude/settings.local.json
 
+# Activity log (nexus-daily 보조 소스, 로컬 전용)
+.claude/activity-log.jsonl
+
 # Teams webhook/flow URLs (sensitive)
 .env.teams
 

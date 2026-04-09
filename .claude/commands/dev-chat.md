@@ -112,6 +112,10 @@ Please review and let me know if anything needs more effort than expected.
      ```
    - 202면 "전송 완료", 그 외면 에러 출력 + 메시지 복사 안내
    - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유
+10. **활동 로그**: 전송 또는 복사 성공 시에만 기록 (취소/에러 시 미기록)
+    ```bash
+    echo '{"date":"'$(date +%Y-%m-%d)'","skill":"dev-chat","client":"{클라이언트명}"}' >> .claude/activity-log.jsonl
+    ```
 
 ## Rules
 
