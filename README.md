@@ -37,7 +37,7 @@
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
-| SRS 번역 | `/srs-translate` | 영어 구조화 번역 (Notion) |
+| SRS 번역 | `/srs-translate` | 영어 구조화 번역 (Notion) — 비창작 원칙, Inferred 섹션 없음 |
 | 킥오프 준비 | `/kickoff-prep` | 고객 안건(KR) + 내부 노트(EN) |
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
 | 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |

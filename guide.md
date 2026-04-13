@@ -54,6 +54,7 @@ Nexus 일별 기록    → /nexus-daily
 - **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 조회. "오늘 뭐해야돼"로 수동 실행
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB — 제목만 저장 (속성 없음)
 - **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
+- **srs-translate**: 한국어 SRS/기획서 → 영어 구조화 번역 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 내용 추가 금지, Inferred Requirements 섹션 없음). Ambiguities는 실제 모호함 있을 때만 포함. PM이 링크+명시적 지시 첨부 시에만 추가 내용 반영.
 - **create-srs**: 여러 소스 자료 → 한국어 SRS/기능명세 초안 생성 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 기능 추가 금지). 미리보기 필수
 - **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log(dev-chat/client-chat/sync-note 사용 기록) 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑
 
