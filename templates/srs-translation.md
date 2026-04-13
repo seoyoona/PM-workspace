@@ -3,6 +3,15 @@
 This is the highest-volume, highest-impact template.
 Errors here propagate to kickoff, planning, design, and development.
 
+## Non-Invention Rule
+**Translate the source. Do not add to it.**
+- Do NOT add requirements, interpretations, or analysis not present in the source
+- Do NOT add "inferred requirements" — if it's not in the SRS, it's not in the output
+- Do NOT force-find ambiguities — only flag what is genuinely unclear in the source text
+- Claude's editorial judgment stays out of the translation output
+
+Exception: if the PM explicitly instructs to incorporate additional content (e.g., "이 링크 내용도 반영해줘"), follow those specific instructions only.
+
 ## Input
 Korean SRS document (from Notion or pasted text)
 
@@ -10,9 +19,8 @@ Korean SRS document (from Notion or pasted text)
 1. Read the full SRS before translating — understand structure and scope first
 2. Check `glossary/{client-name}.md` for established term mappings
 3. Translate faithfully — do NOT add, remove, or reinterpret requirements
-4. Restructure for English readability if the Korean structure is hard to follow
-5. Flag every ambiguity — never resolve silently
-6. List all new domain terms you translated (for glossary review)
+4. Mirror the source structure — do not reorganize sections unless the Korean structure is genuinely unreadable
+5. If a term or phrase is ambiguous in the Korean source, flag it — do not silently pick an interpretation
 
 ## Output Format
 ```
@@ -44,26 +52,22 @@ Korean SRS document (from Notion or pasted text)
 - [Performance, security, compatibility, etc.]
 
 ## 5. Ambiguities & Open Questions
-⚠️ These items need clarification before kickoff or handoff:
+⚠️ Include only if actual ambiguities exist in the source:
 - [ ] [Section X]: "[Korean original]" — could mean [A] or [B]. Which is intended?
-- [ ] [Section Y]: No detail on [topic]. Developers will need [specific info].
-- [ ] [Section Z]: Contradicts [other section]. Which takes priority?
+- [ ] [Section Y]: No detail on [topic] in the source. Developers will need [specific info].
+
+(Omit this section entirely if there are no genuine ambiguities.)
 
 ## 6. New Terms (for glossary review)
+Include on first translation for a new client, or when new domain terms appear:
 | Korean | English (used in this doc) | Confidence | Notes |
 |--------|---------------------------|------------|-------|
 | [term] | [translation] | High/Medium/Low | [why low confidence, if applicable] |
-
-## 7. Inferred Requirements
-These are NOT in the original SRS but seem implied. PM should confirm before including in handoff:
-- [Inferred requirement] — inferred because [reason]
-
-## 8. Original Reference
-> [Key Korean sections preserved for cross-reference, especially ambiguous parts]
 ```
 
 ## Key Rules
-- Section 5 (Ambiguities) is MANDATORY. If you think there are zero ambiguities in an SRS, you are wrong — look harder.
-- Section 6 (New Terms) is MANDATORY on first translation for a client.
-- Section 7 (Inferred) keeps Claude's additions visibly separate from the client's actual requirements.
-- Mark the whole document as "Draft — pending PM review" until the PM confirms.
+- Translate what the source says. Nothing more.
+- Section 5 (Ambiguities): only if genuinely unclear in the source — zero ambiguities is fine.
+- Section 6 (New Terms): include on first client translation or when new terms appear.
+- No "Inferred Requirements" section — Claude does not speculate about implied requirements.
+- Mark the whole document as "Draft — pending PM review".
