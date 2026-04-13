@@ -45,8 +45,8 @@ Nexus 일별 기록    → /nexus-daily
 ## 핵심 구조
 
 - **meeting-note** = source of truth → dev-chat / client-chat은 downstream
-- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지 + 수정 확인 후 Teams 전송
-- **client-chat**: 질문형 / 업데이트형 / 혼합형 자동 감지
+- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지 + 수정 확인 후 Teams 전송. Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
+- **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더/번호 리스트/느낌표 금지. 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적

@@ -54,9 +54,13 @@ Maintenance later:
 
 Open question:
 - {구체적이고 필요한 질문 — 기본은 생략}
-
-Please review and let me know if anything needs more effort than expected.
 ```
+
+**출력 원칙:**
+- Standard ≠ 길다. 각 bullet은 1줄로.
+- Critical context는 2줄 이내.
+- 전체 메시지가 화면 한 페이지를 넘지 않도록.
+- Closing 문구 금지 — "Please review..." / "Let me know..." 류 사용하지 않음. 마지막 섹션에서 끝냄.
 
 ## Meeting-note Input Detection
 입력에 meeting-note 구조 (미팅 정보/핵심 요약/이번 라운드 반영사항 등)가 포함되면 아래 추출 규칙 적용:
@@ -89,11 +93,15 @@ Please review and let me know if anything needs more effort than expected.
    - **Open question**: 조건부. 아래 규칙 참고.
    - **마지막 줄**: "Please review and let me know if anything needs more effort than expected."
 5. **톤**: 개발팀 구현 브리프 — clear, direct, practical. 요구사항을 직접 서술. "This likely means X needs to change" 대신 "Change X to Y" 또는 "X should be Y". 개발자가 바로 작업 목록으로 쓸 수 있는 수준.
-6. **영어로 작성**
+6. **영어로 작성** — 단, 도메인 특화 한국어 용어는 괄호로 병기
+   - 한국어 UI/코드베이스에서 검색해야 하는 용어: "reputation reviewers (평판조회 조회인)"
+   - glossary에 있는 용어는 glossary의 영어 표기 + 괄호 한국어
+   - 일반적인 단어 (예: "user", "admin")는 병기 불필요
 7. **출력**: 터미널에 메시지 출력
-8. **수정 확인**: 메시지 출력 후 사용자에게 수정 여부 확인
+8. **수정 확인**: 메시지 출력 후 (메시지 본문과 구분하여) 사용자에게 확인.
+   메시지 본문 아래에 구분선(---) 후:
    ```
-   수정할 부분 있으면 말씀해주세요. 없으면 전송합니다.
+   수정 사항 있으면 말씀해주세요.
    ```
    - 수정 요청 시 → 반영 후 다시 출력 → 재확인
    - 수정 없음 / 전송 요청 시 → Teams 전송 진행
@@ -123,9 +131,14 @@ Please review and let me know if anything needs more effort than expected.
 - 용어는 glossary 기준 사용
 - "확정 결정"과 "액션 아이템"을 분리하지 않음 — 통합된 "This round" 블록
 - 우선순위 높은 항목을 위에 배치
-- 마지막 줄은 항상 리뷰 요청으로 마무리
+- 별도 closing 없이 마지막 섹션에서 끝냄. "Please review..." / "Let me know..." 류 리뷰 요청 문구 사용 금지.
 - 미팅 노트처럼 느껴지면 안 됨 — 구현 브리프처럼 느껴져야 함
 - 각 항목은 직접적이고 실행 가능하게 서술
+- 클라이언트 메시지 길이 ≠ 출력 길이. 클라이언트가 길게 쓴 경우 핵심만 추출:
+  - 무엇이 문제인지 (1줄)
+  - 무엇을 해야 하는지 (구현 항목)
+  - 불필요한 배경/감정/반복 설명은 제거
+- 클라이언트가 말하지 않은 요구사항을 추가하지 않음. 원문에 없는 bullet은 넣지 않는다. 개발 편의를 위한 제안이 있으면 별도로 "(PM note: ...)" prefix로 분리.
 
 ### "Critical context:" 포함 조건
 - 포함: 긴급 블로커, 수정했다고 했는데 여전히 안 되는 것, 레거시 맥락, MVP 범위 변경, 고객 측 기술적 배경
