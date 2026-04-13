@@ -10,6 +10,7 @@
 ## Quick Start
 
 ```
+워크스페이스 세팅   → /setup-workspace
 미팅 끝났다        → /meeting-note
 개발팀에 전달      → /dev-chat
 고객에게 전달      → /client-chat
@@ -100,8 +101,8 @@ yoona-workspace/
 ├── templates/                   # 문서 구조 템플릿
 ├── handoffs/CLAUDE.md           # 개발팀 전달 체크리스트
 ├── telegram-bot/                # Telegram 봇 (AWS Lambda, 선택)
-├── scripts/migrate-pm.sh        # PM 온보딩 마이그레이션 스크립트
-├── docs/pm-onboarding.md        # PM 온보딩 가이드
+├── scripts/migrate-pm.sh        # PM 마이그레이션 (수동 fallback)
+├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
 └── .claude/commands/            # 스킬 파일 (17개)
     ├── meeting-note.md
     ├── dev-chat.md
@@ -159,7 +160,8 @@ yoona-workspace/
 - 프로젝트 매핑: `.claude/nexus-alias.md` — 약칭 → Nexus projectName 1:1 매핑
 - 계층형 매칭: alias(자동확정) → exact(자동확정) → normalized(자동확정) → substring(확인요청) → 실패(선택요청)
 - Activity Log: `.claude/activity-log.jsonl` — Notion에 기록이 안 남는 스킬(dev-chat/client-chat/sync-note) 사용 시 자동 기록 → nexus-daily 보조 소스로 활용
-- PM 온보딩: `scripts/migrate-pm.sh` + `docs/pm-onboarding.md`
+- PM 온보딩: `/setup-workspace` 스킬 (DB 5개 + 허브 페이지 + ID 교체 자동화)
+- 수동 마이그레이션 fallback: `scripts/migrate-pm.sh`
 
 ## Teams 연동
 

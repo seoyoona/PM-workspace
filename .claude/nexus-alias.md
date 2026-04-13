@@ -16,6 +16,7 @@ Booktails     | Booktails-Booktails-1
 Connectory    | Connectory-Connectory-1
 Bike          | KimKeonTak-Bike-2
 BaraeCNP      | BaraeCNP-PaperERP-1
+Mountain      | Mountain-Sub-Apr
 
 # --- 비활성 (참고용) ---
 # DSA-mar     | DSA-DSA-mar
