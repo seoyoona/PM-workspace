@@ -26,7 +26,7 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 17개 스킬
+## 18개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
@@ -47,6 +47,7 @@
 | SRS 초안 생성 | `/create-srs` | 한국어 SRS/기능명세 초안 (Notion) |
 | Nexus 일별 기록 | `/nexus-daily` | Nexus OS row별 hours/memo 자동 입력 |
 | 새 프로젝트 | `/new-project` | 로컬 파일 + Notion 뷰 자동 생성 |
+| 워크스페이스 세팅 | `/setup-workspace` | Notion DB 5개 + 허브 페이지 + ID 교체 자동 (최초 1회) |
 
 > **모바일:** Telegram Bot은 현재 Notion 연동 비활성 (cigro API 토큰 미발급)
 
@@ -61,9 +62,9 @@ yoona-workspace/
 ├── glossary/{name}.md           # 고객사별 용어집 — KR↔EN 매핑
 ├── templates/                   # 출력 구조 템플릿 — 스킬이 내부적으로 참조
 ├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
-├── scripts/migrate-pm.sh        # PM 온보딩 마이그레이션 스크립트
-├── docs/pm-onboarding.md        # PM 온보딩 가이드
-└── .claude/commands/            # 17개 스킬 파일
+├── scripts/migrate-pm.sh        # PM 마이그레이션 (수동 fallback)
+├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
+└── .claude/commands/            # 18개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드

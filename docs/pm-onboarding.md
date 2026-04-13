@@ -1,6 +1,9 @@
-# PM Workspace 온보딩 가이드
+# PM Workspace 온보딩 가이드 (deprecated)
 
-이 워크스페이스를 fork해서 본인 환경으로 셋업하는 가이드입니다.
+> **이 문서는 보관용입니다. 신규 PM 온보딩은 `/setup-workspace` 스킬을 사용하세요.**
+> 세팅 가이드: https://www.notion.so/cigroio/2b93aae9a89482a18184817b9332bc46
+
+아래 내용은 `/setup-workspace` 도입 전 수동 마이그레이션 방식입니다. fallback으로만 참고하세요.
 
 ---
 
