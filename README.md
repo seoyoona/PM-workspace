@@ -129,6 +129,10 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 - **용어 일관성** — 고객사별 glossary 기반, 동의어 금지
 - **복붙 가능** — 출력물을 그대로 Teams/카톡에 붙여넣기
 - **PM Action ≠ Dev Task** — PM 운영 액션(회신, follow-up)과 개발 태스크 분리
+- **전송 신뢰도** — Teams 전송은 HTTP code 검증 후에만 "전송 완료" 보고. timeout 15s + 실패 시 복사 fallback
+- **중복 방지 (멱등성)** — 같은 주차/날짜/URL/제목 기준 중복 페이지 생성 차단. 덮어쓰기는 반드시 사용자 확인 후에만
+- **보수적 자동화** — `--client` 자동 default는 24h 활동 기준 1개일 때만 + 명시 통보. `/todo` 프로젝트 자동 확정은 Notion select 옵션과 exact match일 때만
+- **확인 프롬프트 표준** — 3~4지 선택지 + "추천: N" 명시 + 한 번에 하나의 확인 포인트만
 
 ## 고도화 운영 방식
 
@@ -159,6 +163,7 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 | **Google Workspace** | 스프레드시트, 드라이브, **캘린더** | MCP (서비스 계정) |
 | **Nexus OS** | 일별 근무시간 기록 | MCP (HTTP) + curl fallback |
 | **Microsoft Teams** | 개발팀 그룹채팅 직접 전송 | Power Automate (HTTP trigger) |
+| **Figma** | 디자인 파일 스펙 확인, 컴포넌트 정보 조회 (선택) | MCP (npx figma-developer-mcp, Personal Access Token) |
 | **Telegram Bot** | 비활성 — cigro API 토큰 미발급으로 Notion 연동 불가 | AWS Lambda (아카이브) |
 
 ## License

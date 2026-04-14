@@ -45,18 +45,66 @@ Nexus 일별 기록    → /nexus-daily
 ## 핵심 구조
 
 - **meeting-note** = source of truth → dev-chat / client-chat은 downstream
-- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지 + 수정 확인 후 Teams 전송. Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
+- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지. **Light는 출력 직후 4지선다** (`1.전송(추천) / 2.수정 / 3.복사만 / 4.취소`). Standard는 기존 수정 확인 유지. Teams 전송은 HTTP code 검증 후에만 완료 보고 (timeout 15s). Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
 - **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더/번호 리스트/느낌표 금지. 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
 - **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" 조회 + Google Calendar 오늘 미팅 조회. "오늘 뭐해야돼"로 수동 실행
-- **todo**: PM 액션 빠르게 추가 → PM Action Hub DB — 제목만 저장 (속성 없음)
-- **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성
+- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" **단일 OR 쿼리로 조회** (속도 개선) + Google Calendar와 병렬 호출. "오늘 뭐해야돼"로 수동 실행
+- **todo**: PM 액션 빠르게 추가 → PM Action Hub DB. **`[브라켓]` 값이 Notion `프로젝트` select 옵션과 exact match일 때만 자동 확정**. 실패 시 숫자 3지선다. 같은 제목+프로젝트+작성일이 이미 있으면 skip (retry loop 대응).
+- **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성. **미리보기 후 단일 3지선다** (`1.생성+Status변경(추천) / 2.생성만 / 3.취소`). 원본 QA URL 기준 중복은 skip + 알림 (덮어쓰기 금지).
 - **srs-translate**: 한국어 SRS/기획서 → 영어 구조화 번역 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 내용 추가 금지, Inferred Requirements 섹션 없음). Ambiguities는 실제 모호함 있을 때만 포함. PM이 링크+명시적 지시 첨부 시에만 추가 내용 반영.
 - **create-srs**: 여러 소스 자료 → 한국어 SRS/기능명세 초안 생성 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 기능 추가 금지). 미리보기 필수
-- **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log(dev-chat/client-chat/sync-note 사용 기록) 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑
+- **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log(dev-chat/client-chat/sync-note 사용 기록) 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑. Nexus API curl은 timeout 30s (hang 방지).
+
+---
+
+## 공통 최적화 규칙 (배치 A/B/C)
+
+모든 스킬에 일관 적용되는 동작 규칙.
+
+### `--client` 보수적 default 제안 (B1)
+
+`--client` 인자를 완전히 누락하면 `.claude/activity-log.jsonl` 최근 24h 기록을 참조:
+- 단일 client → "최근 활동 기준 `--client=Koboom`으로 진행합니다" 명시 후 진행 (사용자가 Ctrl+C로 중단 가능)
+- 2개 이상 → 숫자 선택지 (자동 적용 금지)
+- 0개 → PM에게 `--client` 확인 요청
+
+적용 스킬: `client-chat`, `dev-chat`, `daily-scrum`, `weekly-report`, `issue-ticket`, `qa-request`, `sync-note`, `to-spec`.  
+전문: `templates/client-default.md`
+
+### 중복 페이지 생성 방지 (C1 멱등성 가드)
+
+| 스킬 | Unique key | 정책 |
+|------|-----------|------|
+| `weekly-report` | 클라 + 주차(월~일) | archive + 재생성 (3지선다) |
+| `meeting-note` | 회의명 + 날짜 + 클라 | archive + 재생성 또는 중복 허용 |
+| `srs-translate` | 프로젝트 + 유형 + 언어(KR→EN) | archive + 재생성 또는 v2 생성 |
+| `todo` | 제목 + 프로젝트 + 작성일 | skip + 알림 |
+| `qa-feedback` | 원본 QA URL | skip + 알림 (덮어쓰기 금지) |
+| `nexus-daily` | 날짜 + 태스크 ID | 이미 upsert 구조 (미리보기에 "(덮어씀)" 표시) |
+
+공통 안전장치: archive 실패 시 생성 중단 / 자동 archive 금지 / 2건+ 중복 시 가장 최근 1건만 대상.
+
+### Teams 전송 신뢰도 (U1/U2)
+
+- curl에 `--max-time 15 --connect-timeout 5` 강제 (224~296초 hang 방지)
+- HTTP code 검증 후에만 "✅ 전송 완료 (HTTP $CODE)" 보고
+- 5xx/timeout → 1회 자동 재시도 / 4xx → 재시도 없음
+- 실패 시 `SEND_OK=0` → activity-log 기록 안 함 + "복사해서 수동 전송" fallback 안내
+- 공통 snippet: `templates/teams-post.md`
+
+### 확인 프롬프트 표준 (A6)
+
+- 3~4개 이내 숫자 선택지 (4개는 필수 옵션이 4개일 때만)
+- 반드시 `추천: N` 표시
+- 한 번에 하나의 확인 포인트 (결정 2개가 늘 세트면 조합 옵션으로)
+- 자유서술 확인은 예외 (수정 요청처럼 본질적 free-form인 경우만)
+
+### 컨텍스트 로드 병렬화 (A4)
+
+`clients/{name}/CLAUDE.md` + `glossary/{name}.md` + (선택) Notion fetch는 서로 독립 → 12개 스킬에서 병렬 호출 hint 주석으로 표시.
 
 ---
 
@@ -104,7 +152,9 @@ yoona-workspace/
 ├── telegram-bot/                # Telegram 봇 (AWS Lambda, 선택)
 ├── scripts/migrate-pm.sh        # PM 마이그레이션 (수동 fallback)
 ├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
-└── .claude/commands/            # 스킬 파일 (17개)
+├── templates/teams-post.md      # Teams 전송 공통 snippet (U1/U2)
+├── templates/client-default.md  # --client 보수적 default 규칙 (B1)
+└── .claude/commands/            # 스킬 파일 (18개)
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
@@ -170,6 +220,12 @@ yoona-workspace/
 - 설정: `.env.teams`에 flow URL + 프로젝트별 chat ID
 - 대상 스킬: `/dev-chat`, `/sync-note`
 - 미설정 시 기존처럼 복사 모드로 동작
+
+## Figma MCP (선택)
+
+- 디자인 파일 스펙 확인, 컴포넌트 정보 조회 시 사용
+- 연결: `claude mcp add figma -e FIGMA_API_KEY="토큰" -- npx -y figma-developer-mcp`
+- 토큰 발급: Figma → Settings → Security → Personal access tokens → Generate new token
 
 ## Telegram Bot (비활성)
 
