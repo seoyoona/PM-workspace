@@ -1,7 +1,7 @@
 ---
 description: PM 액션 빠르게 추가 → PM Action Hub DB 저장
 argument-hint: [프로젝트] [할 일]
-allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
+allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__notion-cigro__notion-fetch
 ---
 
 # Quick Todo Add
@@ -46,7 +46,28 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
      - "등록", "업데이트", "정리", "작성" → 운영 체크
    - 나머지 = 제목
 
-2. **Notion 저장** (`mcp__notion-cigro__notion-create-pages` — DB ID: `ff43aae9a89482ea8c57815a65ac9f5b`):
+2. **중복 체크 (C1 멱등성 가드)** — 저장 직전에 반드시 실행:
+   - **Unique key**: 제목(title exact) + 프로젝트 + 작성일(오늘)
+   - PM Action Hub DB(`data_source_url: collection://a183aae9-a894-8379-8708-87cf507ec8e8`)에서 `mcp__notion-cigro__notion-fetch`로 필터 조회:
+     ```json
+     {"and": [
+       {"property": "제목", "title": {"equals": "<title with [ProjectName] prefix>"}},
+       {"property": "프로젝트", "select": {"equals": "<project>"}},
+       {"property": "작성일", "date": {"equals": "<today YYYY-MM-DD>"}}
+     ]}
+     ```
+   - **결과 분기**:
+     - **0건** → Step 3 신규 생성
+     - **1건 이상** → **skip + 알림** (retry loop 대응):
+       ```
+       ⏭️ 같은 항목이 오늘 이미 등록됨: [Koboom] 피드백 업데이트
+         → 기존: [링크]
+         추가하지 않음. 필요하면 수정: /todo [Koboom] 피드백 업데이트 - 추가 (다른 제목)
+       ```
+   - **재시도 루프 대응 원칙**: 동일 세션에서 Bash/MCP timeout으로 재호출되는 경우에도 중복 페이지 생성 방지.
+   - 여러 줄 입력 시 각 줄마다 개별적으로 중복 체크 (한 줄만 중복이어도 나머지는 정상 생성).
+
+3. **Notion 저장** (`mcp__notion-cigro__notion-create-pages` — DB ID: `ff43aae9a89482ea8c57815a65ac9f5b`) — Step 2에서 신규로 판단된 항목만:
    - 제목: **반드시 `[ProjectName] short description` 형태**. 프로젝트명은 대괄호, 설명은 짧고 명확하게.
    - parent: `{"type": "data_source_id", "data_source_id": "a183aae9-a894-8379-8708-87cf507ec8e8"}`
    - properties:
@@ -56,10 +77,14 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
      - `액션 유형` (select): 감지된 유형 / 없으면 생략
      - `출처` (select): "manual"
 
-3. **터미널 출력**:
+4. **터미널 출력**:
    ```
    ✅ 추가 완료: [프로젝트] 할 일 내용
    상태: 미착수
+   ```
+   중복 skip 있으면 별도 블록으로 표시:
+   ```
+   ⏭️ Skip: [Koboom] 피드백 업데이트 (오늘 이미 등록됨 — [링크])
    ```
 
 ## Examples
@@ -91,7 +116,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
 
 - 프로젝트명이 없거나 Notion select 옵션과 exact match가 아니면 **절대 자동 확정 금지** — 숫자 선택지로 PM에게 확인
 - 자동 확정된 경우에만 `[Koboom] 으로 인식했습니다` 명시 통보
-- 여러 줄 입력 시 각 줄을 별도 항목으로 추가
-- 이미 동일 제목 항목이 있으면 중복 알림 (추가는 진행)
+- 여러 줄 입력 시 각 줄을 별도 항목으로 추가 (각각 중복 체크)
+- **중복 체크 (C1)**: 같은 제목+프로젝트+작성일이 이미 있으면 skip. 덮어쓰기/업데이트 금지. 다른 항목으로 추가하려면 제목을 바꿔서 재실행.
 - 한국어 입력 → 한국어로 저장
 - 최대한 빠르게 — 불필요한 확인 질문 없이 바로 추가

@@ -1,7 +1,7 @@
 ---
 description: SRS/기획서를 한국어에서 영어로 번역 및 구조화
 argument-hint: --client <name> [Notion 링크 또는 텍스트]
-allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__notion-cigro__notion-fetch
+allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__notion-cigro__notion-fetch, mcp__notion-cigro__notion-update-page
 ---
 
 # SRS Translation (KR → EN)
@@ -32,10 +32,37 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
    - 용어집 기반으로 일관된 용어 사용
    - 충실한 번역 — 요구사항 추가/제거/재해석 금지
    - 소스 구조를 그대로 반영 — Claude가 구조를 재구성하거나 섹션을 임의로 추가하지 않음
-6. **Notion에 저장**: `mcp__notion-cigro__notion-create-pages`로 프로젝트 문서 DB (`d7f3aae9a894831a96b2013549196181`)에 페이지 생성
+6. **중복 체크 (C1 멱등성 가드)** — 저장 직전에 반드시 실행:
+   - **Unique key**: 프로젝트 + 유형="SRS 번역" + 언어="KR→EN"
+   - 프로젝트 문서 DB(`data_source_url: collection://bd33aae9-a894-82a9-b8e2-87387e7fbf47`)에서 `mcp__notion-cigro__notion-fetch`로 필터 조회:
+     ```json
+     {"and": [
+       {"property": "프로젝트", "select": {"equals": "<project>"}},
+       {"property": "유형", "select": {"equals": "SRS 번역"}},
+       {"property": "언어", "select": {"equals": "KR→EN"}}
+     ]}
+     ```
+   - **결과 분기**:
+     - **0건** → Step 7 새로 생성
+     - **1건 이상** → 사용자 확인 (Confirmation Format 준수):
+       ```
+       ⚠️ 같은 프로젝트의 EN 번역본이 이미 있습니다:
+       - [제목] (작성일: YYYY-MM-DD) — [링크]
+
+       1. 업데이트 (기존 archive + 새로 생성) (추천 — 번역 갱신)
+       2. 새 버전으로 생성 (기존 유지, v2 등 버전 명시)
+       3. 취소
+       추천: 1
+       ```
+       - 1 → 기존 페이지 archive → 새로 생성. 제목은 동일.
+       - 2 → 제목에 " (v2)", " (rev-YYYYMMDD)" 등 버전 접미사 추가하여 생성. 기존 유지.
+       - 3 → 중단
+   - **archive 실패 시 생성 중단**.
+
+7. **Notion에 저장**: `mcp__notion-cigro__notion-create-pages`로 프로젝트 문서 DB (`d7f3aae9a894831a96b2013549196181`)에 페이지 생성
    - 유형: SRS 번역
    - 단계: SRS
    - 상태: 진행 중
    - 언어: KR→EN
    - 클라이언트/프로젝트 속성 설정
-7. **New Terms 확인**: 처음 번역하는 클라이언트라면 도메인 신규 용어 목록을 출력하고 glossary 추가 여부를 사용자에게 확인
+8. **New Terms 확인**: 처음 번역하는 클라이언트라면 도메인 신규 용어 목록을 출력하고 glossary 추가 여부를 사용자에게 확인

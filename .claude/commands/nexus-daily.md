@@ -326,6 +326,7 @@ data = json.loads(r['result']['content'][0]['text'])
 # Rules
 
 - 새 태스크 생성 절대 금지 — 기존 row의 hours/memo 업데이트만
+- **C1 멱등성 정책**: Unique key = `날짜 + 태스크 ID`. 이미 upsert(`task_daily_entry_upsert`) 구조이므로 **같은 날짜/태스크 재호출은 자동으로 덮어쓰기**. 미리보기(Step A9)에서 기존 기록은 "(덮어씀)" 표시되며, 사용자가 저장 직전에 확인. 신규 row 생성 경로 없음 — 구조상 중복 페이지 발생 불가.
 - 한국어 출력
 - 1~3순위 매칭만 자동 확정. 4순위(substring)는 반드시 사용자 확인
 - 복수 후보는 어떤 단계에서든 절대 자동 선택 안 함
