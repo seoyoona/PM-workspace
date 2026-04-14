@@ -50,12 +50,21 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__google-workspace__*, mcp__notion-cig
 
 ## Instructions
 
-1. **PM Action Hub 조회** (MCP):
+> **병렬 호출 가능** — Step 1(Notion fetch)과 Step 2(Google Calendar)는 서로 독립적이므로 동일 턴에 병렬 호출할 것.
+
+1. **PM Action Hub 조회** (MCP, 단일 OR 쿼리):
    - `mcp__notion-cigro__notion-fetch` 사용
    - data_source_id: `a183aae9-a894-8379-8708-87cf507ec8e8`
-   - 상태 = "오늘" 필터로 query, 상태 = "진행 중" 필터로 query (각각 별도 호출)
-   - filter: `{"property": "상태", "select": {"equals": "오늘"}}`
+   - **단일 호출**로 "오늘" + "진행 중" 동시 조회 (이전엔 2번 호출했으나 OR 필터로 통합):
+     ```json
+     {"or": [
+       {"property": "상태", "select": {"equals": "오늘"}},
+       {"property": "상태", "select": {"equals": "진행 중"}}
+     ]}
+     ```
+   - 응답 결과를 "상태" 값 기준 클라이언트측 분류 (오늘 / 진행 중)
    - **이 2개 상태만 조회. 미착수/완료는 무시**
+   - ⚠️ 반드시 `select` 타입. `status`로 쓰면 0건 반환됨
 
 2. **Google Calendar 조회** (primary 캘린더만):
    - **방법 1 (MCP):** `mcp__google-workspace__getCalendarEvents` 호출

@@ -73,10 +73,20 @@ allowed-tools: Read, Glob, Grep, Bash
 | 2 | 결제 오류 | Payment error on checkout | 🔥Highest🔥 | Logic Bug |
 ```
 
-사용자가 확인 후:
-- "생성해줘" / "진행" → Step 4로
-- 수정 요청 → 반영 후 다시 미리보기
-- "취소" → 중단
+미리보기 직후 **단일 확인 프롬프트** (Confirmation Format 준수: 3~4지선다, 추천 표시, 생성/Status 결정을 한 번에):
+
+```
+1. 생성 + 고객 QA DB Status "진행중"으로 변경 (추천)
+2. 생성만 (Status 유지)
+3. 취소
+추천: 1
+```
+
+- 1 → Step 4 티켓 생성 → Step 5 Status 업데이트 (별도 확인 없이 일괄 실행)
+- 2 → Step 4 티켓 생성만 → Step 5 스킵
+- 3 → 중단
+
+수정 요청이 들어오면 → 반영 후 다시 미리보기 → 프롬프트 재표시.
 
 ### Step 4: 티켓 생성
 각 항목을 내부 Tasks DB에 생성:
@@ -158,13 +168,10 @@ Context: Intermittent. Reproduction details requested from client.
 - **Logic Bug**: 기능 오작동, 데이터 불일치, 에러
 - **UX / Non-functional Optimization**: 성능, 사용성 개선
 
-### Step 5: 고객 QA DB 상태 업데이트 (선택)
-미리보기에서 사용자에게 확인:
-```
-고객 QA DB의 처리된 항목 Status를 "진행중"으로 변경할까요?
-1. 변경 (추천)
-2. 유지
-```
+### Step 5: 고객 QA DB 상태 업데이트
+Step 3 미리보기에서 **이미 결정됨** (1=변경 포함 / 2=변경 제외). 여기서 추가 확인 없이 실행.
+- 1 선택 → 처리된 항목 Status를 "진행중"으로 변경
+- 2 선택 → 스킵
 
 ### Step 6: 결과 보고
 ```

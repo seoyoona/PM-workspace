@@ -62,7 +62,8 @@ Let me know if anything needs clarification.
 ## Instructions
 
 1. **인자 파싱**: 클라이언트명과 sync 내용 추출
-2. **컨텍스트 로드**:
+   - `--client` 누락 시 `templates/client-default.md` 규칙 적용 (24h 내 activity-log의 client가 1개면 보수적 default 제안, 2+개면 숫자 선택지, 0개면 PM 확인)
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `clients/{client-name}/CLAUDE.md` — 프로젝트명, 도메인
    - `glossary/{client-name}.md` — 용어 일관성
 3. **무게 감지**: Light / Standard 자동 판단
@@ -80,21 +81,32 @@ Let me know if anything needs clarification.
      3. 취소
      추천: 1
      ```
-   - 1 선택 시: 메시지를 JSON 파일로 저장 후 curl POST
+   - 1 선택 시: 공통 snippet `templates/teams-post.md` 패턴 사용.
      ```bash
      cat > /tmp/teams_msg.json << 'EOF'
      {"chat_id":"<chat_id>","message":"<메시지 내용>"}
      EOF
-     curl -s -o /tmp/teams_resp.txt -w "%{http_code}" \
+     HTTP_CODE=$(curl -sS --connect-timeout 5 --max-time 15 \
+       -o /tmp/teams_resp.txt -w "%{http_code}" \
        -X POST -H 'Content-Type: application/json' \
-       -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>'
+       -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>')
+     CURL_EXIT=$?
      ```
-   - 202면 "전송 완료", 그 외면 에러 출력 + 메시지 복사 안내
+   - 성공 판정 (엄격):
+     - `CURL_EXIT==0` AND `200 <= HTTP_CODE < 300` → `SEND_OK=1`, "✅ 전송 완료 (HTTP $HTTP_CODE)"
+     - `CURL_EXIT==28` → "⚠️ 전송 시간 초과 (15s)" + `SEND_OK=0`
+     - 5xx 또는 timeout → 1회만 재시도. 재시도 후에도 실패면 포기
+     - 그 외 실패 → "⚠️ 전송 실패 (HTTP $HTTP_CODE)" + 응답 본문 500자 출력 + `SEND_OK=0`
+   - **`SEND_OK=0`일 때 절대 "전송 완료" 출력 금지**. 메시지 본문 재출력 + "복사해서 수동 전송" 안내.
+   - 4xx는 재시도하지 않음.
    - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유
-7. **활동 로그**: 전송 또는 복사 성공 시에만 기록 (취소/에러 시 미기록)
+7. **활동 로그**: **반드시 `SEND_OK=1`일 때만** 기록 (취소/에러/timeout 시 미기록)
    ```bash
-   echo '{"date":"'$(date +%Y-%m-%d)'","skill":"sync-note","client":"{클라이언트명}"}' >> .claude/activity-log.jsonl
+   if [ "$SEND_OK" -eq 1 ]; then
+     echo '{"date":"'$(date +%Y-%m-%d)'","skill":"sync-note","client":"{클라이언트명}"}' >> .claude/activity-log.jsonl
+   fi
    ```
+   - 복사 fallback 선택 시에도 사용자 확정 후 1회 기록.
 
 ## Rules
 

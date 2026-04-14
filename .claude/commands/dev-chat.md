@@ -78,7 +78,8 @@ Open question:
 ## Instructions
 
 1. **인자 파싱**: 클라이언트명과 요청 내용 추출
-2. **컨텍스트 로드**:
+   - `--client` 누락 시 `templates/client-default.md` 규칙 적용 (24h 내 activity-log의 client가 1개면 보수적 default 제안, 2+개면 숫자 선택지, 0개면 PM 확인)
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `clients/{client-name}/CLAUDE.md` — 프로젝트 도메인, 기술 스택 이해
    - `glossary/{client-name}.md` — 용어 일관성
 3. **PM 판단**:
@@ -98,32 +99,64 @@ Open question:
    - glossary에 있는 용어는 glossary의 영어 표기 + 괄호 한국어
    - 일반적인 단어 (예: "user", "admin")는 병기 불필요
 7. **출력**: 터미널에 메시지 출력
-8. **수정 확인**: 메시지 출력 후 (메시지 본문과 구분하여) 사용자에게 확인.
-   메시지 본문 아래에 구분선(---) 후:
+8. **출력 직후 확인 프롬프트** — 모드에 따라 분기 (Confirmation Format 준수: 3~4지선다, 추천 표시, 단일 확인 포인트):
+
+   **Light 모드** — 수정 가능성 낮음, 즉시 전송 흐름 통합 (4지선다):
    ```
+   ---
+   1. 전송 (추천)
+   2. 수정
+   3. 복사만
+   4. 취소
+   추천: 1
+   ```
+   - 1 → 곧바로 Step 9 전송. chat_id 없으면 3(복사만)으로 자동 fallback.
+   - 2 → 수정 요청 받은 후 반영 → 메시지 재출력 → 다시 이 프롬프트
+   - 3 → 전송 skip, 복사 안내만 표시 (사용자 확정 후 activity-log 1회 기록)
+   - 4 → 중단 (activity-log 미기록)
+
+   **Standard 모드** — 구조 복잡, 수정 확률 높음 (현행 유지):
+   ```
+   ---
    수정 사항 있으면 말씀해주세요.
    ```
    - 수정 요청 시 → 반영 후 다시 출력 → 재확인
-   - 수정 없음 / 전송 요청 시 → Teams 전송 진행
+   - 수정 없음/전송 요청 시 → Step 9 전송 진행
 9. **Teams 전송**:
    - `.env.teams` 파일에서 `TEAMS_FLOW_URL`과 `TEAMS_CHAT_{CLIENT}_DEV` 로드
    - 클라이언트 디렉토리명 → 대문자 변환 → `TEAMS_CHAT_{CLIENT}_DEV` 키 조합
    - chat_id가 없으면 → 복사 fallback (전송 옵션 표시하지 않음)
-   - chat_id가 있으면: 메시지를 JSON 파일로 저장 후 curl POST
+   - chat_id가 있으면: 공통 snippet `templates/teams-post.md` 패턴 사용.
      ```bash
      cat > /tmp/teams_msg.json << 'EOF'
-     {"chat_id":"<chat_id>","message":"<메시지 내용>"}
+     {"chat_id":"<chat_id>","message":"<메시지 HTML>"}
      EOF
-     curl -s -o /tmp/teams_resp.txt -w "%{http_code}" \
+     HTTP_CODE=$(curl -sS --connect-timeout 5 --max-time 15 \
+       -o /tmp/teams_resp.txt -w "%{http_code}" \
        -X POST -H 'Content-Type: application/json' \
-       -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>'
+       -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>')
+     CURL_EXIT=$?
      ```
-   - 202면 "전송 완료", 그 외면 에러 출력 + 메시지 복사 안내
-   - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유
-10. **활동 로그**: 전송 또는 복사 성공 시에만 기록 (취소/에러 시 미기록)
+   - 성공 판정 (엄격):
+     - `CURL_EXIT==0` AND `200 <= HTTP_CODE < 300` → `SEND_OK=1`, "✅ 전송 완료 (HTTP $HTTP_CODE)"
+     - `CURL_EXIT==28` → "⚠️ 전송 시간 초과 (15s)" + `SEND_OK=0`
+     - 5xx 또는 timeout → 1회만 재시도 (동일 명령). 재시도 후에도 실패면 포기
+     - 그 외 실패 → "⚠️ 전송 실패 (HTTP $HTTP_CODE)" + 응답 본문 500자 출력 + `SEND_OK=0`
+   - **`SEND_OK=0`일 때 절대 "전송 완료" 출력 금지**. 메시지 본문을 다시 출력하며 "복사해서 수동 전송" 안내.
+   - 4xx 에러는 재시도하지 않음 (Flow 설정/chat_id 오류 가능성 → 사용자 확인 필요).
+   - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유.
+   - **메시지 HTML 포맷 규칙**: Teams에서 렌더링되려면 반드시 HTML 사용
+     - 줄바꿈: `\n` 대신 `<br>`
+     - 글머리기호: `<ul><li>...</li></ul>`
+     - 하이퍼링크: `<a href="URL">텍스트</a>`
+     - 굵게: `<b>...</b>`
+10. **활동 로그**: **반드시 `SEND_OK=1`일 때만** 기록 (취소/에러/timeout 시 미기록 — nexus-daily 오인 방지)
     ```bash
-    echo '{"date":"'$(date +%Y-%m-%d)'","skill":"dev-chat","client":"{클라이언트명}"}' >> .claude/activity-log.jsonl
+    if [ "$SEND_OK" -eq 1 ]; then
+      echo '{"date":"'$(date +%Y-%m-%d)'","skill":"dev-chat","client":"{클라이언트명}"}' >> .claude/activity-log.jsonl
+    fi
     ```
+    - 복사 fallback(chat_id 없음) 선택 시에도 활동으로 1회 기록 (사용자가 "복사만" 확정한 경우만).
 
 ## Rules
 

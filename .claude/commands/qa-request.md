@@ -92,7 +92,8 @@ allowed-tools: Read, Glob, Grep
 ## Instructions
 
 1. **인자 파싱**: 클라이언트명과 전달물 정보 추출
-2. **컨텍스트 로드**:
+   - `--client` 누락 시 `templates/client-default.md` 규칙 적용 (24h 내 activity-log의 client가 1개면 보수적 default 제안, 2+개면 숫자 선택지, 0개면 PM 확인)
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `clients/{client-name}/CLAUDE.md` — 클라이언트 톤, 기술 수준
    - `glossary/{client-name}.md` — 용어 일관성
 3. **전달 유형 감지**: 입력에서 전달물 종류 판단

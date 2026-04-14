@@ -36,10 +36,11 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
    - `--client`: 고객사명 (회사명). 필수 — 미입력 시 질문
    - `--project`: 프로젝트/서비스명. 선택 — 미입력 시 소스에서 추출 시도, 불명확하면 질문
    - 소스 자료: 텍스트 또는 Notion 링크
-2. `glossary/{client-name}.md` 용어집 로드 (있으면)
-3. `clients/{client-name}/CLAUDE.md` 클라이언트 컨텍스트 로드 (있으면)
-4. Notion 링크가 있으면 MCP fetch로 내용 읽기
-5. 접근 실패 시 사용자에게 알리고 중단
+2. **컨텍스트 + 소스 로드** (아래 3개는 병렬 호출 가능 — 서로 독립):
+   - `glossary/{client-name}.md` 용어집 (있으면)
+   - `clients/{client-name}/CLAUDE.md` 클라이언트 컨텍스트 (있으면)
+   - Notion 링크가 있으면 MCP fetch로 내용 읽기
+3. 접근 실패 시 사용자에게 알리고 중단
 
 ### Step 2: 요구사항 추출 + 분류
 

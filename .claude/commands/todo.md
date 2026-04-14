@@ -21,8 +21,26 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
 ## Instructions
 
 1. **입력 파싱**:
-   - 프로젝트명 감지: [대괄호] 또는 --client 옵션 또는 알려진 프로젝트명
-   - 액션 유형 감지:
+   - **프로젝트명 감지 (보수적 자동 확정 — B2)**:
+     1. 입력에서 `[대괄호]` 추출 시도
+     2. 대괄호가 있으면 그 값을 Notion `프로젝트` select 옵션과 **exact match**로 비교 (대소문자·공백 완전 일치)
+        - Exact match 성공 → **자동 확정** + 사용자에게 1줄 명시:
+          > `[Koboom] 으로 인식했습니다`
+        - Exact match 실패 → 숫자 선택지로 이동 (아래)
+     3. 대괄호가 없으면 → 숫자 선택지로 이동 (아래)
+     4. **substring / 유사도 / case-insensitive 매칭 자동 확정 금지.** 후보가 1개여도 exact가 아니면 사용자 확인 필수
+   - **매칭 실패 시 숫자 선택지**:
+     ```
+     프로젝트를 지정해주세요:
+     1. 최근 사용 프로젝트 (activity-log 또는 최근 PM Action Hub 기록 기준)
+     2. 전체 목록 보기
+     3. 취소
+     추천: 1
+     ```
+     - 1 선택 → 최근 프로젝트 3~5개 숫자 선택지
+     - 2 선택 → Notion select 옵션 전체 목록 숫자 선택지
+     - 3 선택 → 중단
+   - **액션 유형 감지**:
      - "회신", "전달", "공유", "카톡", "메시지" → 고객 커뮤니케이션
      - "sync", "확인", "체크", "follow-up" → 내부 follow-up
      - "등록", "업데이트", "정리", "작성" → 운영 체크
@@ -71,7 +89,8 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages
 
 ## Rules
 
-- 프로젝트명이 없으면 PM에게 확인
+- 프로젝트명이 없거나 Notion select 옵션과 exact match가 아니면 **절대 자동 확정 금지** — 숫자 선택지로 PM에게 확인
+- 자동 확정된 경우에만 `[Koboom] 으로 인식했습니다` 명시 통보
 - 여러 줄 입력 시 각 줄을 별도 항목으로 추가
 - 이미 동일 제목 항목이 있으면 중복 알림 (추가는 진행)
 - 한국어 입력 → 한국어로 저장

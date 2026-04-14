@@ -23,9 +23,10 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
 
 1. **인자 파싱**: 사용자 입력에서 소스(Notion 링크 또는 텍스트)와 클라이언트명을 추출
    - 추가 지시(링크 + 업데이트 요청)가 있는지 확인
-2. **용어집 로드**: `glossary/{client-name}.md` 파일이 있으면 읽어서 번역 시 참조
-3. **클라이언트 컨텍스트 로드**: `clients/{client-name}/CLAUDE.md` 파일이 있으면 읽어서 도메인 이해에 활용
-4. **소스 가져오기**: Notion 링크면 `mcp__notion-cigro__notion-fetch`으로 블록 읽기, 텍스트면 그대로 사용
+2. **컨텍스트 로드 + 소스 가져오기** (아래 3개는 병렬 호출 가능 — 서로 독립):
+   - **용어집**: `glossary/{client-name}.md` 파일이 있으면 읽어서 번역 시 참조
+   - **클라이언트 컨텍스트**: `clients/{client-name}/CLAUDE.md` 파일이 있으면 읽어서 도메인 이해에 활용
+   - **소스**: Notion 링크면 `mcp__notion-cigro__notion-fetch`으로 블록 읽기, 텍스트면 그대로 사용
 5. **번역 실행**: `templates/srs-translation.md`의 프로세스와 출력 포맷을 따름
    - 전체 SRS를 먼저 읽고 구조와 범위 파악
    - 용어집 기반으로 일관된 용어 사용

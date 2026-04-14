@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
 ## Instructions
 
 1. **인자 파싱**: 클라이언트명과 SRS 번역본 링크 추출
-2. **컨텍스트 로드**:
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `glossary/{client-name}.md` 용어집
    - `clients/{client-name}/CLAUDE.md` 클라이언트 컨텍스트
 3. **SRS 번역본 가져오기**: Notion 링크면 `mcp__notion-cigro__notion-fetch`으로 블록 읽기, 없으면 사용자에게 요청

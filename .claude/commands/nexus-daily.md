@@ -100,7 +100,8 @@ grep "$(date +%Y-%m-%d)" .claude/activity-log.jsonl 2>/dev/null | \
   3. Connectory - PM
   ...
 
-번호로 선택 (쉼표로 여러 개) / --manual로 직접 입력:
+번호로 선택 (쉼표로 여러 개) / --manual로 직접 입력 / c=취소
+추천: 활성 태스크에서 오늘 작업한 항목 번호로 선택
 ```
 사용자가 번호를 선택하면 해당 프로젝트들로 진행. 시간은 균등 분배, 메모는 "프로젝트 관리".
 
@@ -117,7 +118,8 @@ grep "$(date +%Y-%m-%d)" .claude/activity-log.jsonl 2>/dev/null | \
   3. Muchang - PM
   ...
 
-추가할 번호 (쉼표로 여러 개 / 엔터=DSA만 진행):
+추가할 번호 (쉼표로 여러 개 / 엔터=DSA만 진행)
+추천: 엔터 (DSA만 진행)
 ```
 추가된 프로젝트는 활동 1건으로 취급 (수동 추가이므로).
 
@@ -125,15 +127,18 @@ grep "$(date +%Y-%m-%d)" .claude/activity-log.jsonl 2>/dev/null | \
 바로 Step A4로 진행 (충분한 데이터).
 
 ## Step A4: Nexus 태스크 row 조회
-Bash + curl로 tasks_list 호출:
+Bash + curl로 tasks_list 호출 (timeout 필수):
 ```bash
-curl -s "https://nexus-os-iota.vercel.app/api/mcp" \
+curl -sS --connect-timeout 5 --max-time 30 \
+  "https://nexus-os-iota.vercel.app/api/mcp" \
   -H "Authorization: Bearer nxs_3d3173c4a8a2b14510a9ae73c6260adc" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"tasks_list","arguments":{"workforceId":"q57f6mhcy8zg5fgzqq30t36azd83cvsr","overlapsDate":TODAY_TIMESTAMP}},"id":1}'
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"tasks_list","arguments":{"workforceId":"q57f6mhcy8zg5fgzqq30t36azd83cvsr","overlapsDate":TODAY_TIMESTAMP}},"id":1}' \
+  > /tmp/nexus_tasks.json
+NEXUS_EXIT=$?
 ```
-응답을 파일(`/tmp/nexus_tasks.json`)에 저장 후 python3로 파싱.
+`NEXUS_EXIT != 0`이면 에러 표시 후 중단 (timeout=28, 네트워크 오류=6/7). 응답은 `/tmp/nexus_tasks.json`을 python3로 파싱.
 
 ## Step A5: 계층형 매칭
 
@@ -243,15 +248,17 @@ y 선택 시 → "alias에 등록할까요? (y/n)" 제안 → y면 `.claude/nexu
 수정 후 미리보기 다시 출력.
 
 ## Step A10: row별 저장
-확인 후 매칭된 각 row에 대해 task_daily_entry_upsert (curl):
+확인 후 매칭된 각 row에 대해 task_daily_entry_upsert (curl, timeout 필수):
 ```bash
-curl -s "https://nexus-os-iota.vercel.app/api/mcp" \
+curl -sS --connect-timeout 5 --max-time 30 \
+  "https://nexus-os-iota.vercel.app/api/mcp" \
   -H "Authorization: Bearer nxs_3d3173c4a8a2b14510a9ae73c6260adc" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"task_daily_entry_upsert","arguments":{"taskId":"TASK_ID","date":TODAY_TIMESTAMP,"hours":HOURS,"memo":"MEMO"}},"id":N}'
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"task_daily_entry_upsert","arguments":{"taskId":"TASK_ID","date":TODAY_TIMESTAMP,"hours":HOURS,"memo":"MEMO"}},"id":N}' \
+  > /tmp/nexus_upsert_$N.json
 ```
-각 row별 독립 저장. 응답을 파일에 저장 후 파싱.
+각 row별 독립 저장. 응답 파일을 python3로 파싱하여 성공 여부 확인. exit code ≠ 0이면 해당 row 실패로 표시하고 다음 row로 진행.
 
 ## Step A11: 저장 검증
 각 row별 task_daily_entry_get으로 저장 확인.
@@ -292,14 +299,18 @@ Step A8~A12와 동일.
 
 # Nexus API curl 패턴
 
-모든 Nexus API 호출은 아래 패턴 사용. 응답은 반드시 파일에 저장 후 python3로 파싱 (bash 변수 대입 시 제어문자 깨짐 방지).
+모든 Nexus API 호출은 아래 패턴 사용. 응답은 반드시 파일에 저장 후 python3로 파싱 (bash 변수 대입 시 제어문자 깨짐 방지). **timeout 필수** — Nexus 서버 지연 시 무한 대기 방지.
 
 ```bash
-curl -s "https://nexus-os-iota.vercel.app/api/mcp" \
+curl -sS --connect-timeout 5 --max-time 30 \
+  "https://nexus-os-iota.vercel.app/api/mcp" \
   -H "Authorization: Bearer nxs_3d3173c4a8a2b14510a9ae73c6260adc" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"TOOL","arguments":{ARGS}},"id":N}' > /tmp/nexus_result.json
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"TOOL","arguments":{ARGS}},"id":N}' \
+  > /tmp/nexus_result.json
+EXIT=$?
+# EXIT == 28 → timeout / EXIT == 6,7 → DNS/연결 실패 / EXIT != 0 → 실패 처리 후 재시도 또는 중단
 ```
 
 파싱:

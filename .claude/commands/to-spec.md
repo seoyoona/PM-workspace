@@ -15,7 +15,8 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
 ## Instructions
 
 1. **인자 파싱**: 클라이언트 요청 내용(텍스트/Notion 링크)과 클라이언트명 추출
-2. **컨텍스트 로드**:
+   - `--client` 누락 시 `templates/client-default.md` 규칙 적용 (24h 내 activity-log의 client가 1개면 보수적 default 제안, 2+개면 숫자 선택지, 0개면 PM 확인)
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `glossary/{client-name}.md` 용어집
    - `clients/{client-name}/CLAUDE.md` 클라이언트 컨텍스트 (도메인 이해용)
 3. **소스 가져오기**: Notion 링크면 `mcp__notion-cigro__notion-fetch`으로 블록 읽기, 텍스트면 그대로 사용

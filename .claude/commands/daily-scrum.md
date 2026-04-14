@@ -22,7 +22,8 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
 ## Instructions
 
 1. **인자 파싱**: 클라이언트명과 scrum 내용 추출
-2. **컨텍스트 로드**:
+   - `--client` 누락 시 `templates/client-default.md` 규칙 적용 (24h 내 activity-log의 client가 1개면 보수적 default 제안, 2+개면 숫자 선택지, 0개면 PM 확인)
+2. **컨텍스트 로드** (아래 항목은 병렬 호출 가능 — 서로 독립):
    - `clients/{client-name}/CLAUDE.md` — 프로젝트명 확인
    - `glossary/{client-name}.md` — 용어 일관성
 3. **내용 분류**: 입력을 아래 섹션으로 자동 분류
