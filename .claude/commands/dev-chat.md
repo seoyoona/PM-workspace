@@ -63,17 +63,23 @@ Open question:
 - Closing 문구 금지 — "Please review..." / "Let me know..." 류 사용하지 않음. 마지막 섹션에서 끝냄.
 
 ## Meeting-note Input Detection
-입력에 meeting-note 구조 (미팅 정보/핵심 요약/이번 라운드 반영사항 등)가 포함되면 아래 추출 규칙 적용:
+입력에 `## Action Items` 섹션(meeting-note 구조)이 있으면 아래 쿼리 기반 매핑 적용:
 
-| meeting-note 섹션 | → dev-chat 섹션 | 추출 규칙 |
+| 쿼리 | → dev-chat 섹션 | 추출 규칙 |
 |---|---|---|
-| 핵심 요약 | Critical context | 블로커/고장 관련만 1-2줄 발췌. 방향성/유지보수 구분 등 PM 판단은 제외. |
-| 이번 라운드 (🔴) | Critical context | 상황+이유를 Critical context로. 구현 액션은 This round에. |
-| 이번 라운드 (일반) | This round | dev 구현 항목만. `PM:` `Client:` prefix 항목 제외. |
-| 후순위/유지보수 | Maintenance later | dev 항목만. |
-| 고객/PM 확인 필요 | (제외) | dev 대상 아님. 단 dev가 답할 질문이 있으면 Open question으로. |
+| Action Items 🔴 WHERE owner IN (Dev, Dev+*) | Critical context | 각 행의 Action + Context를 합쳐 "상황 + 왜 긴급한지" 2~3줄 bullet. 표 복제 금지. |
+| Action Items 🟡 WHERE owner IN (Dev, Dev+*) + 결정/합의 사항(dev 대상) | This round | 3~5 bullet. due 있으면 inline `— by Apr 23`. |
+| 논의 메모 / 진행 상태 WHERE dev 대상 | Open question (기본 생략) | 개발팀이 "아직 결정 아님"을 알아야 할 경우만 1~2줄. |
+| 후순위/유지보수 WHERE owner=Dev | Maintenance later | 해당 시만. |
+| Action Items WHERE owner=Client OR owner=PM | (제외) | dev 대상 아님. |
+| 스코프 경계, 배경/신뢰 관리 컨텍스트 | (제외) | — |
 
-**제외 대상:** PM 내부 액션, Client 액션, 핵심 요약의 전략/방향성 판단, 고객 불만 관련
+**톤 규칙 (중요):**
+- 쿼리 결과 표를 그대로 붙여넣지 않는다. 각 행을 자연스러운 영어 bullet 서술로 풀어쓴다.
+- Critical context는 2~3줄 이내, This round는 3~5 bullet 각 1줄.
+- "Change X to Y" 직접 서술. "This likely means..." 추측 금지.
+
+**공통 제외 대상:** PM 내부 액션, Client 액션, 핵심 요약의 전략/방향성 판단, 고객 불만 관련
 
 ## Instructions
 

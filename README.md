@@ -30,7 +30,7 @@
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
-| 미팅 끝남 | `/meeting-note` | Notion 미팅노트 + Teams(EN) + 카톡(KR) |
+| 미팅 끝남 | `/meeting-note` | Notion 미팅노트 (Action Items 테이블 🔴/🟡/🔵 + 결정/합의·논의 메모·스코프 경계 분리) + Teams(EN) + 카톡(KR) |
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 번역만 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
@@ -97,9 +97,9 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 ### 스킬 간 관계
 
 ```
-/meeting-note = source of truth
-  → /dev-chat (개발팀 전달)은 여기서 추출
-  → /client-chat (고객 전달)은 여기서 추출
+/meeting-note = source of truth (Action Items 테이블 + 결정/합의·논의 메모·스코프 경계 분리)
+  → /dev-chat (개발팀 전달)은 priority/owner 쿼리로 추출 (표 복제 X, 서술 bullet)
+  → /client-chat (고객 전달)은 owner=Client 쿼리로 추출 (합니다체 서술문)
 
 /create-srs = SRS 초안 생성
   → 여러 소스 → 한국어 SRS/기능명세 초안
