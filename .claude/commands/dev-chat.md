@@ -67,19 +67,19 @@ Open question:
 
 | 쿼리 | → dev-chat 섹션 | 추출 규칙 |
 |---|---|---|
-| Action Items 🔴 WHERE owner IN (Dev, Dev+*) | Critical context | 각 행의 Action + Context를 합쳐 "상황 + 왜 긴급한지" 2~3줄 bullet. 표 복제 금지. |
-| Action Items 🟡 WHERE owner IN (Dev, Dev+*) + 결정/합의 사항(dev 대상) | This round | 3~5 bullet. due 있으면 inline `— by Apr 23`. |
-| 논의 메모 / 진행 상태 WHERE dev 대상 | Open question (기본 생략) | 개발팀이 "아직 결정 아님"을 알아야 할 경우만 1~2줄. |
-| 후순위/유지보수 WHERE owner=Dev | Maintenance later | 해당 시만. |
-| Action Items WHERE owner=Client OR owner=PM | (제외) | dev 대상 아님. |
-| 스코프 경계, 배경/신뢰 관리 컨텍스트 | (제외) | — |
+| 바로 진행할 일 WHERE owner IN (Dev, Dev+*) + 긴급 | Critical context | "상황 + 왜 긴급한지" 2~3줄 bullet. |
+| 바로 진행할 일 WHERE owner IN (Dev, Dev+*) + 비긴급 + 이번 미팅에서 확정된 것(dev 대상) | This round | 3~5 bullet. due 있으면 inline `— by Apr 23`. |
+| 메모해둘 이슈 WHERE dev 대상 | Open question (기본 생략) | "아직 결정 아님"을 알아야 할 경우만 1~2줄. |
+| 이번 라운드 범위 밖 WHERE owner=Dev | Maintenance later | 해당 시만. |
+| 확인 후 회신할 일 WHERE owner=Client OR owner=PM | (제외) | dev 대상 아님. |
+| PM 참고 배경 | (제외) | — |
 
 **톤 규칙 (중요):**
-- 쿼리 결과 표를 그대로 붙여넣지 않는다. 각 행을 자연스러운 영어 bullet 서술로 풀어쓴다.
+- 각 항목을 자연스러운 영어 bullet 서술로 풀어쓴다.
 - Critical context는 2~3줄 이내, This round는 3~5 bullet 각 1줄.
 - "Change X to Y" 직접 서술. "This likely means..." 추측 금지.
 
-**공통 제외 대상:** PM 내부 액션, Client 액션, 핵심 요약의 전략/방향성 판단, 고객 불만 관련
+**공통 제외 대상:** PM 내부 액션, Client 액션, 전략/방향성 판단, 고객 불만 관련
 
 ## Instructions
 
