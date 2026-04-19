@@ -98,7 +98,6 @@ Open question:
    - **This round**: 현재 라운드의 모든 구현 요구사항을 하나의 블록으로. 항상 포함.
    - **Maintenance later**: 명시적으로 유지보수/후순위로 미룬 항목. 없으면 생략.
    - **Open question**: 조건부. 아래 규칙 참고.
-   - **마지막 줄**: "Please review and let me know if anything needs more effort than expected."
 5. **톤**: 개발팀 구현 브리프 — clear, direct, practical. 요구사항을 직접 서술. "This likely means X needs to change" 대신 "Change X to Y" 또는 "X should be Y". 개발자가 바로 작업 목록으로 쓸 수 있는 수준.
 6. **영어로 작성** — 단, 도메인 특화 한국어 용어는 괄호로 병기
    - 한국어 UI/코드베이스에서 검색해야 하는 용어: "reputation reviewers (평판조회 조회인)"
@@ -121,13 +120,17 @@ Open question:
    - 3 → 전송 skip, 복사 안내만 표시 (사용자 확정 후 activity-log 1회 기록)
    - 4 → 중단 (activity-log 미기록)
 
-   **Standard 모드** — 구조 복잡, 수정 확률 높음 (현행 유지):
+   **Standard 모드** — 구조 복잡, 수정 확률 높음 (3지선다):
    ```
    ---
-   수정 사항 있으면 말씀해주세요.
+   1. 전송 (추천)
+   2. 수정
+   3. 취소
+   추천: 1
    ```
-   - 수정 요청 시 → 반영 후 다시 출력 → 재확인
-   - 수정 없음/전송 요청 시 → Step 9 전송 진행
+   - 1 → 곧바로 Step 9 전송. chat_id 없으면 복사 fallback.
+   - 2 → 수정 요청 받은 후 반영 → 메시지 재출력 → 다시 이 프롬프트
+   - 3 → 중단 (activity-log 미기록)
 9. **Teams 전송**:
    - `.env.teams` 파일에서 `TEAMS_FLOW_URL`과 `TEAMS_CHAT_{CLIENT}_DEV` 로드
    - 클라이언트 디렉토리명 → 대문자 변환 → `TEAMS_CHAT_{CLIENT}_DEV` 키 조합
