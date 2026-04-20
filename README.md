@@ -31,7 +31,7 @@
 | 상황 | 스킬 | 출력 |
 |------|------|------|
 | 미팅 끝남 | `/meeting-note` | Notion 미팅노트 (한눈에 보기 + 확정 사항 + Action Items 불릿 + 범위 밖 + 메모 이슈 + PM 배경) + Teams(EN) + 카톡(KR) |
-| 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 번역만 / Standard: 브리프) |
+| 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |

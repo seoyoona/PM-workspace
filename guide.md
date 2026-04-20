@@ -45,7 +45,7 @@ Nexus 일별 기록    → /nexus-daily
 ## 핵심 구조
 
 - **meeting-note** = source of truth → dev-chat / client-chat은 downstream. Notion 친화 **불릿 기반 구조**: `한눈에 보기` → `이번 미팅에서 확정된 것` → `Action Items` (바로 진행할 일 / 확인 후 회신할 일) → `이번 라운드 범위 밖` → `메모해둘 이슈` → `PM 참고 배경`. 2-phase 파이프라인(Phase A Raw 추출 → Phase B 분류 매핑). Action Items는 표 대신 owner 볼드 불릿, 모호하면 `메모해둘 이슈`로 보수 승격. Part2/3은 쿼리 → Teams/카톡 톤 서술.
-- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지. **출력 직후 선택지**: Light = 4지선다(`1.전송(추천) / 2.수정 / 3.복사만 / 4.취소`), Standard = 3지선다(`1.전송(추천) / 2.수정 / 3.취소`). Teams 전송은 HTTP code 검증 후에만 완료 보고 (timeout 15s). Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
+- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지. **Light 입력 타입 감지**: 클라 메시지 원문(한국어 존댓말) 복붙이면 `Client confirmed... / Client reports... / Client is asking...` 중계 프레이밍 사용 (dev팀이 PM을 주체로 오해 방지), PM 내부 메모/반말은 프레이밍 없이 직접 번역. **출력 직후 선택지**: Light = 4지선다(`1.전송(추천) / 2.수정 / 3.복사만 / 4.취소`), Standard = 3지선다(`1.전송(추천) / 2.수정 / 3.취소`). Teams 전송은 HTTP code 검증 후에만 완료 보고 (timeout 15s). Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
 - **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더 금지. **인사+용건+질문 setup을 1줄에 병합**, 프로젝트명/완충 표현/의미 중복 금지. 느낌표는 메시지당 1개 이내(친근한 인사용). 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
