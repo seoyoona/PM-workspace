@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RCK Footer Preview</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif; }
+
+    /* ============================
+       FOOTER
+    ============================ */
+    #site-footer {
+      background-color: #1b1e2b;
+      color: #b0b5c8;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── 약관 링크 바 ── */
+    .footer-policy-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 18px 0;
+      border-bottom: 1px solid #2e3247;
+      flex-wrap: wrap;
+      gap: 4px 0;
+    }
+
+    .footer-policy-bar a {
+      color: #c8ccd8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 0 14px;
+      border-right: 1px solid #3a3f55;
+      transition: color 0.2s;
+    }
+
+    .footer-policy-bar a:first-child {
+      padding-left: 0;
+    }
+
+    .footer-policy-bar a:hover {
+      color: #ffffff;
+    }
+
+    .footer-policy-bar a.privacy {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+
+    .footer-policy-bar a.privacy:hover {
+      color: #93c5fd;
+    }
+
+    .footer-policy-date {
+      margin-left: auto;
+      font-size: 12px;
+      color: #6b7194;
+    }
+
+    /* ── 메인 푸터 영역 ── */
+    .footer-main {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      gap: 48px;
+      padding: 40px 0 36px;
+      border-bottom: 1px solid #2e3247;
+      align-items: start;
+    }
+
+    /* 로고 */
+    .footer-logo img {
+      max-width: 120px;
+      filter: brightness(0) invert(1);
+      opacity: 0.85;
+    }
+
+    .footer-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    /* 회사 정보 */
+    .footer-company p {
+      margin-bottom: 4px;
+      color: #9095aa;
+      font-size: 13px;
+    }
+
+    .footer-company .company-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #d0d4e3;
+      margin-bottom: 10px;
+    }
+
+    .footer-company .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-bottom: 4px;
+    }
+
+    .footer-company .info-row span {
+      color: #9095aa;
+      font-size: 13px;
+    }
+
+    .footer-company .info-row .sep {
+      margin: 0 8px;
+      color: #3a3f55;
+    }
+
+    .footer-company .highlight-row {
+      margin-top: 6px;
+      padding: 6px 10px;
+      background: #22273a;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-company .highlight-row span {
+      font-size: 12px;
+      color: #7a7f99;
+    }
+
+    .footer-company .highlight-row .label {
+      color: #60a5fa;
+      font-weight: 600;
+    }
+
+    /* 빠른 링크 */
+    .footer-links h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7194;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links ul li a {
+      color: #9095aa;
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer-links ul li a:hover {
+      color: #ffffff;
+    }
+
+    .footer-links .brochure-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      padding: 7px 14px;
+      border: 1px solid #3a3f55;
+      border-radius: 6px;
+      color: #9095aa;
+      text-decoration: none;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .footer-links .brochure-btn:hover {
+      border-color: #60a5fa;
+      color: #60a5fa;
+    }
+
+    /* ── 카피라이트 ── */
+    .footer-copy {
+      padding: 18px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy p {
+      font-size: 12px;
+      color: #4a4f68;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 900px) {
+      .footer-inner {
+        padding: 0 24px;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .footer-policy-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .footer-policy-bar a {
+        border-right: none;
+        padding: 0;
+      }
+
+      .footer-policy-date {
+        margin-left: 0;
+        margin-top: 4px;
+      }
+
+      .footer-copy {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-company .info-row {
+        flex-direction: column;
+        gap: 2px;
+      }
+      .footer-company .info-row .sep {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     FOOTER — 레퍼런스체크코리아
+
+     개발자 노트:
+     - 약관 파일 경로: /files/ 디렉토리에 아래 3개 파일 업로드 필요
+         · terms-individual.pdf   (개인회원 서비스 이용약관)
+         · terms-corporate.pdf    (기업회원 서비스 이용약관)
+         · privacy-policy.pdf     (개인정보처리방침)
+     - 로고 이미지: /images/logo_white.png 또는 기존 로고 경로로 교체
+     - 약관 시행일: 2026년 4월 13일
+============================================================ -->
+<footer id="site-footer">
+  <div class="footer-inner">
+
+    <!-- 약관 링크 바 -->
+    <div class="footer-policy-bar">
+      <a href="/files/terms-individual.pdf" target="_blank" rel="noopener">개인회원 서비스 이용약관</a>
+      <a href="/files/terms-corporate.pdf" target="_blank" rel="noopener">기업회원 서비스 이용약관</a>
+      <a href="/files/privacy-policy.pdf" target="_blank" rel="noopener" class="privacy">개인정보처리방침</a>
+      <span class="footer-policy-date">시행일: 2026년 4월 13일</span>
+    </div>
+
+    <!-- 메인 푸터 -->
+    <div class="footer-main">
+
+      <!-- 로고 -->
+      <div class="footer-logo">
+        <!-- 기존 로고 이미지 경로로 교체하세요 -->
+        <!-- <img src="/images/logo_white.png" alt="RCK 레퍼런스체크코리아"> -->
+        <span class="footer-logo-text">RCK</span>
+      </div>
+
+      <!-- 회사 정보 -->
+      <div class="footer-company">
+        <p class="company-name">레퍼런스체크코리아 주식회사</p>
+
+        <div class="info-row">
+          <span>대표이사: 윤정식</span>
+          <span class="sep">|</span>
+          <span>사업자등록번호: 108-81-99015</span>
+        </div>
+
+        <div class="highlight-row">
+          <span class="label">통신판매업신고번호</span>
+          <span>제 2026-서울구로-0187 호</span>
+        </div>
+
+        <div class="info-row" style="margin-top: 10px;">
+          <span>주소: 서울시 구로구 디지털로 26길 123, 1501호 (구로동, 지플러스타워)</span>
+        </div>
+
+        <div class="info-row">
+          <span>TEL: 02-6382-1220</span>
+          <span class="sep">|</span>
+          <span>FAX: 02-6021-4177</span>
+          <span class="sep">|</span>
+          <span>EMAIL: ask@rck.co.kr</span>
+        </div>
+      </div>
+
+      <!-- 빠른 링크 -->
+      <div class="footer-links">
+        <h4>바로가기</h4>
+        <ul>
+          <li><a href="/sub/m0101.php">평판조회 서비스</a></li>
+          <li><a href="/sub/m0102.php">온라인 평판조회</a></li>
+          <li><a href="/sub/m0103.php">사실조회</a></li>
+          <li><a href="https://blog.naver.com/refcheck" target="_blank" rel="noopener">블로그</a></li>
+        </ul>
+        <a href="/files/RCK_BROCHURE_WEB.pdf" target="_blank" rel="noopener" class="brochure-btn">
+          ↓ 브로셔 다운로드
+        </a>
+      </div>
+
+    </div>
+
+    <!-- 카피라이트 -->
+    <div class="footer-copy">
+      <p>COPYRIGHT © REFERENCE CHECK KOREA. ALL RIGHTS RESERVED.</p>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>

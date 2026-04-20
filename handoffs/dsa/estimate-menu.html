@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>DSA — 견적 관리</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+    background: #f5f6f7;
+    color: #1e2128;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .app { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 256px;
+    background: #fff;
+    border-right: 1px solid #e0e3e8;
+    padding: 20px 0;
+    flex-shrink: 0;
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 20px 20px; border-bottom: 1px solid #e0e3e8;
+  }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(135deg, #4a7aff 0%, #6b9fff 100%);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px;
+  }
+  .logo-text { font-weight: 700; font-size: 15px; }
+  .logo-sub { font-size: 11px; color: #707382; }
+  .user-info {
+    padding: 16px 20px; border-bottom: 1px solid #e0e3e8;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #e7efff; color: #4a7aff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 13px;
+  }
+  .user-meta { font-size: 12px; }
+  .user-role { color: #707382; font-size: 11px; }
+  .user-email { color: #4b4f5a; }
+
+  .nav { padding: 12px 8px; }
+  .nav-section { margin-bottom: 8px; }
+  .nav-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; font-weight: 600; font-size: 13px;
+    color: #1e2128; cursor: pointer; border-radius: 6px;
+  }
+  .nav-header:hover { background: #f5f6f7; }
+  .nav-header .arrow { margin-left: auto; font-size: 10px; color: #707382; }
+  .nav-items { padding-left: 28px; }
+  .nav-item {
+    padding: 8px 12px; font-size: 13px; color: #4b4f5a;
+    border-radius: 6px; cursor: pointer;
+  }
+  .nav-item:hover { background: #f5f6f7; }
+  .nav-item.active {
+    background: #e7efff; color: #2962ff; font-weight: 500;
+  }
+
+  /* Main */
+  .main { flex: 1; padding: 28px 32px; max-width: 1280px; }
+  .page-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .page-subtitle { color: #707382; font-size: 14px; }
+  .header-actions { display: flex; gap: 8px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 16px; border-radius: 8px; font-weight: 500; font-size: 13px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .btn-primary { background: #2962ff; color: #fff; }
+  .btn-primary:hover { background: #1e50e0; }
+  .btn-secondary {
+    background: #fff; color: #4b4f5a; border-color: #d4d7dd;
+  }
+  .btn-secondary:hover { background: #f5f6f7; }
+  .btn-danger { background: #fff; color: #dc2626; border-color: #fecaca; }
+  .btn-danger:hover { background: #fef2f2; }
+  .btn-ghost { background: transparent; color: #4b4f5a; }
+  .btn-ghost:hover { background: #f5f6f7; }
+
+  /* Stat cards */
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: #fff; border: 1px solid #e0e3e8; border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .stat-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: #707382; margin-bottom: 8px;
+  }
+  .stat-value { font-size: 26px; font-weight: 700; }
+  .stat-delta { font-size: 12px; color: #707382; margin-top: 2px; }
+  .stat-delta.up { color: #0a9b6c; }
+
+  /* Content panel */
+  .panel {
+    background: #fff; border: 1px solid #e0e3e8; border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; gap: 16px; flex-wrap: wrap;
+  }
+  .panel-title { font-size: 16px; font-weight: 700; }
+  .panel-tools { display: flex; gap: 8px; align-items: center; flex: 1; justify-content: flex-end; }
+  .search {
+    position: relative; flex: 1; max-width: 380px;
+  }
+  .search input {
+    width: 100%; padding: 9px 12px 9px 34px;
+    border: 1px solid #d4d7dd; border-radius: 8px;
+    font-size: 13px; outline: none;
+    font-family: inherit;
+  }
+  .search input:focus { border-color: #2962ff; }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: #a1a5b0;
+  }
+  .select-wrap { position: relative; }
+  .select {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 12px; border: 1px solid #d4d7dd; border-radius: 8px;
+    background: #fff; font-size: 13px; color: #4b4f5a; cursor: pointer;
+    min-width: 130px; user-select: none;
+  }
+  .select:hover { border-color: #9ea3ad; }
+  .select .arrow { margin-left: auto; font-size: 10px; }
+  .select-menu {
+    position: absolute; top: calc(100% + 4px); right: 0;
+    background: #fff; border: 1px solid #e0e3e8; border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08); min-width: 180px;
+    padding: 4px; z-index: 20; display: none;
+  }
+  .select-menu.open { display: block; }
+  .select-opt {
+    padding: 8px 12px; font-size: 13px; border-radius: 6px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .select-opt:hover { background: #f5f6f7; }
+  .select-opt.active { color: #2962ff; font-weight: 500; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left; padding: 12px 14px;
+    background: #f5f6f7; color: #707382; font-weight: 500; font-size: 12px;
+    border-top: 1px solid #e0e3e8; border-bottom: 1px solid #e0e3e8;
+    white-space: nowrap;
+  }
+  thead th:first-child { border-radius: 8px 0 0 8px; }
+  thead th:last-child { border-radius: 0 8px 8px 0; }
+  tbody td {
+    padding: 14px; border-bottom: 1px solid #eef0f3;
+    vertical-align: middle;
+  }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #fafbfc; }
+  .muted { color: #707382; font-size: 12px; margin-top: 2px; }
+
+  /* Status badges */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; white-space: nowrap;
+  }
+  .badge-draft { background: #f0f2f5; color: #4b4f5a; }
+  .badge-sent { background: #e7efff; color: #2962ff; }
+  .badge-contract { background: #dcf5e9; color: #0a9b6c; }
+
+  /* Action cell */
+  .actions { display: flex; gap: 6px; align-items: center; }
+  .cta-create {
+    background: #0a9b6c; color: #fff; border: none;
+    padding: 6px 10px; border-radius: 6px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    font-family: inherit;
+  }
+  .cta-create:hover { background: #088658; }
+  .icon-btn {
+    width: 28px; height: 28px; border: 1px solid #e0e3e8;
+    background: #fff; border-radius: 6px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #707382;
+    font-family: inherit; font-size: 13px;
+  }
+  .icon-btn:hover { background: #f5f6f7; color: #1e2128; }
+
+  /* Pagination */
+  .pagination {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 16px; font-size: 13px; color: #707382;
+  }
+  .page-nums { display: flex; gap: 4px; }
+  .page-num {
+    width: 30px; height: 30px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .page-num:hover { background: #f5f6f7; }
+  .page-num.active { background: #2962ff; color: #fff; font-weight: 600; }
+
+  /* Amount */
+  .amount { font-weight: 500; text-align: right; white-space: nowrap; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, .45);
+    display: none; align-items: center; justify-content: center;
+    z-index: 50; animation: fadeIn .15s ease;
+  }
+  .modal-backdrop.open { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: #fff; border-radius: 16px; width: 560px; max-width: 90vw;
+    max-height: 90vh; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    display: flex; flex-direction: column;
+  }
+  .modal-lg { width: 720px; }
+  .modal-head {
+    padding: 20px 24px; border-bottom: 1px solid #e0e3e8;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; }
+  .modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+  .modal-foot {
+    padding: 16px 24px; border-top: 1px solid #e0e3e8;
+    display: flex; justify-content: flex-end; gap: 8px;
+  }
+  .close-btn {
+    background: none; border: none; font-size: 22px; cursor: pointer;
+    color: #707382; width: 32px; height: 32px; border-radius: 6px;
+  }
+  .close-btn:hover { background: #f5f6f7; }
+
+  /* Form */
+  .form-row { margin-bottom: 16px; }
+  .form-label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: #1e2128; margin-bottom: 6px;
+  }
+  .form-label .req { color: #dc2626; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid #d4d7dd; border-radius: 8px;
+    font-size: 13px; outline: none; font-family: inherit;
+    background: #fff;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #2962ff; }
+  .form-textarea { min-height: 80px; resize: vertical; }
+  .form-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-hint { font-size: 12px; color: #707382; margin-top: 4px; }
+
+  /* Detail modal */
+  .detail-header {
+    padding: 20px 24px; background: linear-gradient(135deg, #f5f8ff 0%, #ffffff 100%);
+    border-bottom: 1px solid #e0e3e8;
+  }
+  .detail-meta {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px;
+    padding: 20px 24px;
+  }
+  .detail-field {}
+  .detail-field-label { font-size: 12px; color: #707382; margin-bottom: 4px; }
+  .detail-field-value { font-size: 14px; color: #1e2128; font-weight: 500; }
+  .status-flow {
+    display: flex; gap: 8px; align-items: center;
+    padding: 16px 24px; background: #fafbfc;
+    border-top: 1px solid #e0e3e8; border-bottom: 1px solid #e0e3e8;
+  }
+  .status-step {
+    flex: 1; text-align: center;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 12px; font-weight: 500; color: #a1a5b0;
+    background: #fff; border: 1px solid #e0e3e8;
+    cursor: pointer;
+  }
+  .status-step.active { background: #2962ff; color: #fff; border-color: #2962ff; }
+  .status-step.done { background: #dcf5e9; color: #0a9b6c; border-color: #b0e4cc; }
+  .status-step:hover:not(.active):not(.done) { background: #f5f6f7; }
+  .status-arrow { color: #d4d7dd; font-size: 14px; }
+
+  /* Toast */
+  .toast-container {
+    position: fixed; bottom: 24px; right: 24px;
+    z-index: 100; display: flex; flex-direction: column; gap: 8px;
+  }
+  .toast {
+    background: #1e2128; color: #fff; padding: 12px 18px;
+    border-radius: 10px; font-size: 13px; font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    animation: slideIn .2s ease;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.success { background: #0a9b6c; }
+  .toast.error { background: #dc2626; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+  /* Upload area */
+  .upload-area {
+    border: 2px dashed #d4d7dd; border-radius: 12px;
+    padding: 40px 20px; text-align: center;
+    cursor: pointer; transition: all .15s;
+  }
+  .upload-area:hover, .upload-area.drag {
+    border-color: #2962ff; background: #f5f8ff;
+  }
+  .upload-icon { font-size: 36px; margin-bottom: 8px; color: #a1a5b0; }
+  .upload-title { font-weight: 600; margin-bottom: 4px; }
+  .upload-hint { font-size: 12px; color: #707382; }
+
+  /* Row menu */
+  .row-menu {
+    position: absolute; background: #fff; border: 1px solid #e0e3e8;
+    border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    padding: 4px; z-index: 30; min-width: 160px; display: none;
+  }
+  .row-menu.open { display: block; }
+  .row-menu-item {
+    padding: 8px 12px; font-size: 13px; border-radius: 6px;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+  }
+  .row-menu-item:hover { background: #f5f6f7; }
+  .row-menu-item.danger { color: #dc2626; }
+  .row-menu-item.danger:hover { background: #fef2f2; }
+  .row-menu-divider { height: 1px; background: #e0e3e8; margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">G</div>
+      <div>
+        <div class="logo-text">Ggom</div>
+        <div class="logo-sub">기술지도 관리 시스템</div>
+      </div>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">조</div>
+      <div class="user-meta">
+        <div class="user-role">조직관리자</div>
+        <div class="user-email">team0@test.co.kr</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-header">📁 프로젝트 관리 <span class="arrow">▾</span></div>
+        <div class="nav-items">
+          <div class="nav-item">기술지도 현황</div>
+          <div class="nav-item">프로젝트 관리</div>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-header">🚗 차량 관리 <span class="arrow">▾</span></div>
+        <div class="nav-items">
+          <div class="nav-item">차량 목록</div>
+          <div class="nav-item">운행일지 리스트</div>
+          <div class="nav-item">운행일지 작성</div>
+          <div class="nav-item">운행 리포트</div>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-header">📝 기술지도 관리 <span class="arrow">▾</span></div>
+        <div class="nav-items">
+          <div class="nav-item">계약현황</div>
+          <div class="nav-item">손익관리</div>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-header">💼 사업 관리 <span class="arrow">▾</span></div>
+        <div class="nav-items">
+          <div class="nav-item active">견적 관리</div>
+          <div class="nav-item">입찰 관리</div>
+          <div class="nav-item">협력사 관리</div>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-header">⚙️ 시스템 <span class="arrow">▾</span></div>
+        <div class="nav-items">
+          <div class="nav-item">사용자 정보</div>
+          <div class="nav-item">드라이브</div>
+          <div class="nav-item">문서대장</div>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">견적 관리</h1>
+        <p class="page-subtitle">견적 작성부터 계약 체결까지 영업 파이프라인을 관리하세요</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="downloadExcel()">
+          ⬇ 엑셀 다운로드
+        </button>
+        <button class="btn btn-secondary" onclick="openUpload()">
+          ⬆ 엑셀 일괄 업로드
+        </button>
+        <button class="btn btn-primary" onclick="openCreate()">
+          + 새 견적 작성
+        </button>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">전체 견적 <span>📋</span></div>
+        <div class="stat-value" id="stat-total">42</div>
+        <div class="stat-delta up">▲ 이번 달 +8</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">견적서 작성 <span>✏️</span></div>
+        <div class="stat-value" id="stat-draft">12</div>
+        <div class="stat-delta">작성 중</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">견적서 발송 <span>📤</span></div>
+        <div class="stat-value" id="stat-sent">18</div>
+        <div class="stat-delta">응답 대기</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">계약 진행 <span>✅</span></div>
+        <div class="stat-value" id="stat-contract">12</div>
+        <div class="stat-delta up" id="stat-rate">전환율 28.6%</div>
+      </div>
+    </div>
+
+    <!-- Table panel -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">견적 내역</div>
+        <div class="panel-tools">
+          <div class="search">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="견적번호, 거래처, 공사명 검색" oninput="applyFilters()" />
+          </div>
+          <div class="select-wrap">
+            <div class="select" onclick="toggleSelect('status-menu')">
+              <span>☰</span>
+              <span id="status-label">전체 상태</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="select-menu" id="status-menu">
+              <div class="select-opt active" onclick="setStatus('all', '전체 상태')">전체 상태</div>
+              <div class="select-opt" onclick="setStatus('draft', '견적서 작성')">견적서 작성</div>
+              <div class="select-opt" onclick="setStatus('sent', '견적서 발송')">견적서 발송</div>
+              <div class="select-opt" onclick="setStatus('contract', '계약 진행')">계약 진행</div>
+            </div>
+          </div>
+          <div class="select-wrap">
+            <div class="select" onclick="toggleSelect('region-menu')">
+              <span>📍</span>
+              <span id="region-label">전체 지역</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="select-menu" id="region-menu">
+              <div class="select-opt active" onclick="setRegion('all', '전체 지역')">전체 지역</div>
+              <div class="select-opt" onclick="setRegion('서울', '서울')">서울</div>
+              <div class="select-opt" onclick="setRegion('경기', '경기')">경기</div>
+              <div class="select-opt" onclick="setRegion('경상', '경상')">경상</div>
+              <div class="select-opt" onclick="setRegion('충청', '충청')">충청</div>
+              <div class="select-opt" onclick="setRegion('전라', '전라')">전라</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>견적번호</th>
+            <th>거래처 (발주처)</th>
+            <th>공사명</th>
+            <th>지역</th>
+            <th style="text-align:right">견적금액</th>
+            <th>작성일</th>
+            <th>상태</th>
+            <th style="text-align:right">액션</th>
+          </tr>
+        </thead>
+        <tbody id="estimate-tbody"></tbody>
+      </table>
+
+      <div class="pagination">
+        <div id="page-info">총 0건</div>
+        <div class="page-nums">
+          <div class="page-num">‹</div>
+          <div class="page-num active">1</div>
+          <div class="page-num">2</div>
+          <div class="page-num">3</div>
+          <div class="page-num">4</div>
+          <div class="page-num">5</div>
+          <div class="page-num">›</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Create / Edit Modal -->
+<div class="modal-backdrop" id="create-modal">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div class="modal-title" id="create-title">새 견적 작성</div>
+      <button class="close-btn" onclick="closeModal('create-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-cols">
+        <div class="form-row">
+          <label class="form-label">견적번호 <span class="req">*</span></label>
+          <input type="text" class="form-input" id="f-id" placeholder="자동 생성" />
+          <div class="form-hint">저장 시 자동 생성됩니다</div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">작성일 <span class="req">*</span></label>
+          <input type="date" class="form-input" id="f-date" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">거래처 (발주처) <span class="req">*</span></label>
+        <input type="text" class="form-input" id="f-client" placeholder="예: HL전자통신" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">공사명 <span class="req">*</span></label>
+        <input type="text" class="form-input" id="f-project" placeholder="프로젝트명" />
+      </div>
+      <div class="form-cols">
+        <div class="form-row">
+          <label class="form-label">지역 <span class="req">*</span></label>
+          <input type="text" class="form-input" id="f-region" placeholder="예: 경상북도 영천시" />
+        </div>
+        <div class="form-row">
+          <label class="form-label">견적금액 (원) <span class="req">*</span></label>
+          <input type="number" class="form-input" id="f-amount" placeholder="12500000" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">초기 상태</label>
+        <select class="form-select" id="f-status">
+          <option value="draft">견적서 작성</option>
+          <option value="sent">견적서 발송</option>
+          <option value="contract">계약 진행</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">비고</label>
+        <textarea class="form-textarea" id="f-note" placeholder="추가 메모 (선택)"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('create-modal')">취소</button>
+      <button class="btn btn-primary" onclick="saveEstimate()" id="save-btn">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-backdrop" id="detail-modal">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div class="modal-title" id="d-title">EST-2026-0042</div>
+      <button class="close-btn" onclick="closeModal('detail-modal')">×</button>
+    </div>
+    <div class="detail-header">
+      <div style="font-size: 20px; font-weight: 700; margin-bottom: 4px;" id="d-project">프로젝트명</div>
+      <div style="color: #707382; font-size: 13px;" id="d-client">거래처</div>
+    </div>
+    <div class="status-flow" id="d-flow"></div>
+    <div class="detail-meta">
+      <div class="detail-field">
+        <div class="detail-field-label">지역</div>
+        <div class="detail-field-value" id="d-region">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">견적금액</div>
+        <div class="detail-field-value" id="d-amount">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">작성일</div>
+        <div class="detail-field-value" id="d-date">—</div>
+      </div>
+      <div class="detail-field">
+        <div class="detail-field-label">현재 상태</div>
+        <div class="detail-field-value" id="d-status">—</div>
+      </div>
+      <div class="detail-field" style="grid-column: 1 / -1;">
+        <div class="detail-field-label">비고</div>
+        <div class="detail-field-value" id="d-note">—</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" onclick="deleteCurrent()" style="margin-right: auto">삭제</button>
+      <button class="btn btn-secondary" onclick="editCurrent()">편집</button>
+      <button class="btn btn-primary" id="d-create-btn" onclick="createSiteFromCurrent()" style="display:none">
+        + 현장 생성
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Excel Upload Modal -->
+<div class="modal-backdrop" id="upload-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">엑셀 일괄 업로드</div>
+      <button class="close-btn" onclick="closeModal('upload-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom: 16px; font-size: 13px; color: #4b4f5a;">
+        기존 eCount 내역관리 데이터 또는 외부 견적 데이터를 한 번에 업로드할 수 있습니다.
+      </div>
+      <div class="upload-area" onclick="mockUpload()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-title">파일을 드래그하거나 클릭하여 선택</div>
+        <div class="upload-hint">.xlsx / .xls / .csv (최대 10MB)</div>
+      </div>
+      <div style="margin-top: 16px; padding: 12px 14px; background: #f5f8ff; border-radius: 8px; font-size: 12px; color: #2962ff;">
+        💡 <button class="btn btn-ghost" style="padding: 0; color: #2962ff; text-decoration: underline;" onclick="downloadTemplate()">양식 템플릿 다운로드</button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('upload-modal')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Site Confirm Modal -->
+<div class="modal-backdrop" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">현장 생성</div>
+      <button class="close-btn" onclick="closeModal('confirm-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom: 12px;">
+        이 견적을 기반으로 <b>새 프로젝트(현장)</b>를 생성하시겠습니까?
+      </div>
+      <div style="padding: 12px 14px; background: #f5f6f7; border-radius: 8px; font-size: 13px;">
+        <div style="margin-bottom: 6px;"><b id="c-project">—</b></div>
+        <div style="color: #707382;">
+          <span id="c-client">—</span> · <span id="c-region">—</span> · <span id="c-amount">—</span>
+        </div>
+      </div>
+      <div style="margin-top: 12px; font-size: 12px; color: #707382;">
+        프로젝트 생성 화면으로 이동하며, 견적 정보가 자동 입력됩니다.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('confirm-modal')">취소</button>
+      <button class="btn btn-primary" onclick="goToSiteCreate()">프로젝트 생성 이동</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+const STATUS_LABELS = {
+  draft: '견적서 작성',
+  sent: '견적서 발송',
+  contract: '계약 진행'
+};
+const STATUS_ORDER = ['draft', 'sent', 'contract'];
+
+let estimates = [
+  { id: 'EST-2026-0042', client: 'HL전자통신', clientType: '건설사', project: '지방소멸대응기금-신중년놀이터조성사업', region: '경상북도 영천시', amount: 12500000, date: '2026-04-15', status: 'contract', note: '대형 프로젝트, 조기 착수 희망' },
+  { id: 'EST-2026-0041', client: '삼성건설', clientType: '건설사', project: '동대구역 복합개발 PF 신축공사', region: '대구 동구', amount: 8200000, date: '2026-04-14', status: 'sent', note: '' },
+  { id: 'EST-2026-0040', client: '대우건설', clientType: '건설사', project: '송도국제도시 오피스텔 신축', region: '인천 연수구', amount: 15800000, date: '2026-04-13', status: 'sent', note: '' },
+  { id: 'EST-2026-0039', client: '현대엔지니어링', clientType: '건설사', project: '판교 제2테크노밸리 R&D센터', region: '경기 성남시', amount: 22000000, date: '2026-04-12', status: 'contract', note: '계약서 검토 중' },
+  { id: 'EST-2026-0038', client: 'GS건설', clientType: '건설사', project: '평택 자이 3단지 리모델링', region: '경기 평택시', amount: 6700000, date: '2026-04-11', status: 'draft', note: '' },
+  { id: 'EST-2026-0037', client: '포스코건설', clientType: '건설사', project: '광양제철소 제3고로 개수공사', region: '전남 광양시', amount: 18400000, date: '2026-04-10', status: 'sent', note: '' },
+  { id: 'EST-2026-0036', client: '롯데건설', clientType: '건설사', project: '잠실 롯데캐슬 리뉴얼', region: '서울 송파구', amount: 9300000, date: '2026-04-09', status: 'contract', note: '' },
+  { id: 'EST-2026-0035', client: 'SK에코플랜트', clientType: '건설사', project: '청주 오창 산업단지 증설', region: '충북 청주시', amount: 11200000, date: '2026-04-08', status: 'draft', note: '' },
+  { id: 'EST-2026-0034', client: 'DL이앤씨', clientType: '건설사', project: '여의도 파크원 확장공사', region: '서울 영등포구', amount: 14500000, date: '2026-04-07', status: 'sent', note: '' }
+];
+
+let filters = { status: 'all', region: 'all', query: '' };
+let currentId = null;
+let editMode = false;
+
+function fmtWon(n) {
+  return '₩' + n.toLocaleString('ko-KR');
+}
+function relativeDate(dateStr) {
+  const d = new Date(dateStr);
+  const days = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+  if (days === 0) return '오늘';
+  if (days === 1) return '어제';
+  if (days < 7) return days + '일 전';
+  return '';
+}
+
+function render() {
+  const tbody = document.getElementById('estimate-tbody');
+  const filtered = estimates.filter(e => {
+    if (filters.status !== 'all' && e.status !== filters.status) return false;
+    if (filters.region !== 'all' && !e.region.includes(filters.region)) return false;
+    if (filters.query) {
+      const q = filters.query.toLowerCase();
+      if (!e.id.toLowerCase().includes(q) &&
+          !e.client.toLowerCase().includes(q) &&
+          !e.project.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('page-info').textContent = `총 ${filtered.length}건 · 1-${Math.min(filtered.length, 9)} 표시`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 48px; color: #707382;">검색 결과가 없습니다</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.slice(0, 9).map(e => {
+    const badge = `badge-${e.status}`;
+    const rel = relativeDate(e.date);
+    const actionBtn = e.status === 'contract'
+      ? `<button class="cta-create" onclick="event.stopPropagation(); confirmCreate('${e.id}')">+ 현장 생성</button>`
+      : `<button class="icon-btn" onclick="event.stopPropagation(); editFrom('${e.id}')" title="편집">✎</button>`;
+    return `
+      <tr onclick="openDetail('${e.id}')">
+        <td><b>${e.id}</b></td>
+        <td>${e.client}<div class="muted">${e.clientType}</div></td>
+        <td>${e.project}</td>
+        <td>${e.region}</td>
+        <td class="amount">${fmtWon(e.amount)}</td>
+        <td>${e.date}${rel ? `<div class="muted">${rel}</div>` : ''}</td>
+        <td><span class="badge ${badge}">${STATUS_LABELS[e.status]}</span></td>
+        <td>
+          <div class="actions" style="justify-content:flex-end">
+            ${actionBtn}
+            <button class="icon-btn" onclick="event.stopPropagation(); showMenu(event, '${e.id}')" title="더보기">⋯</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  // Stats
+  const total = estimates.length;
+  const draft = estimates.filter(e => e.status === 'draft').length;
+  const sent = estimates.filter(e => e.status === 'sent').length;
+  const contract = estimates.filter(e => e.status === 'contract').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-draft').textContent = draft;
+  document.getElementById('stat-sent').textContent = sent;
+  document.getElementById('stat-contract').textContent = contract;
+  document.getElementById('stat-rate').textContent = `전환율 ${total ? ((contract/total)*100).toFixed(1) : 0}%`;
+}
+
+// Select menus
+function toggleSelect(id) {
+  document.querySelectorAll('.select-menu').forEach(m => {
+    if (m.id !== id) m.classList.remove('open');
+  });
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.select-wrap')) {
+    document.querySelectorAll('.select-menu').forEach(m => m.classList.remove('open'));
+  }
+  if (!e.target.closest('.row-menu') && !e.target.closest('.icon-btn')) {
+    document.querySelectorAll('.row-menu').forEach(m => m.remove());
+  }
+});
+function setStatus(val, label) {
+  filters.status = val;
+  document.getElementById('status-label').textContent = label;
+  document.querySelectorAll('#status-menu .select-opt').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('status-menu').classList.remove('open');
+  render();
+}
+function setRegion(val, label) {
+  filters.region = val;
+  document.getElementById('region-label').textContent = label;
+  document.querySelectorAll('#region-menu .select-opt').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('region-menu').classList.remove('open');
+  render();
+}
+function applyFilters() {
+  filters.query = document.getElementById('search-input').value;
+  render();
+}
+
+// Create / Edit
+function openCreate() {
+  editMode = false;
+  currentId = null;
+  document.getElementById('create-title').textContent = '새 견적 작성';
+  document.getElementById('f-id').value = '';
+  document.getElementById('f-id').placeholder = '자동 생성';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('f-client').value = '';
+  document.getElementById('f-project').value = '';
+  document.getElementById('f-region').value = '';
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-status').value = 'draft';
+  document.getElementById('f-note').value = '';
+  openModal('create-modal');
+}
+function editFrom(id) {
+  const e = estimates.find(x => x.id === id);
+  if (!e) return;
+  editMode = true;
+  currentId = id;
+  document.getElementById('create-title').textContent = '견적 편집 · ' + id;
+  document.getElementById('f-id').value = e.id;
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-client').value = e.client;
+  document.getElementById('f-project').value = e.project;
+  document.getElementById('f-region').value = e.region;
+  document.getElementById('f-amount').value = e.amount;
+  document.getElementById('f-status').value = e.status;
+  document.getElementById('f-note').value = e.note || '';
+  openModal('create-modal');
+}
+function saveEstimate() {
+  const client = document.getElementById('f-client').value.trim();
+  const project = document.getElementById('f-project').value.trim();
+  const region = document.getElementById('f-region').value.trim();
+  const amount = Number(document.getElementById('f-amount').value);
+  if (!client || !project || !region || !amount) {
+    toast('필수 항목을 입력해주세요', 'error');
+    return;
+  }
+  const data = {
+    client, project, region, amount,
+    clientType: '건설사',
+    date: document.getElementById('f-date').value || new Date().toISOString().slice(0, 10),
+    status: document.getElementById('f-status').value,
+    note: document.getElementById('f-note').value.trim()
+  };
+  if (editMode && currentId) {
+    const idx = estimates.findIndex(e => e.id === currentId);
+    estimates[idx] = { ...estimates[idx], ...data };
+    toast('견적이 수정되었습니다', 'success');
+  } else {
+    const nextNum = String(estimates.length + 100).slice(-4);
+    data.id = `EST-2026-${nextNum}`;
+    estimates.unshift(data);
+    toast('새 견적이 추가되었습니다', 'success');
+  }
+  closeModal('create-modal');
+  render();
+}
+
+// Detail
+function openDetail(id) {
+  const e = estimates.find(x => x.id === id);
+  if (!e) return;
+  currentId = id;
+  document.getElementById('d-title').textContent = e.id;
+  document.getElementById('d-project').textContent = e.project;
+  document.getElementById('d-client').textContent = e.client + ' · ' + e.clientType;
+  document.getElementById('d-region').textContent = e.region;
+  document.getElementById('d-amount').textContent = fmtWon(e.amount);
+  document.getElementById('d-date').textContent = e.date;
+  document.getElementById('d-status').innerHTML = `<span class="badge badge-${e.status}">${STATUS_LABELS[e.status]}</span>`;
+  document.getElementById('d-note').textContent = e.note || '—';
+  // Status flow
+  const flowEl = document.getElementById('d-flow');
+  const curIdx = STATUS_ORDER.indexOf(e.status);
+  flowEl.innerHTML = STATUS_ORDER.map((s, i) => {
+    let cls = 'status-step';
+    if (i < curIdx) cls += ' done';
+    if (i === curIdx) cls += ' active';
+    return `<div class="${cls}" onclick="changeStatus('${s}')">${STATUS_LABELS[s]}</div>` +
+           (i < STATUS_ORDER.length - 1 ? '<span class="status-arrow">→</span>' : '');
+  }).join('');
+  // Create site button
+  document.getElementById('d-create-btn').style.display = e.status === 'contract' ? 'inline-flex' : 'none';
+  openModal('detail-modal');
+}
+function changeStatus(newStatus) {
+  const e = estimates.find(x => x.id === currentId);
+  if (!e || e.status === newStatus) return;
+  e.status = newStatus;
+  toast(`상태가 "${STATUS_LABELS[newStatus]}"로 변경되었습니다`, 'success');
+  openDetail(currentId); // refresh detail
+  render();
+}
+function editCurrent() {
+  closeModal('detail-modal');
+  editFrom(currentId);
+}
+function deleteCurrent() {
+  if (!confirm('이 견적을 삭제하시겠습니까?')) return;
+  estimates = estimates.filter(e => e.id !== currentId);
+  closeModal('detail-modal');
+  toast('견적이 삭제되었습니다', 'success');
+  render();
+}
+function createSiteFromCurrent() {
+  confirmCreate(currentId);
+  closeModal('detail-modal');
+}
+
+// Row menu
+function showMenu(ev, id) {
+  document.querySelectorAll('.row-menu').forEach(m => m.remove());
+  const menu = document.createElement('div');
+  menu.className = 'row-menu open';
+  const rect = ev.target.getBoundingClientRect();
+  menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+  menu.style.left = (rect.left + window.scrollX - 130) + 'px';
+  menu.innerHTML = `
+    <div class="row-menu-item" onclick="openDetail('${id}'); this.parentElement.remove()">👁 상세 보기</div>
+    <div class="row-menu-item" onclick="editFrom('${id}'); this.parentElement.remove()">✎ 편집</div>
+    <div class="row-menu-item" onclick="duplicateEstimate('${id}'); this.parentElement.remove()">📋 복제</div>
+    <div class="row-menu-divider"></div>
+    <div class="row-menu-item danger" onclick="deleteById('${id}'); this.parentElement.remove()">🗑 삭제</div>
+  `;
+  document.body.appendChild(menu);
+}
+function duplicateEstimate(id) {
+  const e = estimates.find(x => x.id === id);
+  if (!e) return;
+  const nextNum = String(estimates.length + 100).slice(-4);
+  const copy = { ...e, id: `EST-2026-${nextNum}`, status: 'draft', date: new Date().toISOString().slice(0, 10) };
+  estimates.unshift(copy);
+  toast('견적이 복제되었습니다', 'success');
+  render();
+}
+function deleteById(id) {
+  if (!confirm('이 견적을 삭제하시겠습니까?')) return;
+  estimates = estimates.filter(e => e.id !== id);
+  toast('견적이 삭제되었습니다', 'success');
+  render();
+}
+
+// Create site
+function confirmCreate(id) {
+  const e = estimates.find(x => x.id === id);
+  if (!e) return;
+  currentId = id;
+  document.getElementById('c-project').textContent = e.project;
+  document.getElementById('c-client').textContent = e.client;
+  document.getElementById('c-region').textContent = e.region;
+  document.getElementById('c-amount').textContent = fmtWon(e.amount);
+  openModal('confirm-modal');
+}
+function goToSiteCreate() {
+  closeModal('confirm-modal');
+  toast('프로젝트 생성 페이지로 이동합니다', 'success');
+  setTimeout(() => toast('(데모: 실제 구현 시 /project/create 페이지 이동 + 견적 정보 prefill)'), 800);
+}
+
+// Excel
+function openUpload() { openModal('upload-modal'); }
+function downloadExcel() {
+  toast('현재 필터링된 견적 데이터를 다운로드합니다', 'success');
+}
+function downloadTemplate() {
+  toast('업로드 양식 템플릿이 다운로드되었습니다', 'success');
+}
+function mockUpload() {
+  closeModal('upload-modal');
+  toast('엑셀 파일 업로드 완료 · 12건이 추가되었습니다', 'success');
+}
+
+// Modal
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// Toast
+function toast(msg, kind) {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; }, 2200);
+  setTimeout(() => el.remove(), 2600);
+}
+
+render();
+
+// Auto-open modal based on ?state= query param (for Figma multi-state capture)
+(function autoOpenFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const state = params.get('state');
+  if (!state) return;
+  // Wait for render to settle
+  setTimeout(() => {
+    switch (state) {
+      case 'create':
+        openCreate();
+        break;
+      case 'detail':
+        openDetail('EST-2026-0042'); // contract status — shows 현장 생성 button
+        break;
+      case 'detail-sent':
+        openDetail('EST-2026-0041'); // sent status
+        break;
+      case 'detail-draft':
+        openDetail('EST-2026-0038'); // draft status
+        break;
+      case 'upload':
+        openUpload();
+        break;
+      case 'confirm':
+        confirmCreate('EST-2026-0042');
+        break;
+      case 'rowmenu':
+        // Simulate row menu open at first row
+        const firstRow = document.querySelector('#estimate-tbody tr');
+        if (firstRow) {
+          const moreBtn = firstRow.querySelectorAll('.icon-btn');
+          const btn = moreBtn[moreBtn.length - 1];
+          const fakeEv = { target: btn, stopPropagation: () => {} };
+          showMenu(fakeEv, 'EST-2026-0042');
+        }
+        break;
+      case 'filter':
+        toggleSelect('status-menu');
+        break;
+    }
+  }, 100);
+})();
+</script>
+</body>
+</html>
