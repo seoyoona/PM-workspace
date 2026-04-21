@@ -40,7 +40,7 @@
 | SRS 번역 | `/srs-translate` | 영어 구조화 번역 (Notion) — 비창작 원칙, Inferred 섹션 없음 |
 | 킥오프 준비 | `/kickoff-prep` | 고객 안건(KR) + 내부 노트(EN) |
 | 이슈 티켓 | `/issue-ticket` | Linear 티켓 |
-| 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log |
+| 데일리 스크럼 | `/daily-scrum` | Notion Daily Scrum Log + 영어 dev-chat (summary + todos 구조) Teams 전송 |
 | 내부 싱크 | `/sync-note` | 영어 Teams 메시지 |
 | 아침 브리핑 | `/today-brief` | 오늘 할 일 + Google Calendar 미팅 요약 |
 | 할 일 추가 | `/todo` | PM Action Hub DB |

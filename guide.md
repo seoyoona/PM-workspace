@@ -49,7 +49,7 @@ Nexus 일별 기록    → /nexus-daily
 - **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더 금지. **인사+용건+질문 setup을 1줄에 병합**, 프로젝트명/완충 표현/의미 중복 금지. 느낌표는 메시지당 1개 이내(친근한 인사용). 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
-- **daily-scrum**: 프로젝트별 daily check-in → Notion DB 로그 누적
+- **daily-scrum**: 프로젝트별 daily check-in → PM Action Hub "오늘"+"진행 중" 자동 추출(해당 프로젝트 필터) + 사용자 추가 입력(blocker/메모) 병합 → Notion DB 저장 + 영어 dev-chat 메시지 생성/Teams 전송. **Dev-chat 구조**: narrative summary(1-2줄) + PM todos + 조건부(Blockers/Team today/Heads-up). Basecamp heartbeat 방식 — 맥락 먼저, bullet 뒤. Summary 생략 조건: todo ≤3 + 같은 테마 + 특별 맥락 없음. Standard 승격: blocker 2+ OR todo 5+ OR scrum 녹취에서 team today 추출. 4지선다(`1.저장+전송(추천) / 2.저장만 / 3.수정 / 4.취소`).
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
 - **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" **단일 OR 쿼리로 조회** (속도 개선) + Google Calendar와 병렬 호출. "오늘 뭐해야돼"로 수동 실행
 - **todo**: PM 액션 빠르게 추가 → PM Action Hub DB. **`[브라켓]` 값이 Notion `프로젝트` select 옵션과 exact match일 때만 자동 확정**. 실패 시 숫자 3지선다. 같은 제목+프로젝트+작성일이 이미 있으면 skip (retry loop 대응).
