@@ -1,0 +1,5 @@
+# case07: 13단계 시나리오 → 단계 cap 12 초과 경고 출력
+must_match	단계 수가 12를 초과	cap 위반 경고 문구
+must_match	자동 자르	자동 자르기 X 명시
+must_match	^\| 13 \|	Section 5 표에 13번째 단계 row 존재 (자동 자르기 안 함 검증)
+must_match_in_section	5. 단계별 행동 + 기대 결과	\| 13 \|	Section 5 안에 13단계 row

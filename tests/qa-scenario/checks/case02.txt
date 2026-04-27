@@ -1,0 +1,5 @@
+# case02: SRS REQ ID 보존
+must_match	^srs_ref: REQ-PAY-01, REQ-AUTH-03$	frontmatter srs_ref REQ list 정확
+must_match	REQ-PAY-01	Source Linkage REQ-PAY-01 인용
+must_match	REQ-AUTH-03	Source Linkage REQ-AUTH-03 인용
+must_match	^brief_ref: none$	Change Brief 미연결

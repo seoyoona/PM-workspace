@@ -1,0 +1,7 @@
+# case04: no-invention — 외부 효과가 source에 없으면 [확인 필요], 추측 금지
+must_match	^scenario_id: SCN-connectory-1-001$	scenario_id
+must_match	users 테이블에 row	source에 명시된 DB 효과 보존
+must_match_in_section	6. 최종 기대 결과 (Final)	\[확인 필요	Section 6 외부 효과 [확인 필요]
+must_not_match	이메일 발송	source 없는 이메일 발송 추측 X
+must_not_match	푸시 알림 발송	source 없는 푸시 발송 추측 X
+must_not_match	SMS 발송	source 없는 SMS 발송 추측 X

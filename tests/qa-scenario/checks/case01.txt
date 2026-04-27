@@ -1,0 +1,5 @@
+# case01: Change Brief In-Round 항목으로부터 시나리오 생성
+must_match	^scenario_id: SCN-connectory-1-001$	scenario_id 정확 매치
+must_match	^brief_ref: clients/Connectory/Connectory-1/change-briefs/	brief_ref가 Change Brief 경로
+must_match	^srs_ref: missing$	SRS 미연결 partial-skip
+must_match	포인트 충전 화면	source(Change Brief) 키워드 보존

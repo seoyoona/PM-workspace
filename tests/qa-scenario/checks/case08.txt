@@ -1,0 +1,3 @@
+# case08: client 미입력 → 저장 안 함, 화면만
+file_must_not_exist	tests/qa-scenario/outputs/case08-*.md	client 누락 시 outputs 파일 생성 X
+note	case08은 outputs/ 파일이 없어야 PASS	informational only

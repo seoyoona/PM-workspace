@@ -1,0 +1,5 @@
+# case03: SRS / Change Brief 모두 부재 → partial-skip
+must_match	^srs_ref: missing$	srs_ref missing
+must_match	^brief_ref: none$	brief_ref none
+must_match	\[확인 필요 — Nexus Agent / PM\]	Section 1 partial-skip 안내
+must_not_match	hard-fail	hard-fail 단어 출력 안 됨
