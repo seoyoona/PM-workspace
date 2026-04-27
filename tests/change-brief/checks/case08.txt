@@ -1,0 +1,4 @@
+# case08: Notion URL fetch 실패 → free-text fallback
+must_match	Notion 페이지를 읽지 못했습니다	free-text fallback 안내 메시지
+must_match	free-text 모드로 전환	free-text 모드 전환 명시
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items

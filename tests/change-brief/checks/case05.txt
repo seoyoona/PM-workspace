@@ -1,0 +1,7 @@
+# case05: SRS / design.md 부재 → partial-skip
+must_match	srs_ref: missing	frontmatter srs missing
+must_match	design_md: missing	frontmatter design missing
+must_match	SRS 미연결	§2 partial-skip 문구
+must_match	design.md 부재	§3 partial-skip 문구
+must_match_in_section	In-Round	- \[ \]	partial-skip 후에도 분류 정상 진행
+must_not_match	hard-fail	hard-fail 단어 출력에 안 보여야 함

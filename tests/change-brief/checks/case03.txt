@@ -1,0 +1,6 @@
+# case03: musing → Confirm-Needed
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items
+must_match	musing	musing 근거 명시
+must_match_in_section	In-Round	\(현재 항목 없음\)	musing → In-Round 승급 금지
+must_match_in_section	Next-Round	\(현재 항목 없음\)	Next-Round 빈
+must_match_in_section	Out-of-Scope	\(현재 항목 없음\)	Out-of-Scope 빈

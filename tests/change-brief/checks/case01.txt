@@ -1,0 +1,6 @@
+# case01: 작은 UI 문구 변경 → In-Round
+must_match_in_section	In-Round	- \[ \]	In-Round 1+ items
+must_match	Impact: Low	Low impact 표기
+must_match_in_section	Next-Round	\(현재 항목 없음\)	Next-Round 빈 표시
+must_match_in_section	Out-of-Scope	\(현재 항목 없음\)	Out-of-Scope 빈 표시
+must_match_in_section	Confirm-Needed	\(현재 항목 없음\)	Confirm-Needed 빈 표시

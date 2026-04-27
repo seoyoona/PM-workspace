@@ -1,0 +1,3 @@
+# case07: --client 미입력 → 저장 안 함
+file_must_not_exist	tests/change-brief/outputs/case07-*.md	client 누락 시 outputs/에 파일 생성 금지
+note	case07은 outputs/ 파일이 없어야 PASS	informational only

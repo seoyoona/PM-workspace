@@ -1,0 +1,32 @@
+# Global checks — fields separated by TAB. Lines starting with # are comments.
+# Format: TYPE<TAB>PATTERN<TAB>DESCRIPTION
+must_match	^---$	frontmatter delimiter present
+must_match	^status: 	status field in frontmatter
+must_match	^client: 	client field in frontmatter
+must_match	^project: 	project field in frontmatter
+must_match	^source: 	source field in frontmatter
+must_match	^srs_ref: 	srs_ref field in frontmatter
+must_match	^design_md: 	design_md field in frontmatter
+must_match	Reference draft	reference-draft banner
+must_match	## 1\. 변경 요청 요약	section 1 present
+must_match	## 2\. 기존 범위 대비 영향도	section 2 present
+must_match	## 3\. 화면·UX 영향	section 3 present
+must_match	## 4\. 추가 개발 여부 결정	section 4 (4-bucket) present
+must_match	### In-Round	In-Round bucket present
+must_match	### Next-Round	Next-Round bucket present
+must_match	### Out-of-Scope	Out-of-Scope bucket present
+must_match	### Confirm-Needed	Confirm-Needed bucket present
+must_match	## 5\. 고객 확인 질문	section 5 present
+must_match	## 6\. 개발팀 전달 문구	section 6 present
+must_match	다음 단계 \(자동 실행 안 함	"다음 단계" 안내
+must_match	status가 `Dev-Handoff`로 변경되기 전까지	In-Round 확정 아님 경고
+must_match	Impact: (Low|Medium|High|Unknown)	Impact 레벨 표기
+must_not_match	[0-9]+ ?MD\b	구체 공수(MD) 임의 산정 금지
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	구체 공수(hour) 임의 산정 금지
+must_not_match	[0-9]+ ?(일|days?)\b	구체 공수(day) 임의 산정 금지
+must_not_match	Auto-Pass	Auto-Pass 라벨 미사용
+must_not_match	→ 자동 실행	자동 chain 트리거 언어 미사용
+must_not_match	Running /(to-spec|dev-chat|client-chat)	자동 sub-skill 실행 언어 미사용
+must_not_match	mcp__nexus-os__	Nexus MCP 호출 미언급
+must_not_match	notion-create-pages	Notion 자동 페이지 생성 호출 미언급
+must_not_match	notion-update-page	Notion 자동 페이지 수정 호출 미언급

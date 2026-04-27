@@ -1,0 +1,6 @@
+# case04: 명백한 계약 범위 밖 → Out-of-Scope
+must_match_in_section	Out-of-Scope	- \[ \]	Out-of-Scope 1+ items
+must_match	WEB-only	계약 type=WEB-only 근거 인용
+must_match_in_section	In-Round	\(현재 항목 없음\)	In-Round 빈
+must_match_in_section	Next-Round	\(현재 항목 없음\)	Next-Round 빈
+must_match_in_section	Confirm-Needed	\(현재 항목 없음\)	Confirm-Needed 빈

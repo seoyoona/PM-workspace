@@ -1,0 +1,4 @@
+# case06: --project 미입력 → frontmatter project=unknown + 2순위 fallback
+must_match	^project: unknown$	frontmatter project=unknown
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items
+must_match_filepath	tests/change-brief/outputs/case06-id-verification-no-project.md	2순위 fallback 경로 패턴 검증
