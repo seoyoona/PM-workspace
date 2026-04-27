@@ -26,14 +26,15 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 18개 스킬
+## 19개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
 | 미팅 끝남 | `/meeting-note` | Notion 미팅노트 (한눈에 보기 + 확정 사항 + Action Items 불릿 + 범위 밖 + 메모 이슈 + PM 배경) + Teams(EN) + 카톡(KR) |
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
-| 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
+| 진행 중 변경 요청 | `/change-brief` | 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) Markdown — 로컬 저장. 자동 chain 트리거 없음. SRS/design.md 부재 시 partial-skip. |
+| 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB (Change Brief Dev-Handoff 이후 PM이 별도 실행 권장) |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
@@ -64,7 +65,7 @@ yoona-workspace/
 ├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
 ├── scripts/migrate-pm.sh        # PM 마이그레이션 (수동 fallback)
 ├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
-└── .claude/commands/            # 18개 스킬 파일
+└── .claude/commands/            # 19개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드
@@ -105,8 +106,15 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → 여러 소스 → 한국어 SRS/기능명세 초안
   → /srs-translate, /kickoff-prep의 upstream
 
+/change-brief = 진행 중 변경 요청 triage (Nexus PM Agent 미관할 in-flight delta 레이어)
+  → 클라/미팅/QA 피드백 → 4-bucket(In-Round / Next-Round / Out-of-Scope / Confirm-Needed) → 로컬 markdown
+  → 자동 chain 트리거 없음. status=Dev-Handoff 도달 후 PM이 직접 /to-spec 실행
+  → SRS/design.md 부재 시 partial-skip (해당 섹션만 "확인 필요")
+  → 구체 공수 산정 금지, Impact 레벨만 (Low/Medium/High/Unknown)
+
 /to-spec = 큰 요청 처리
   → 스펙 페이지 + 태스크 DB 동시 생성
+  → 권장 선행: /change-brief Dev-Handoff 승급 후 In-Round 항목만
 
 /today-brief = 아침 브리핑
   → PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동)
@@ -133,6 +141,10 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 - **중복 방지 (멱등성)** — 같은 주차/날짜/URL/제목 기준 중복 페이지 생성 차단. 덮어쓰기는 반드시 사용자 확인 후에만
 - **보수적 자동화** — `--client` 자동 default는 24h 활동 기준 1개일 때만 + 명시 통보. `/todo` 프로젝트 자동 확정은 Notion select 옵션과 exact match일 때만
 - **확인 프롬프트 표준** — 3~4지 선택지 + "추천: N" 명시 + 한 번에 하나의 확인 포인트만
+- **Nexus PM Agent와 역할 경계** — 사내 공식 PM 에이전트가 sales→SRS→design.md→wireframe→handoff까지 Official source-of-truth 담당. 이 워크스페이스는 in-flight delta 레이어 (진행 중 변경 처리, QA, 운영 자동화). PM 산출물은 항상 `Draft / PM Review / Dev-Handoff` 라벨, **Official 산출물 생성·편집 금지**. Nexus MCP는 현재 메타데이터(project/task/contract) read만 가능, 문서 콘텐츠(SRS / design.md / 녹음) read 불가 → 그런 입력은 로컬·Notion에서 받는다.
+- **Hard-fail 최소화** — 외부 의존성(SRS, design.md) 부재 시 스킬 전체 실패 대신 partial-skip (해당 섹션만 "확인 필요"). Notion URL fetch 실패 시 free-text fallback.
+- **자동 chain 금지** — 신규 스킬은 다음 스킬을 자동 트리거하지 않음. "다음 단계" 안내만 출력. PM 수동 게이트.
+- **AI 공수 산정 금지** — 구체 수치(MD/hour/day) 임의 산정 금지, Impact 레벨만(Low/Medium/High/Unknown).
 
 ## 고도화 운영 방식
 

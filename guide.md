@@ -14,6 +14,7 @@
 미팅 끝났다        → /meeting-note
 개발팀에 전달      → /dev-chat
 고객에게 전달      → /client-chat
+진행 중 변경 요청   → /change-brief
 고객 요청이 크다   → /to-spec
 검수 요청이다      → /qa-request
 주간 보고          → /weekly-report
@@ -48,7 +49,8 @@ Nexus 일별 기록    → /nexus-daily
 - **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지. **Light 입력 타입 감지**: 클라 메시지 원문(한국어 존댓말) 복붙이면 `Client confirmed... / Client reports... / Client is asking...` 중계 프레이밍 사용 (dev팀이 PM을 주체로 오해 방지), PM 내부 메모/반말은 프레이밍 없이 직접 번역. **출력 직후 선택지**: Light = 4지선다(`1.전송(추천) / 2.수정 / 3.복사만 / 4.취소`), Standard = 3지선다(`1.전송(추천) / 2.수정 / 3.취소`). Teams 전송은 HTTP code 검증 후에만 완료 보고 (timeout 15s). Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
 - **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더 금지. **인사+용건+질문 setup을 1줄에 병합**, 프로젝트명/완충 표현/의미 중복 금지. 느낌표는 메시지당 1개 이내(친근한 인사용). 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
-- **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인)
+- **change-brief**: 진행 중 변경 요청 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) — 클라/미팅/QA 피드백 → 영향도·UI 영향·고객 확인 질문·개발팀 전달 문구를 한 페이지로 정리. **로컬 markdown 저장만** (v1), Notion/Nexus/Linear 자동 write 없음. SRS·design.md 부재 시 partial-skip(해당 섹션만 "확인 필요"). status: Draft → PM Review → Dev-Handoff (frontmatter 수동). `/to-spec`·`/dev-chat`·`/client-chat` 자동 트리거 없음 — 다음 단계는 안내만. 구체 공수(MD/hour) 임의 산정 금지, Impact 레벨만(Low/Medium/High/Unknown).
+- **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인). **권장 선행 흐름**: `/change-brief`로 4-bucket triage 후 status=`Dev-Handoff` In-Round 항목만 PM이 직접 실행.
 - **daily-scrum**: 프로젝트별 daily check-in → PM Action Hub "오늘"+"진행 중" 자동 추출(해당 프로젝트 필터) + 사용자 추가 입력(blocker/메모) 병합 → Notion DB 저장 + 영어 dev-chat 메시지 생성/Teams 전송. **Dev-chat 구조**: narrative summary(1-2줄) + PM todos + 조건부(Blockers/Team today/Heads-up). Basecamp heartbeat 방식 — 맥락 먼저, bullet 뒤. Summary 생략 조건: todo ≤3 + 같은 테마 + 특별 맥락 없음. Standard 승격: blocker 2+ OR todo 5+ OR scrum 녹취에서 team today 추출. 4지선다(`1.저장+전송(추천) / 2.저장만 / 3.수정 / 4.취소`).
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
 - **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" **단일 OR 쿼리로 조회** (속도 개선) + Google Calendar와 병렬 호출. "오늘 뭐해야돼"로 수동 실행
@@ -154,10 +156,11 @@ yoona-workspace/
 ├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
 ├── templates/teams-post.md      # Teams 전송 공통 snippet (U1/U2)
 ├── templates/client-default.md  # --client 보수적 default 규칙 (B1)
-└── .claude/commands/            # 스킬 파일 (18개)
+└── .claude/commands/            # 스킬 파일 (19개)
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
+    ├── change-brief.md
     ├── to-spec.md
     ├── qa-request.md
     ├── weekly-report.md
@@ -171,7 +174,8 @@ yoona-workspace/
     ├── todo.md
     ├── qa-feedback.md
     ├── create-srs.md
-    └── nexus-daily.md
+    ├── nexus-daily.md
+    └── setup-workspace.md
 ```
 
 ### Nexus OS 연동 파일
