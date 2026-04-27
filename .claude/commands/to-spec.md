@@ -11,6 +11,8 @@ allowed-tools: Read, Glob, Grep, mcp__notion-cigro__notion-create-pages, mcp__no
 
 ## Context
 - 요청→스펙 템플릿: !`cat /Users/yoona/Documents/yoona-workspace/templates/request-to-spec.md`
+- **권장 선행 흐름**: 진행 중 변경 요청은 먼저 `/change-brief`로 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed)한 뒤, status가 `Dev-Handoff`로 승격된 In-Round 항목만 PM이 직접 `/to-spec`을 실행해 ticketing한다. `/change-brief`가 `/to-spec`을 자동 트리거하지 않으며, `/to-spec` 측도 `/change-brief` 자동 호출은 안 함 — 둘 사이는 PM 수동 게이트.
+- `--source change-brief <path>` 인자로 호출되면 해당 Change Brief 파일을 read-only 참조해 In-Round 항목만 ticketing 대상으로 사용한다.
 
 ## Instructions
 

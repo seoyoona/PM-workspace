@@ -14,7 +14,10 @@ Most projects follow this sequence. Be aware of which phase we are in.
 4. **Planning Confirmation** → if needed, confirm scope/plan with client (Korean)
 5. **Design Confirmation** → if needed, confirm design with client (Korean)
 6. **Final Handoff** → package confirmed specs into English for dev and design teams
-7. **Ongoing** → updates, tickets, weekly reports, ad-hoc requests
+7. **In-Flight Change Handling** → 진행 중 클라이언트 추가 요구 / 미팅 결정 / QA 피드백이 scope·design 영향 가능성 있으면 `/change-brief`로 먼저 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) 후 ticketing. Official SRS / design.md는 편집하지 않음 (Nexus Agent / design owner 영역).
+8. **Ongoing Ops** → routine updates, tickets (post-triage), weekly reports, daily scrum, ad-hoc requests
+
+> Phases 1–3과 Official SRS / design.md / wireframe 작성은 사내 **Nexus PM Agent** 영역. 이 워크스페이스는 Draft / PM Review / Dev-Handoff 라벨 산출물만 다룬다. Nexus MCP는 현재 project / task / contract 메타데이터만 노출하고, SRS / design.md / 녹음 / transcript 같은 문서 콘텐츠는 read 불가 — 그런 입력은 로컬 파일 또는 Notion에서 받는다.
 
 ## Critical Rule: Ambiguity Handling
 **NEVER resolve ambiguity silently.** When the Korean source is:
