@@ -7,7 +7,7 @@ set -o pipefail
 
 cd "$(dirname "$0")/.."
 
-CASES=(case01 case02 case03 case04 case05 case06 case07 case08)
+CASES=(case01 case02 case03 case04 case05 case06 case07 case09 case08)
 TESTS_DIR="tests/qa-scenario"
 OUTPUTS_DIR="$TESTS_DIR/outputs"
 CHECKS_DIR="$TESTS_DIR/checks"

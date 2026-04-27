@@ -1,0 +1,7 @@
+# case09: 10~12단계 mid-range → "분리 검토 권장" 안내, cap 초과 경고는 X
+must_match	^scenario_id: SCN-connectory-5-001$	scenario_id 매치
+must_match	분리할지 검토하세요	mid-range 분리 검토 안내 문구
+must_match	자동 분리는 하지 않	자동 분리 X 명시
+must_match	^\| 10 \|	Section 5에 10단계 row 존재
+must_not_match	단계 수가 12를 초과	13+ cap 초과 경고 문구는 미포함 (10단계는 cap 초과 아님)
+must_not_match	자동 자르	cap 초과 관련 자동 자르기 안내도 미포함

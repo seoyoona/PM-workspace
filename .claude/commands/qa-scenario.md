@@ -37,7 +37,7 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 15. 기존 시나리오 파일 자동 수정·삭제 (수정은 PM이 직접 편집)
 16. SRS / Change Brief 부재로 스킬 전체 hard-fail (해당 섹션만 partial-skip)
 17. 한 라운드 시나리오가 화면 수 × 1.5 초과 시 자동 작성 (경고만)
-18. 단계 수 12 초과 시 자동 작성 (경고만)
+18. 단계 수 10~12: 분리 검토 권장 안내 / 13 이상: cap 초과 경고 / 자동 자르기·자동 분리 모두 금지
 19. `clients/*/`로 ignore되지 않는 경로에 시나리오 파일 저장 — 항상 `clients/<client>/<project>/qa/scenarios/` 또는 fallback
 20. 실제 시나리오 파일을 git add (정책상 ignored 유지)
 21. `.gitignore` 수정
@@ -103,11 +103,17 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 - **Section 2 사용자 역할**: source에서 명시된 역할만. 추론 시 `[추론]` 태그
 - **Section 3 사전 조건**: source(SRS / Change Brief)에 있는 환경·계정·외부 의존만 명시. 임의 추가 X. 미정인 항목은 `[확인 필요]`. **계정·credential은 redact 또는 mock 사용 권고**
 - **Section 4 테스트 목표**: 1문장. source의 의도 그대로 정규화
-- **Section 5 단계별 행동**: source의 흐름·UI 표현·인터랙션을 따름. **단계 수 cap 12** — 초과 시 작성 후 경고:
-  ```
-  ⚠️ 단계 수가 12를 초과했습니다 (현재 N). 시나리오 분리를 권장합니다.
-  ```
-  PM이 분리 결정. 자동 자르기 X
+- **Section 5 단계별 행동**: source의 흐름·UI 표현·인터랙션을 따름. 단계 수는 **3-tier 가이드**:
+  - **권장: 6~9 단계** — PM/QA 실행성 기준 sweet spot. 별도 안내 없음
+  - **10~12 단계: 분리 검토 권장** — 작성 정상 진행, 출력 하단에 의무 안내:
+    ```
+    ℹ️ 현재 시나리오는 N단계입니다. PM/QA 실행성을 위해 작성/제출/검수 등으로 분리할지 검토하세요. 자동 분리는 하지 않습니다.
+    ```
+  - **13 단계 이상: cap 초과 경고** — 작성 정상 진행, 출력 하단에 의무 경고:
+    ```
+    ⚠️ 단계 수가 12를 초과했습니다 (현재 N). 시나리오 분리를 권장합니다.
+    ```
+  - 자동 자르기 / 자동 분리 절대 금지. PM이 수동으로 분리 여부 결정
 - **Section 6 최종 기대 결과**: UI / DB / 외부 모두 작성. 외부 효과가 source에 명시 안 된 경우 `[확인 필요]`
 - **Section 7 실패 시 기록 체크리스트**: 표준 항목 그대로 (PM이 실행 시 채움)
 - **Section 8 미디어 요구**: priority 따라 default 제안 — P0=모든 단계 스크린샷+영상 / P1=실패 시 스크린샷 / P2=불필요. PM이 변경 가능
@@ -175,7 +181,7 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 - "Internal QA scenario draft — for PM/QA validation only. Not a client-facing spec or dev ticket." banner 의무 포함
 - source 없는 흐름·기대결과·권한·데이터 조건 발명 금지 — 부족 시 `[확인 필요]`
 - 추론은 `[추론]` 태그 명시 (CLAUDE.md L135)
-- 단계 cap 12 강제 경고
+- 단계 수 3-tier 가이드 강제: 6~9 권장 / 10~12 분리 검토 권장 안내 / 13+ cap 초과 경고. 자동 자르기·자동 분리 X
 - scenario ID 충돌 시 자동 덮어쓰기 금지
 
 ### 금지
