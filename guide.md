@@ -123,7 +123,7 @@ Nexus 일별 기록    → /nexus-daily
 |---|---|---|
 | `clients/{name}/CLAUDE.md` | 톤·도메인·담당자 컨텍스트 | `/new-project` 자동 |
 | `glossary/{name}.md` | 용어집 (KR↔EN) | `/new-project` 자동 |
-| Notion DB 3개 (프로젝트 SELECT) | 페이지 생성 시 프로젝트 태깅 | `/new-project` 자동 |
+| Notion DB 4개 (프로젝트 SELECT: 프로젝트 문서 / 커뮤니케이션 / 태스크 / Daily Scrum Log) | 페이지 생성 시 프로젝트 태깅 + linked view 필터 | `/new-project` 자동 |
 | PM Workspace 토글 | 프로젝트별 linked view 모음 | `/new-project` 자동 |
 | `.claude/nexus-alias.md` | Nexus OS 프로젝트 매핑 | 수동 추가 |
 | `.env.teams` | Teams 그룹채팅 ID | `/new-project` 안내 (선택) |
