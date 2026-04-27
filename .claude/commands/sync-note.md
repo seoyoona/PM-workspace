@@ -86,7 +86,7 @@ Let me know if anything needs clarification.
      cat > /tmp/teams_msg.json << 'EOF'
      {"chat_id":"<chat_id>","message":"<메시지 내용>"}
      EOF
-     HTTP_CODE=$(curl -sS --connect-timeout 5 --max-time 15 \
+     HTTP_CODE=$(curl -sS --connect-timeout 5 --max-time 30 \
        -o /tmp/teams_resp.txt -w "%{http_code}" \
        -X POST -H 'Content-Type: application/json' \
        -d @/tmp/teams_msg.json '<TEAMS_FLOW_URL>')
@@ -94,11 +94,12 @@ Let me know if anything needs clarification.
      ```
    - 성공 판정 (엄격):
      - `CURL_EXIT==0` AND `200 <= HTTP_CODE < 300` → `SEND_OK=1`, "✅ 전송 완료 (HTTP $HTTP_CODE)"
-     - `CURL_EXIT==28` → "⚠️ 전송 시간 초과 (15s)" + `SEND_OK=0`
-     - 5xx 또는 timeout → 1회만 재시도. 재시도 후에도 실패면 포기
+     - `CURL_EXIT==28` → "⚠️ 전송 시간 초과 (30s) — Flow가 응답을 못 줬지만 메시지는 전달됐을 가능성 높음. Teams에서 직접 확인 후 미수신이면 수동 재전송." + `SEND_OK=0`. **자동 재시도 금지** (중복 전송 방지).
+     - 5xx만 1회 재시도. 재시도 후에도 실패면 포기.
      - 그 외 실패 → "⚠️ 전송 실패 (HTTP $HTTP_CODE)" + 응답 본문 500자 출력 + `SEND_OK=0`
    - **`SEND_OK=0`일 때 절대 "전송 완료" 출력 금지**. 메시지 본문 재출력 + "복사해서 수동 전송" 안내.
    - 4xx는 재시도하지 않음.
+   - **timeout(CURL_EXIT=28)은 재시도하지 않음** — Power Automate Flow는 timeout이 나도 메시지를 이미 전달했을 가능성이 높아 재시도 시 중복 위험.
    - 주의: JSON 내 특수문자 이스케이프 필수. bash `!` 문제 방지를 위해 반드시 파일 경유
 7. **활동 로그**: **반드시 `SEND_OK=1`일 때만** 기록 (취소/에러/timeout 시 미기록)
    ```bash
