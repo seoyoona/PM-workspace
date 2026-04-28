@@ -15,7 +15,7 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 - **로컬 markdown 저장만** (`clients/<c>/<p>/qa/plans/QA-<CLIENT>-YYYYMMDD.md`, `clients/*/` 룰로 자동 git ignored)
 - SRS / Change Brief / design.md 부재 시 **hard-fail 금지** — partial-skip (해당 영역만 `[확인 필요]` 또는 `(현재 항목 없음)`)
 - AI는 source 기반 작성. **source에 없는 사용자 흐름·기대결과·권한·데이터 조건 발명 금지**
-- 이전 v1.5 `/qa-scenario`(단일 시나리오 도구)는 본 스킬로 통합·대체됨. 흡수된 룰: Scenario ID(P0/P1/EDGE/REG-NN) / 단계 수 가이드 / no-invention / partial-skip / git ignored / Internal banner / 자동 ticketing 금지 / 자동 브라우저 금지
+- v1.5 단일 시나리오 도구는 본 스킬로 통합·대체됨 (deprecate 기간 0). 흡수된 룰: Scenario ID(P0/P1/EDGE/REG-NN) / 단계 수 가이드 / no-invention / partial-skip / git ignored / Internal banner / 자동 ticketing 금지 / 자동 브라우저 금지
 
 ## Source 우선순위 (중요)
 
@@ -92,9 +92,9 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 다음 5개 source를 동시 탐색:
 
 1. **SRS** (primary):
-   - `clients/<c>/<p>/srs.md` (로컬)
-   - 없으면 `mcp__notion-cigro__notion-search` "SRS" + 프로젝트명 keyword
-   - 둘 다 없으면 `srs_ref: missing` + Section 1·§9에 `[확인 필요]`
+   - `clients/<c>/<p>/srs.md` (로컬, 자동 탐색)
+   - PM이 `--srs <Notion URL>` 명시한 경우 `mcp__notion-cigro__notion-fetch`로 read
+   - 둘 다 없으면 `srs_ref: missing` + Section 1·§9에 `[확인 필요]`. v1.1에서 Notion 자동 search 추가 검토 (현재 v1은 명시 URL fetch만)
 2. **Change Briefs** (primary):
    - `clients/<c>/<p>/change-briefs/*.md` 모두 read
    - frontmatter `status: Dev-Handoff`인 것만 In-Round source로 사용
