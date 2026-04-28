@@ -173,5 +173,5 @@ All document outputs go to Notion, not local files. Local workspace is for templ
 - Templates are in `templates/` — use them as structure guides, not rigid forms
 - Glossaries are in `glossary/{client-name}.md` — always check before translating
 - `clients/{client-name}/CLAUDE.md` — client context, auto-loaded when working in that directory
-- `clients/{client-name}/{project}/qa/scenarios/SCN-*.md` — `/qa-scenario`로 생성한 PM/QA 내부 검수 시나리오. **고객·개발팀 전달용 아님**. `clients/*/` 룰로 자동 git ignored. v1.5는 로컬 markdown만, Notion 자동 write 없음.
+- `clients/{client-name}/{project}/qa/plans/QA-*.md` — `/qa-plan`으로 생성한 PM/QA 내부 검수 플랜 (9 섹션 — 범위·역할·플로우·P0/P1/EDGE/REG 시나리오·전달 메시지·확인 필요). **고객·개발팀 §8만 전달**, §1~§7은 내부용. `clients/*/` 룰로 자동 git ignored. 로컬 markdown만, Notion 자동 write 없음.
 - `handoffs/` — for local drafts only, final output goes to Notion

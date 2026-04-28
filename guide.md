@@ -15,7 +15,7 @@
 개발팀에 전달      → /dev-chat
 고객에게 전달      → /client-chat
 진행 중 변경 요청   → /change-brief
-QA 시나리오 작성    → /qa-scenario
+QA 플랜 작성        → /qa-plan
 고객 요청이 크다   → /to-spec
 검수 요청이다      → /qa-request
 주간 보고          → /weekly-report
@@ -44,23 +44,124 @@ Nexus 일별 기록    → /nexus-daily
 
 ---
 
-## 핵심 구조
+## 커맨드 레퍼런스 (20개)
 
-- **meeting-note** = source of truth → dev-chat / client-chat은 downstream. Notion 친화 **불릿 기반 구조**: `한눈에 보기` → `이번 미팅에서 확정된 것` → `Action Items` (바로 진행할 일 / 확인 후 회신할 일) → `이번 라운드 범위 밖` → `메모해둘 이슈` → `PM 참고 배경`. 2-phase 파이프라인(Phase A Raw 추출 → Phase B 분류 매핑). Action Items는 표 대신 owner 볼드 불릿, 모호하면 `메모해둘 이슈`로 보수 승격. Part2/3은 쿼리 → Teams/카톡 톤 서술.
-- **dev-chat**: Light(번역만) / Standard(구조화 브리프) 자동 감지. **Light 입력 타입 감지**: 클라 메시지 원문(한국어 존댓말) 복붙이면 `Client confirmed... / Client reports... / Client is asking...` 중계 프레이밍 사용 (dev팀이 PM을 주체로 오해 방지), PM 내부 메모/반말은 프레이밍 없이 직접 번역. **출력 직후 선택지**: Light = 4지선다(`1.전송(추천) / 2.수정 / 3.복사만 / 4.취소`), Standard = 3지선다(`1.전송(추천) / 2.수정 / 3.취소`). Teams 전송은 HTTP code 검증 후에만 완료 보고 (timeout 15s). Closing 문구 없음. 클라이언트 장문은 핵심만 증류. 도메인 한국어 용어 괄호 병기.
-- **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더 금지. **인사+용건+질문 setup을 1줄에 병합**, 프로젝트명/완충 표현/의미 중복 금지. 느낌표는 메시지당 1개 이내(친근한 인사용). 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
-- **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
-- **change-brief**: 진행 중 변경 요청 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) — 클라/미팅/QA 피드백 → 영향도·UI 영향·고객 확인 질문·개발팀 전달 문구를 한 페이지로 정리. **로컬 markdown 저장만** (v1), Notion/Nexus/Linear 자동 write 없음. SRS·design.md 부재 시 partial-skip(해당 섹션만 "확인 필요"). status: Draft → PM Review → Dev-Handoff (frontmatter 수동). `/to-spec`·`/dev-chat`·`/client-chat` 자동 트리거 없음 — 다음 단계는 안내만. 구체 공수(MD/hour) 임의 산정 금지, Impact 레벨만(Low/Medium/High/Unknown).
-- **qa-scenario**: PM/QA 내부 시나리오 문서 1장 생성 (v1.5) — SRS REQ ID / Change Brief In-Round / PM 입력을 source로 받아 9-section Markdown(Source Linkage·역할·사전 조건·테스트 목표·단계별 행동·최종 기대·실패 기록·미디어·실행 로그) 작성. **로컬 저장만** (`clients/<c>/<p>/qa/scenarios/SCN-<slug>-NNN.md`, `clients/*/` 룰로 자동 git ignored). source 없는 사용자 흐름·기대결과·권한·데이터 조건 발명 ❌ → 부족한 항목은 `[확인 필요]`. **단계 수 3-tier 가이드**: 권장 6~9 / 10~12 분리 검토 권장 안내 / 13+ cap 초과 경고. scenario ID 충돌 방지(max+1, 명시 ID 충돌 시 자동 덮어쓰기 X). Notion/Nexus auto-write·자동 ticketing·자동 브라우저·자동 스크린샷 모두 ❌ (v3 qa-agent-skills wrapper 영역). status: 작성중 → 검토 → 확정 (frontmatter 수동). 고객·개발팀 전달용 ❌ — 내부용 banner 의무.
-- **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인). **권장 선행 흐름**: `/change-brief`로 4-bucket triage 후 status=`Dev-Handoff` In-Round 항목만 PM이 직접 실행.
-- **daily-scrum**: 프로젝트별 daily check-in → PM Action Hub "오늘"+"진행 중" 자동 추출(해당 프로젝트 필터) + 사용자 추가 입력(blocker/메모) 병합 → Notion DB 저장 + 영어 dev-chat 메시지 생성/Teams 전송. **Dev-chat 구조**: narrative summary(1-2줄) + PM todos + 조건부(Blockers/Team today/Heads-up). Basecamp heartbeat 방식 — 맥락 먼저, bullet 뒤. Summary 생략 조건: todo ≤3 + 같은 테마 + 특별 맥락 없음. Standard 승격: blocker 2+ OR todo 5+ OR scrum 녹취에서 team today 추출. 4지선다(`1.저장+전송(추천) / 2.저장만 / 3.수정 / 4.취소`).
-- **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
-- **today-brief**: 아침 브리핑 — PM Action Hub "오늘" + "진행 중" **단일 OR 쿼리로 조회** (속도 개선) + Google Calendar와 병렬 호출. "오늘 뭐해야돼"로 수동 실행
-- **todo**: PM 액션 빠르게 추가 → PM Action Hub DB. **`[브라켓]` 값이 Notion `프로젝트` select 옵션과 exact match일 때만 자동 확정**. 실패 시 숫자 3지선다. 같은 제목+프로젝트+작성일이 이미 있으면 skip (retry loop 대응).
-- **qa-feedback**: 고객 QA DB → 번역 + 분류 → 내부 Tasks DB 티켓 자동 생성. **미리보기 후 단일 3지선다** (`1.생성+Status변경(추천) / 2.생성만 / 3.취소`). 원본 QA URL 기준 중복은 skip + 알림 (덮어쓰기 금지).
-- **srs-translate**: 한국어 SRS/기획서 → 영어 구조화 번역 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 내용 추가 금지, Inferred Requirements 섹션 없음). Ambiguities는 실제 모호함 있을 때만 포함. PM이 링크+명시적 지시 첨부 시에만 추가 내용 반영.
-- **create-srs**: 여러 소스 자료 → 한국어 SRS/기능명세 초안 생성 → Notion 프로젝트 문서 DB 저장. 비창작 원칙(소스에 없는 기능 추가 금지). 미리보기 필수
-- **nexus-daily**: Nexus OS 일별 기록 자동화 — Notion 활동(PM Action Hub + 커뮤니케이션 DB) + Activity Log(dev-chat/client-chat/sync-note 사용 기록) 자동 수집 → 프로젝트/시간/메모 자동 생성 → 미리보기 확인 → Nexus row별 저장. 계층형 매칭(alias→exact→normalized→substring) + `.claude/nexus-alias.md` 프로젝트 매핑. Nexus API curl은 timeout 30s (hang 방지).
+한 줄 요약. 입력 옵션 · 동작 단계 · Hard Boundaries · 예시는 `.claude/commands/{커맨드명}.md` 본문 참조.
+
+| 커맨드 | 한 줄 설명 |
+|---|---|
+| `/setup-workspace` | 워크스페이스 초기 세팅 — Notion DB 5개 + 허브 페이지 + ID 교체 (최초 1회) |
+| `/new-project` | 새 프로젝트 셋업 — 로컬 파일 + Notion 뷰 + Project management |
+| `/create-srs` | 여러 소스 → 한국어 SRS/기능명세 초안 (Notion 프로젝트 문서 DB) |
+| `/srs-translate` | 한국어 SRS → 영어 구조화 번역 (Notion) |
+| `/kickoff-prep` | 킥오프 미팅 안건(KR) + 내부 노트(EN) 2페이지 |
+| `/meeting-note` | 미팅 녹취/메모 → Notion 미팅노트 + Teams + 카톡 한번에 |
+| `/dev-chat` | 고객 요청/미팅 결과 → 영어 Teams 메시지 (Light/Standard 자동) |
+| `/client-chat` | 개발팀 메시지 → 한국어 카톡 메시지 (질문/업데이트 자동 감지) |
+| `/sync-note` | 내부 sync 미팅 → 개발팀 Teams 메시지 |
+| `/change-brief` | 진행 중 변경 요청 4-bucket triage (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) |
+| `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (범위·역할·플로우·P0/P1/EDGE/REG·전달·확인) — 자동 git ignored |
+| `/to-spec` | 클라이언트 요청 → Notion 스펙 + 태스크 DB |
+| `/qa-request` | 검수 요청 카톡 메시지 (web/admin/apk/program/testflight 자동 감지) |
+| `/qa-feedback` | 고객 QA DB → 내부 Tasks DB 영문 티켓 (번역+분류) |
+| `/issue-ticket` | Linear 이슈 티켓 (한/영 입력) |
+| `/daily-scrum` | 프로젝트별 daily check-in → Notion + 영어 dev-chat Teams + PM 할 일 자동으로 PM Action Hub 등록 |
+| `/today-brief` | 아침 브리핑 — PM Action Hub + Google Calendar |
+| `/todo` | PM 액션 빠르게 추가 → PM Action Hub DB |
+| `/weekly-report` | 주간 리포트 (Notion 커뮤니케이션 DB) |
+| `/nexus-daily` | Nexus OS 일별 근무시간 자동 기록 |
+
+---
+
+## 업무별 흐름 가이드
+
+상황별로 어떤 커맨드를 어떤 순서로 쓰는지. 각 커맨드의 옵션·세부 동작은 위 [커맨드 레퍼런스](#커맨드-레퍼런스-20개) 안내대로 `.claude/commands/{커맨드명}.md` 본문 참조.
+
+### 1. 새 프로젝트 시작
+
+```
+영업팀 인계
+  ↓ /new-project --client <name> --project <name>
+SRS 받음 (한국어)
+  ↓ /create-srs (소스 → 한국어 SRS 초안)
+  ↓ PM 검토
+  ↓ /srs-translate (영어 구조화)
+킥오프 준비
+  ↓ /kickoff-prep (한국어 안건 + 영어 내부 노트)
+```
+
+### 2. 미팅이 끝났다
+
+```
+녹취록/메모
+  ↓ /meeting-note (3-part: Notion 미팅노트 + Teams + 카톡)
+미팅에서 큰 변경 요청 발생
+  ↓ /change-brief (4-bucket triage)
+결정된 dev 액션 (자동 추출)
+  ↓ /dev-chat
+고객 follow-up (자동 추출)
+  ↓ /client-chat
+```
+
+### 3. 진행 중 변경 요청 / 추가 기획
+
+```
+클라/미팅/QA 피드백 (scope·design 영향 가능성)
+  ↓ /change-brief — In-Round / Next-Round / Out-of-Scope / Confirm-Needed
+status=Dev-Handoff 도달 + In-Round 항목
+  ↓ PM 직접 /to-spec --source change-brief <path>
+Confirm-Needed 항목
+  ↓ Section 5 → /client-chat 별도 실행
+```
+
+### 4. QA 라운드
+
+```
+SRS / Change Brief In-Round / QA history / 클라 컨텍스트 기준 전체 QA 플랜 작성 (PM/QA 내부)
+  ↓ /qa-plan <client>   (positional, 대소문자 무관, project/round/srs/brief 모두 자동 탐색)
+검수 시작 안내 (고객 카톡)
+  ↓ /qa-request
+고객 QA 피드백 들어옴
+  ↓ /qa-feedback (번역+분류 → 내부 Tasks DB)
+  ↓ 본문 첫 줄에 "시나리오 ID: SCN-..." 메타 보존 (수동)
+정식 티켓이 필요한 큰 버그
+  ↓ /issue-ticket → Linear
+```
+
+### 5. 매일 / 매주 운영
+
+- 아침 브리핑 (평일 10:30 자동): `/today-brief`
+- 데일리 스크럼: `/daily-scrum --client <name>`
+- 빠른 할 일 추가: `/todo [project] 내용`
+- 주간 보고: `/weekly-report --client <name>`
+- 퇴근 전 시간 기록: `/nexus-daily`
+
+### 6. 통신 변환 보조 (수시)
+
+- 고객 → 개발팀: `/dev-chat` (Light = 클라 원문 중계 / Standard = 브리프)
+- 개발팀 → 고객: `/client-chat` (질문/업데이트 자동 감지)
+- 내부 sync → 개발팀: `/sync-note`
+
+---
+
+## 개별 커맨드 상세
+
+각 커맨드의 입력 옵션 · 동작 단계 · Hard Boundaries · 출력 예시 · 안전장치는 본문 파일 참조:
+
+```
+.claude/commands/{커맨드명}.md
+```
+
+핵심 공통 정책은 아래 [공통 최적화 규칙](#공통-최적화-규칙-배치-abc) 섹션 + 다음 invariant 참조.
+
+**모든 신규 in-flight delta 스킬에 적용되는 invariant:**
+
+- **Official 산출물 생성·편집 금지** (Nexus PM Agent 영역) — Draft / PM Review / Dev-Handoff 라벨 산출물만 생성 가능
+- **Hard-fail 최소화** — 외부 의존(SRS, design.md) 부재 시 partial-skip (해당 섹션만 "확인 필요")
+- **자동 chain 트리거 금지** — 다음 단계는 안내만, PM 수동 게이트
+- **AI 공수 산정 금지** — 구체 MD/hour/day 임의 산정 X, Impact / priority 레벨만
+- **Nexus MCP는 메타데이터 only** — SRS / design.md / 녹음 / transcript은 Nexus MCP로 read 불가, 로컬·Notion에서 받음
+- **추측성 UI 위치 자동 제안 금지** — source(SRS/design.md/Change Brief) 근거 없으면 `[확인 필요]`
 
 ---
 
@@ -163,7 +264,7 @@ yoona-workspace/
     ├── dev-chat.md
     ├── client-chat.md
     ├── change-brief.md
-    ├── qa-scenario.md
+    ├── qa-plan.md
     ├── to-spec.md
     ├── qa-request.md
     ├── weekly-report.md
