@@ -1,4 +1,4 @@
-# case05: project 1개 자동 선택 + 근거 명시
-must_match	^project: DSA$	project 정확
-must_match	선택된 project: DSA	선택 안내 출력
-must_match	근거: clients/dsa/ 하위 project 1개만 존재	선택 근거 명시
+# case05: single project auto-selected with reason
+must_match	^project: DSA$	project exact
+must_match	Selected project: DSA	selection notice present
+must_match	only one project exists under clients/dsa/	selection reason cited

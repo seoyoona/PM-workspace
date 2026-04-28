@@ -1,6 +1,6 @@
-# case07: 시나리오 13단계 → 단계 cap 초과 경고
-must_match	단계 cap 초과	cap 초과 경고
-must_match	현재 13	현재 단계 수 명시
-must_match	자동 자르기 X	자동 자르기 X 명시
-must_match	^\| 13 \||  13\.	13단계 row 또는 number 존재 (자동 자르기 안 함 검증)
-must_match	분리 권장	PM 수동 분리 안내
+# case07: 13-step scenario → step cap exceeded warning
+must_match	Step cap exceeded	cap-exceeded warning
+must_match	currently 13	current step count cited
+must_match	No auto-truncation	auto-truncation explicitly forbidden
+must_match	^\| 13 \||  13\.	13-step row or number present (verifies no auto-truncation)
+must_match	split recommended	PM manual split guidance

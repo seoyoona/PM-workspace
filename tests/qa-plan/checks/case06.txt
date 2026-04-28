@@ -1,5 +1,5 @@
-# case06: project N개 → 추천 1개 선택 + 근거 + 다른 후보 명시
-must_match	^project: Connectory-1$	선택된 project
-must_match	선택된 project: Connectory-1	선택 안내
-must_match	최근 mtime	근거 — 최근 mtime 인용
-must_match	Connectory-2, Connectory-3	다른 후보 명시
+# case06: N projects → 1 recommended + reason + other candidates listed
+must_match	^project: Connectory-1$	selected project
+must_match	Selected project: Connectory-1	selection notice
+must_match	recent mtime	reason — recent mtime cited
+must_match	Connectory-2, Connectory-3	other candidates listed

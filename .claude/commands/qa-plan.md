@@ -1,5 +1,5 @@
 ---
-description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(범위·역할·플로우·P0·P1·Edge·회귀·전달 메시지·확인 필요)
+description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어 (Vietnamese QA 팀용)
 argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text]
 allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 ---
@@ -12,8 +12,9 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 ## Context
 - 출력 템플릿: !`cat /Users/yoona/Documents/yoona-workspace/templates/qa-plan.md`
 - 한 라운드 검수에 필요한 9-section QA 플랜을 단일 Markdown으로 생성. PM이 §8을 그대로 QA / 고객사에 전달
+- **출력 언어: 영어 (Vietnamese QA 팀이 읽음).** 사용자 명시 한국어 인용(원문) 외에는 모두 영어로 작성
 - **로컬 markdown 저장만** (`clients/<c>/<p>/qa/plans/QA-<CLIENT>-YYYYMMDD.md`, `clients/*/` 룰로 자동 git ignored)
-- SRS / Change Brief / design.md 부재 시 **hard-fail 금지** — partial-skip (해당 영역만 `[확인 필요]` 또는 `(현재 항목 없음)`)
+- SRS / Change Brief / design.md 부재 시 **hard-fail 금지** — partial-skip (해당 영역만 `[TBD]` 또는 `(none)`)
 - AI는 source 기반 작성. **source에 없는 사용자 흐름·기대결과·권한·데이터 조건 발명 금지**
 - v1.5 단일 시나리오 도구는 본 스킬로 통합·대체됨 (deprecate 기간 0). 흡수된 룰: Scenario ID(P0/P1/EDGE/REG-NN) / 단계 수 가이드 / no-invention / partial-skip / git ignored / Internal banner / 자동 ticketing 금지 / 자동 브라우저 금지
 
@@ -117,76 +118,78 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 
 QA Plan ID = `QA-<CLIENT>-YYYYMMDD` (CLIENT는 대문자, 날짜는 created date)
 
-### Step 5. 9 섹션 작성
+### Step 5. 9 섹션 작성 (모두 영어로 출력)
 
-**원칙: source 기반 작성. source 부족 시 `[확인 필요]` 또는 `(현재 항목 없음)`. 발명 ❌. 9 섹션은 모두 존재해야 하지만 모두 채워야 하는 건 아님.**
+**원칙: source 기반 작성. source 부족 시 `[TBD]` 또는 `(none)`. 발명 ❌. 9 섹션은 모두 존재해야 하지만 모두 채워야 하는 건 아님.**
 
-#### Section 1. QA 범위
-- 이번 라운드 검수 대상: SRS REQ ID list / 화면 list / Change Brief In-Round 항목
-- 검수 제외: Out-of-Scope 항목 / Confirm-Needed 항목 (검수 안 하지만 인지)
-- source 부족 시 `[확인 필요]` 명시
+**언어: 모든 본문은 영어. 한국어 원문 인용이 필요한 경우만 quote block에 보존하고 곧바로 영어 번역 추가.**
 
-#### Section 2. 테스트 역할 / 계정
-- 역할 list: glossary / SRS에서 명시된 역할만 (예: 일반회원, 조직관리자, 외부사용자)
-- 계정: mock 계정 식별자 + role 매핑 (실제 credential 대신)
-- 외부 의존: 결제 mock / 이메일 mock / 푸시 토큰 등
+#### Section 1. QA Scope
+- This round's test targets: SRS REQ IDs / screens / Change Brief In-Round items
+- Out of scope: Out-of-Scope items / Confirm-Needed items (acknowledged, not tested)
+- Mark `[TBD]` when source is insufficient
 
-#### Section 3. 전체 플로우 맵
-- **텍스트 트리 또는 표**로 출력 (Mermaid ❌ — `--diagram` 옵션 없음)
-- 진입 → 핵심 흐름 → 종결까지 사용자 journey
-- design.md 있으면 화면명 보조 인용 (UI 표현 검증 보조 only)
-- 플로우별 priority 표시
+#### Section 2. Test Roles / Accounts
+- Role list: only roles declared in SRS / glossary (e.g., regular member, org admin, external user)
+- Accounts: mock identifiers + role mapping (no real credentials)
+- External dependencies: payment mock / email mock / push tokens / etc.
 
-#### Section 4. P0 핵심 시나리오 (필수 회귀)
-각 시나리오는 compact 5-line block:
+#### Section 3. End-to-End Flow Map
+- **Text tree or table** (no Mermaid — `--diagram` flag not available)
+- User journey from entry → core flow → exit
+- Reference design.md screen names if available (UI representation cross-check only)
+- Annotate per-flow priority
+
+#### Section 4. P0 Critical Scenarios (mandatory regression)
+Compact 5-line block per scenario:
 
 ```
-### P0-NN: <한 줄 제목>
-- 역할: <주 역할>
-- 사전 조건: <환경·계정·외부 의존 1줄>
-- 단계 (≤9 권장):
+### P0-NN: <one-line title>
+- Role: <primary role>
+- Preconditions: <environment / account / external deps in one line>
+- Steps (≤9 recommended):
   1. ...
   2. ...
-- 기대 결과: <UI / DB / 외부 — 한 블록>
+- Expected outcome: <UI / DB / External — single block>
 ```
 
-P0 = SRS REQ ID 또는 Change Brief In-Round 직접 연결, 회귀 빈발 영역.
+P0 = direct link to SRS REQ ID or Change Brief In-Round, high-regression area.
 
-**단계 수 3-tier 가이드 (시나리오 1개당):**
-- **권장 6~9** (sweet spot)
-- **10~12**: 시나리오 본문 끝에 `ℹ️ 분리 검토 권장 (현재 N단계)` 안내. 자동 분리 X
-- **13+**: `⚠️ 단계 cap 초과 (현재 N) — 시나리오 분리 권장.` PM 수동 결정. 자동 자르기 X
+**Step-count 3-tier guidance (per scenario):**
+- **Recommended 6–9** (sweet spot)
+- **10–12**: append `ℹ️ Consider splitting (currently N steps)` at end of scenario. No auto-split.
+- **13+**: `⚠️ Step cap exceeded (currently N) — split recommended.` PM decides manually. No auto-truncation.
 
-#### Section 5. P1 보조 시나리오 (라운드별)
-P0와 동일 format, priority만 P1.
+#### Section 5. P1 Supporting Scenarios (per-round)
+Same format as P0; priority is P1.
 
-#### Section 6. Edge / Negative Case
-- 입력 검증 실패
-- 권한 boundary
-- 동시성 / race condition
-- 외부 mock 실패
-- ID 형식: `EDGE-NN`
-- **source 근거 있는 것만.** 추측 ❌
+#### Section 6. Edge / Negative Cases
+- Input validation failures
+- Permission boundaries
+- Concurrency / race conditions
+- External mock failures
+- ID format: `EDGE-NN`
+- **Source-grounded only.** No speculation.
 
 #### Section 7. Regression Checklist
-- 이전 라운드 FAIL 시나리오 재실행 list
-- 이번 라운드 변경 영향 영역 list (Change Brief In-Round 기반)
-- ID 형식: `REG-NN`
-- 빈 상태면 `(현재 회귀 대상 없음)`
+- Re-run prior-round FAIL scenarios
+- Impact areas from this round's Change Brief In-Round items
+- ID format: `REG-NN`
+- If empty: `(no regression items in this round)`
 
-#### Section 8. QA 전달 메시지
-PM이 그대로 복사해 QA / 고객사에 전달:
-- 검수 시작 안내 (한국어 합니다체 또는 client/CLAUDE.md 톤)
-- 시나리오 ID list + 우선순위 (P0-NN, P1-NN, EDGE-NN, REG-NN)
-- staging URL / mock 계정 / 마감 일자
-- 실패 보고 형식: "본문 첫 줄에 `QA Plan: QA-<CLIENT>-YYYYMMDD`, `Scenario: P0-NN` 메타 보존" 가이드
+#### Section 8. QA Handoff Message
+Copy/paste-ready block for QA / client transmission. **English only** (Vietnamese QA team reads it):
+- Brief intro line
+- Scenario ID list + priorities (P0-NN, P1-NN, EDGE-NN, REG-NN)
+- Staging URL / mock accounts / deadline
+- Failure report convention: "preserve `QA Plan: QA-<CLIENT>-YYYYMMDD`, `Scenario: P0-NN` meta on the first line of the report body"
 
-#### Section 9. PM 확인 필요
-- SRS / Change Brief / design.md 부재로 인한 `[확인 필요]` 항목 모음
-- musing 톤 항목 (Decision 승급 X)
-- 외부 효과(이메일·푸시 등) source 부재 항목
-- 시나리오 수 cap (화면 × 1.5) 초과 시 PM 분리·통합 검토 권장 안내
-- project resolution 0개일 때 입력 요청
+#### Section 9. PM Review Items
+- `[TBD]` items caused by missing SRS / Change Brief / design.md
+- Musing-tone items (not promoted to Decision)
+- Items with external effects (email / push) lacking source
+- Scenario count cap (screens × 1.5) exceeded — split/consolidate review prompt
+- Project resolution = 0 → input request
 
 ### Step 6. 시나리오 수 cap 점검
 - 화면 수 × 1.5를 초과하면 §9 PM 확인 필요로 안내
@@ -204,36 +207,36 @@ PM이 그대로 복사해 QA / 고객사에 전달:
 
 ### Step 8. 화면 출력 + "다음 단계" 안내
 
-**화면에 출력:**
+**화면에 출력 (PM-facing, 한국어 요약 가능):**
 - 생성된 파일 경로 (또는 3순위 fallback 시 "저장 안 됨, 화면 출력만")
 - frontmatter 요약 (qa_plan_id / status / round / srs_ref / brief_refs 수 / design_md)
-- §1 QA 범위 요약 (검수 대상 시나리오 N개, P0=X / P1=Y / EDGE=Z / REG=W)
-- §8 QA 전달 메시지 (PM이 그대로 복사 가능)
+- §1 QA Scope 요약 (검수 대상 시나리오 N개, P0=X / P1=Y / EDGE=Z / REG=W)
+- §8 QA Handoff Message (영어, PM이 그대로 복사해 QA에 전달)
 - "다음 단계" 안내 블록
 
 **"다음 단계" 블록 의무 포함:**
 ```
 📋 다음 단계 (자동 실행 안 함, 안내만):
-- §8 QA 전달 메시지 → /client-chat 또는 /qa-request에 사용
+- §8 QA Handoff Message → /qa-request 또는 /client-chat에 사용
 - 검수 후 발견된 버그 → /qa-feedback (본문 첫 줄에 "QA Plan: QA-<CLIENT>-YYYYMMDD" 또는 "Scenario: P0-NN" 메타 보존)
 - 큰 버그 → /issue-ticket → Linear
-- status 변경: 파일 frontmatter status: 직접 수정 (작성중 → 검토 → 확정)
+- status 변경: 파일 frontmatter status: 직접 수정 (Draft → Review → Final)
 ```
 
 **내부 검수용 의무 안내 (마지막 줄):**
 ```
-⚠️ 이 QA plan은 PM/QA 내부 검수용입니다. §1~§7을 고객·개발팀에 그대로 전달하지 마세요. §8만 전달용.
+⚠️ This QA plan is for PM/QA internal validation. Do not forward §1–§7 to client or dev team directly. §8 is the only client/QA-facing section.
 ```
 
 ## Rules
 
 ### 필수
-- 한국어 출력 (단계의 영어 UI 텍스트는 그대로 보존 가능)
-- frontmatter status 기본 `작성중` (자동 승급 X)
+- **출력은 영어** (Vietnamese QA 팀이 읽음). 한국어 원문 인용이 필요한 경우 quote block 안에 보존하고 영어 번역 추가
+- frontmatter status 기본 `Draft` (Draft → Review → Final, 자동 승급 X)
 - "Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket." banner 의무 포함
-- source 없는 흐름·기대결과·권한·데이터 조건 발명 금지 — 부족 시 `[확인 필요]`
-- 추론은 `[추론]` 태그 명시 (CLAUDE.md L135)
-- 9 섹션 모두 존재. 빈 섹션은 `[확인 필요]` 또는 `(현재 항목 없음)`로 명시
+- source 없는 흐름·기대결과·권한·데이터 조건 발명 금지 — 부족 시 `[TBD]`
+- 추론은 `[inferred]` 태그 명시 (영어 출력이므로 한국어 `[추론]` 대신)
+- 9 섹션 모두 존재. 빈 섹션은 `[TBD]` 또는 `(none)`로 명시
 - 시나리오별 단계 cap 3-tier 가이드 적용 (6~9 / 10~12 / 13+)
 - 시나리오 ID 형식: `P0-NN` / `P1-NN` / `EDGE-NN` / `REG-NN` (zero-pad 2자리)
 - QA Plan ID 형식: `QA-<CLIENT>-YYYYMMDD` (CLIENT는 대문자)

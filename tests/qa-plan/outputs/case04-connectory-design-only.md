@@ -1,5 +1,5 @@
 ---
-status: 작성중
+status: Draft
 client: connectory
 project: Connectory-2
 qa_plan_id: QA-CONNECTORY-20260428
@@ -9,75 +9,76 @@ author: PM
 srs_ref: missing
 brief_refs: []
 design_md: clients/Connectory/Connectory-2/design.md
-scope: 전체
+scope: all
 ---
 
 # QA Plan — connectory Connectory-2 R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.
 
-## 1. QA 범위
-**검수 대상:**
-- SRS 요구사항: [확인 필요 — SRS 미연결]
-- 화면 list: [확인 필요 — primary source 부족]
-- Change Brief In-Round 항목: (현재 항목 없음)
+## 1. QA Scope
 
-**검수 제외 (인지만):**
-- Out-of-Scope 항목: [확인 필요 — Change Brief 부재로 미식별]
-- Confirm-Needed 항목: [확인 필요]
+**Test Targets:**
+- SRS requirements: [TBD — SRS not linked]
+- Screens: [TBD — primary source insufficient]
+- Change Brief In-Round items: (none)
 
-## 2. 테스트 역할 / 계정
-- 주 역할: [확인 필요 — SRS·Change Brief·QA history 부재로 역할 미식별]
-- mock 계정 매핑: [확인 필요]
-- 외부 의존: [확인 필요]
+**Out of Scope (acknowledged, not tested):**
+- Out-of-Scope items: [TBD — Change Brief missing, cannot identify]
+- Confirm-Needed items: [TBD]
 
-## 3. 전체 플로우 맵
-[확인 필요 — 사용자 흐름의 primary source(SRS / Change Brief / QA history) 부재. design.md만으로 시나리오 흐름 발명 ❌]
+## 2. Test Roles / Accounts
+- Primary roles: [TBD — SRS / Change Brief / QA history all missing, roles not identifiable]
+- Mock account mapping: [TBD]
+- External dependencies: [TBD]
 
-(design.md에서 정의된 화면 컴포넌트 / 토큰 인용은 가능하나, "사용자가 어떻게 흐르는가"는 추론하지 않음)
+## 3. End-to-End Flow Map
+[TBD — primary sources for user flow (SRS / Change Brief / QA history) are missing. design.md alone cannot be used to invent scenario flows ❌]
 
-## 4. P0 핵심 시나리오 (필수 회귀)
+(design.md screen components / tokens may be referenced, but "how the user flows" is not inferred)
 
-(현재 항목 없음 — primary source 부족으로 P0 시나리오 작성 불가)
+## 4. P0 Critical Scenarios (mandatory regression)
 
-## 5. P1 보조 시나리오
+(none — primary source insufficient, P0 scenarios cannot be authored)
 
-(현재 항목 없음)
+## 5. P1 Supporting Scenarios
 
-## 6. Edge / Negative Case
+(none)
 
-(현재 항목 없음 — Edge case는 source 명시 흐름이 있어야 작성 가능)
+## 6. Edge / Negative Cases
 
-## 7. Regression Checklist (이전 → R1)
+(none — Edge cases require source-defined flows)
 
-(현재 회귀 대상 없음)
+## 7. Regression Checklist (previous → R1)
 
-## 8. QA 전달 메시지
+(no regression items in this round)
+
+## 8. QA Handoff Message
 
 ```
-[확인 필요 — primary source 부족으로 QA 플랜 본문 작성 불가. 아래 sources 확보 후 재실행 권장:
-- SRS / 기능명세
+[TBD — primary source insufficient, QA plan body cannot be authored. Please re-run after securing one or more of:
+- SRS / functional spec
 - Change Brief
-- 이전 QA history
-design.md만으로는 시나리오 발명 X (no-invention 룰)]
+- prior-round QA history
+design.md alone cannot be used to invent scenarios (no-invention rule)]
 ```
 
-## 9. PM 확인 필요
+## 9. PM Review Items
 
-- **SRS 미연결** — clients/Connectory/Connectory-2/srs.md 또는 Notion 프로젝트 문서 DB 확인 필요
-- **Change Brief 부재** — clients/Connectory/Connectory-2/change-briefs/ 비어 있음
-- **QA history 부재** — 이전 라운드 피드백 자료 없음
-- **design.md만 있음** — UI 토큰·컴포넌트는 정의되어 있으나, design.md를 QA 범위·기능 흐름 primary source로 사용하지 않음 (no-invention 룰)
-- → primary source 확보 후 `/qa-plan` 재실행 권장
-
----
-
-## 다음 단계 (자동 실행 안 함, 안내만)
-
-- 본 QA plan은 source 부족으로 검수에 사용 불가
-- PM이 SRS / Change Brief / QA history 중 1개 이상 확보 후 `/qa-plan connectory --project Connectory-2` 재실행
-- design.md만으로는 시나리오 발명 X (룰 위반)
+- **SRS not linked** — confirm clients/Connectory/Connectory-2/srs.md or Notion project doc DB
+- **Change Brief missing** — clients/Connectory/Connectory-2/change-briefs/ is empty
+- **QA history missing** — no prior-round feedback materials
+- **design.md only** — UI tokens / components are defined, but design.md is not a primary source for QA scope or feature flow (no-invention rule)
+- → secure primary source then re-run `/qa-plan`
 
 ---
 
-> ⚠️ **이 QA plan은 PM/QA 내부 검수용입니다.** §1~§7을 고객·개발팀에 그대로 전달하지 마세요. §8만 전달용 — 단, 본 case는 §8도 [확인 필요] 상태이므로 전달 X.
+## Next Steps (no auto-execution, guidance only)
+
+- This QA plan cannot be used for testing due to insufficient source
+- PM should secure ≥1 of SRS / Change Brief / QA history, then re-run `/qa-plan connectory --project Connectory-2`
+- design.md alone cannot be used to invent scenarios (rule violation)
+
+---
+
+> ⚠️ **This QA plan is for PM/QA internal validation.** Do not forward §1–§7 to client or dev team directly. §8 is the only client/QA-facing section — but in this case §8 is also [TBD], so do not forward.

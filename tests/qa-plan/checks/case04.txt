@@ -1,14 +1,14 @@
-# case04: design.md만 → no-invention 강제 (P0/P1 시나리오 발명 X)
+# case04: design.md only → no-invention enforced (no P0/P1 invention)
 must_match	^srs_ref: missing$	SRS missing
 must_match	^brief_refs: \[\]$	brief_refs empty
-must_match	^design_md: clients/	design.md만 있음
-must_match	primary source 부족	primary source 부족 명시
-must_match	no-invention 룰	룰 인용
-must_match_in_section	4. P0 핵심 시나리오 (필수 회귀)	\(현재 항목 없음	P0 빈 (발명 X)
-must_match_in_section	5. P1 보조 시나리오	\(현재 항목 없음	P1 빈
-must_not_match	mock_advisor	source 없는데 계정 발명 X
-must_not_match	mock_member	source 없는데 계정 발명 X
-must_not_match	mock_admin	source 없는데 계정 발명 X
-must_not_match	mock_user	source 없는데 계정 발명 X
-must_not_match	토스 결제	source 없는 외부 의존 발명 X
-must_not_match	토스 sandbox	source 없는 외부 의존 발명 X
+must_match	^design_md: clients/	design.md only
+must_match	primary source insufficient	primary-source-insufficient marker
+must_match	no-invention rule	rule cited
+must_match_in_section	4. P0 Critical Scenarios (mandatory regression)	\(none	P0 empty (no invention)
+must_match_in_section	5. P1 Supporting Scenarios	\(none	P1 empty
+must_not_match	mock_advisor	no account invention without source
+must_not_match	mock_member	no account invention without source
+must_not_match	mock_admin	no account invention without source
+must_not_match	mock_user	no account invention without source
+must_not_match	Toss payment	no external-dependency invention without source
+must_not_match	Toss sandbox	no external-dependency invention without source

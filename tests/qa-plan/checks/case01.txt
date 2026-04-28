@@ -1,10 +1,10 @@
-# case01: 풀-소스 DSA — P0+P1+EDGE+REG 모두 작성
-must_match	^qa_plan_id: QA-DSA-20260428$	QA Plan ID 정확 매치
-must_match	^srs_ref: clients/dsa/DSA/srs\.md$	SRS 경로 정확
-must_match	REQ-DSA-01	SRS REQ ID 인용
-must_match	### P0-01:	P0-01 시나리오 존재
-must_match	### P0-02:	P0-02 시나리오 존재
-must_match	### P1-01:	P1-01 시나리오 존재
-must_match	### EDGE-01:	EDGE-01 존재
-must_match	### REG-01:	REG-01 존재 (이전 라운드 회귀)
-must_match	mock_advisor_dsa01	mock 계정 식별자 사용
+# case01: full-source DSA — P0+P1+EDGE+REG all present
+must_match	^qa_plan_id: QA-DSA-20260428$	QA Plan ID exact match
+must_match	^srs_ref: clients/dsa/DSA/srs\.md$	SRS path exact
+must_match	REQ-DSA-01	SRS REQ ID cited
+must_match	### P0-01:	P0-01 scenario present
+must_match	### P0-02:	P0-02 scenario present
+must_match	### P1-01:	P1-01 scenario present
+must_match	### EDGE-01:	EDGE-01 present
+must_match	### REG-01:	REG-01 present (prior-round regression)
+must_match	mock_advisor_dsa01	mock account identifier used

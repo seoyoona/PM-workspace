@@ -1,5 +1,5 @@
 ---
-status: 작성중
+status: Draft
 client: dsa
 project: DSA
 qa_plan_id: QA-DSA-20260428
@@ -9,137 +9,140 @@ author: PM
 srs_ref: clients/dsa/DSA/srs.md
 brief_refs: [clients/dsa/DSA/change-briefs/2026-04-25-report-preview-risk-emphasis.md]
 design_md: clients/dsa/DSA/design.md
-scope: 전체
+scope: all
 ---
 
 # QA Plan — DSA DSA R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.
 
-## 1. QA 범위
-**검수 대상:**
-- SRS 요구사항: REQ-DSA-01 (보고서 작성), REQ-DSA-02 (보고서 검수), REQ-DSA-03 (운행일지)
-- 화면 list: 프로젝트 상세 / 기술지도 현황 / 보고서 작성·미리보기·편집 / 운행일지 작성
-- Change Brief In-Round 항목: 보고서 미리보기 화면에 위험요인 강조 표시 추가 (clients/dsa/DSA/change-briefs/2026-04-25-...md)
+## 1. QA Scope
 
-**검수 제외 (인지만):**
-- Out-of-Scope 항목: (현재 항목 없음)
-- Confirm-Needed 항목: (현재 항목 없음)
+**Test Targets:**
+- SRS requirements: REQ-DSA-01 (report authoring), REQ-DSA-02 (report review), REQ-DSA-03 (vehicle log)
+- Screens: Project detail / Tech advisory dashboard / Report compose·preview·edit / Vehicle log compose
+- Change Brief In-Round items: Risk-factor emphasis on report preview screen (clients/dsa/DSA/change-briefs/2026-04-25-...md)
 
-## 2. 테스트 역할 / 계정
-- 주 역할: 기술지도위원, 조직관리자
-- mock 계정 매핑:
-  - mock_advisor_dsa01 — role: 기술지도위원, 보유 프로젝트 1건 할당
-  - mock_org_admin_dsa01 — role: 조직관리자, 검수 권한
-- 외부 의존: [확인 필요 — 인세프 동기화 / 알림 채널 source 미명시]
+**Out of Scope (acknowledged, not tested):**
+- Out-of-Scope items: (none)
+- Confirm-Needed items: (none)
 
-## 3. 전체 플로우 맵
+## 2. Test Roles / Accounts
+- Primary roles: Tech Advisor, Org Admin
+- Mock account mapping:
+  - mock_advisor_dsa01 — role: Tech Advisor, 1 project assigned
+  - mock_org_admin_dsa01 — role: Org Admin, review permission
+- External dependencies: [TBD — INSEP sync / notification channel source not specified]
+
+## 3. End-to-End Flow Map
 ```
-mock_advisor 로그인
-└── 프로젝트 상세
-    └── 기술지도 현황
-        ├── 보고서 작성 폼
-        │   ├── 위험요인 입력
-        │   ├── 개선사항 입력
-        │   └── 미리보기 → 편집 → 제출
-        └── 검수 대기 list (mock_org_admin)
-            └── 보고서 상세 → 승인 / 반려
+mock_advisor login
+└── Project detail
+    └── Tech advisory dashboard
+        ├── Report compose form
+        │   ├── Risk-factor input
+        │   ├── Improvement input
+        │   └── Preview → Edit → Submit
+        └── Review queue (mock_org_admin)
+            └── Report detail → Approve / Reject
 ```
 
-(design.md 화면명 보조 인용: 미리보기 영역의 위험요인 강조 token은 `--color-danger` 사용)
+(design.md cross-check: risk-factor emphasis token uses `--color-danger`)
 
-## 4. P0 핵심 시나리오 (필수 회귀)
+## 4. P0 Critical Scenarios (mandatory regression)
 
-### P0-01: 기술지도위원 보고서 작성·제출 (REQ-DSA-01)
-- 역할: 기술지도위원
-- 사전 조건: staging, mock_advisor_dsa01, 담당 프로젝트 1건 할당, 사진 mock 1장
-- 단계 (≤9):
-  1. mock_advisor_dsa01 로그인 → 메인 진입
-  2. 프로젝트 list → 담당 프로젝트 선택
-  3. 기술지도 현황 진입 → "보고서 작성" 클릭
-  4. 사진 1장 업로드
-  5. 위험요인 입력
-  6. 미리보기 → 위험요인 강조 표시 확인 (Change Brief In-Round 검증)
-  7. 편집 → 제출
-- 기대 결과: UI "검수 대기" 라벨 / DB reports.status=`pending_review` / 외부 [확인 필요]
+### P0-01: Tech Advisor authors and submits report (REQ-DSA-01)
+- Role: Tech Advisor
+- Preconditions: staging, mock_advisor_dsa01, 1 project assigned, 1 mock photo
+- Steps (≤9):
+  1. Log in as mock_advisor_dsa01 → main entry
+  2. Project list → select assigned project
+  3. Enter Tech advisory dashboard → click "Compose report"
+  4. Upload 1 photo
+  5. Enter risk factors
+  6. Open preview → verify risk-factor emphasis (Change Brief In-Round verification)
+  7. Edit → Submit
+- Expected outcome: UI shows "Pending review" label / DB reports.status=`pending_review` / External [TBD]
 
-### P0-02: 조직관리자 보고서 검수 승인 (REQ-DSA-02)
-- 역할: 조직관리자
-- 사전 조건: P0-01 완료된 보고서 1건 존재, mock_org_admin_dsa01
-- 단계 (≤9):
-  1. mock_org_admin_dsa01 로그인
-  2. 검수 대기 list 진입
-  3. P0-01 보고서 선택 → 상세 진입
-  4. 위험요인·개선사항 확인
-  5. 승인 클릭
-- 기대 결과: UI 보고서 status `approved` / DB reports.status=`approved`, 검수자 기록 / 외부 [확인 필요]
+### P0-02: Org Admin reviews and approves report (REQ-DSA-02)
+- Role: Org Admin
+- Preconditions: 1 report from P0-01 exists, mock_org_admin_dsa01
+- Steps (≤9):
+  1. Log in as mock_org_admin_dsa01
+  2. Enter Review queue
+  3. Select report from P0-01 → open detail
+  4. Verify risk factors and improvements
+  5. Click Approve
+- Expected outcome: UI status changes to `approved` / DB reports.status=`approved`, reviewer recorded / External [TBD]
 
-## 5. P1 보조 시나리오
+## 5. P1 Supporting Scenarios
 
-### P1-01: 운행일지 작성 (REQ-DSA-03)
-- 역할: 기술지도위원
-- 사전 조건: mock_advisor_dsa01, 차량 1대 할당
-- 단계 (≤9):
-  1. 차량 메뉴 진입
-  2. 운행일지 작성 → 출발지·도착지·거리 입력
-  3. 저장
-- 기대 결과: UI 일지 list에 추가 / DB vehicle_logs row 생성
+### P1-01: Vehicle log entry (REQ-DSA-03)
+- Role: Tech Advisor
+- Preconditions: mock_advisor_dsa01, 1 vehicle assigned
+- Steps (≤9):
+  1. Open Vehicle menu
+  2. Compose log → enter origin·destination·distance
+  3. Save
+- Expected outcome: UI log list updated / DB vehicle_logs row created
 
-## 6. Edge / Negative Case
+## 6. Edge / Negative Cases
 
-### EDGE-01: 사진 미업로드로 보고서 제출 시도
-- 시나리오: P0-01 단계 4 skip
-- 기대 결과: 제출 차단, 에러 메시지 노출
+### EDGE-01: Submit report without uploading photo
+- Scenario: skip step 4 of P0-01
+- Expected outcome: submission blocked, error message shown
 
-### EDGE-02: 다른 기술지도위원의 프로젝트 접근 시도
-- 시나리오: mock_advisor_dsa01이 본인 미할당 프로젝트 URL 직접 접근
-- 기대 결과: 403 또는 프로젝트 list로 redirect
+### EDGE-02: Tech Advisor accesses another advisor's project
+- Scenario: mock_advisor_dsa01 directly opens unassigned project URL
+- Expected outcome: 403 or redirect to project list
 
 ## 7. Regression Checklist (R0 → R1)
 
-### REG-01: 보고서 제출 시 status 미반영 (R0 FAIL)
-- 원래 시나리오: P0-01 변형 — 제출 후 list 새로고침 시 `pending_review` 미표시
-- 라운드: R0 (이전)
-- 재실행 요건: P0-01 완료 후 list 새로고침 + 다른 PM 계정으로 list 조회
+### REG-01: Report submit status not reflected (R0 FAIL)
+- Original scenario: P0-01 variant — after submit, list refresh did not show `pending_review`
+- Round: R0 (previous)
+- Re-run criteria: complete P0-01 then refresh list and view from another PM account
 
-## 8. QA 전달 메시지
+## 8. QA Handoff Message
 
 ```
-안녕하세요, DSA R1 QA 플랜을 공유드립니다.
+Hi team,
 
-검수 시나리오:
-- P0 (필수): P0-01, P0-02
-- P1 (보조): P1-01
+Sharing the QA plan for DSA R1.
+
+Scenarios in scope:
+- P0 (mandatory): P0-01, P0-02
+- P1 (supporting): P1-01
 - EDGE: EDGE-01, EDGE-02
 - REG: REG-01
 
-테스트 환경:
-- staging URL: [확인 필요 — DSA staging URL 공유 필요]
-- mock 계정: mock_advisor_dsa01 (기술지도위원), mock_org_admin_dsa01 (조직관리자)
-- 마감 일자: [확인 필요]
+Test environment:
+- Staging URL: [TBD — DSA staging URL to be shared]
+- Mock accounts: mock_advisor_dsa01 (Tech Advisor), mock_org_admin_dsa01 (Org Admin)
+- Deadline: [TBD]
 
-실패 보고 시 본문 첫 줄에 다음 메타를 보존해 주세요:
+When reporting failures, please preserve the following meta on the first line of the report:
 QA Plan: QA-DSA-20260428
 Scenario: P0-NN
 
-문의 사항은 회신 부탁드립니다.
+Reach out with any questions.
 ```
 
-## 9. PM 확인 필요
+## 9. PM Review Items
 
-- staging URL 공유 필요 (DSA dev팀 확인)
-- 외부 효과: 알림 채널·인세프 동기화 source 부재 → dev팀 확인 필요
-- 마감 일자 확인 후 §8에 반영
-
----
-
-## 다음 단계 (자동 실행 안 함, 안내만)
-
-- §8 QA 전달 메시지 → `/client-chat` 또는 `/qa-request`에 사용
-- 검수 후 발견된 버그 → `/qa-feedback` (본문 첫 줄에 `QA Plan: QA-DSA-20260428` 또는 `Scenario: P0-NN` 메타 보존)
-- 큰 버그 → `/issue-ticket` → Linear
-- status 변경: 이 파일 frontmatter `status:` 직접 수정 (작성중 → 검토 → 확정)
+- Staging URL needs to be shared (confirm with DSA dev team)
+- External effects: notification channel / INSEP sync source missing → confirm with dev team
+- Confirm deadline and reflect in §8
 
 ---
 
-> ⚠️ **이 QA plan은 PM/QA 내부 검수용입니다.** §1~§7을 고객·개발팀에 그대로 전달하지 마세요. §8만 전달용.
+## Next Steps (no auto-execution, guidance only)
+
+- §8 QA Handoff Message → use with `/client-chat` or `/qa-request`
+- Bugs found during QA → `/qa-feedback` (preserve `QA Plan: QA-DSA-20260428` or `Scenario: P0-NN` on the first line of the report body)
+- Significant bugs → `/issue-ticket` → Linear
+- Status change: edit frontmatter `status:` directly (Draft → Review → Final)
+
+---
+
+> ⚠️ **This QA plan is for PM/QA internal validation.** Do not forward §1–§7 to client or dev team directly. §8 is the only client/QA-facing section.

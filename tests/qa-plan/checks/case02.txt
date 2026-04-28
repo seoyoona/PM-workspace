@@ -1,6 +1,6 @@
-# case02: SRS 미연결 → partial-skip
+# case02: SRS not linked → partial-skip
 must_match	^srs_ref: missing$	srs_ref missing
-must_match	\[확인 필요 — SRS 미연결\]	SRS 미연결 명시
-must_match	^brief_refs: \[clients	brief_refs는 정상 (Change Brief 1건)
-must_match	### P0-01:	Change Brief 기반 P0 시나리오 존재
-must_not_match	hard-fail	hard-fail 단어 출력에 안 보여야 함
+must_match	\[TBD — SRS not linked\]	SRS-not-linked marker
+must_match	^brief_refs: \[clients	brief_refs has Change Brief
+must_match	### P0-01:	P0-01 (Change Brief based) present
+must_not_match	hard-fail	hard-fail wording must not appear

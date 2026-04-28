@@ -1,6 +1,6 @@
 # Global checks — TAB-separated. Comments start with #.
 must_match	^---$	frontmatter delimiter
-must_match	^status: 작성중$	status default 작성중
+must_match	^status: Draft$	status default Draft
 must_match	^client: 	client field
 must_match	^project: 	project field
 must_match	^qa_plan_id: QA-[A-Z0-9]+-[0-9]{8}$	QA Plan ID format QA-<CLIENT>-YYYYMMDD
@@ -9,17 +9,17 @@ must_match	^srs_ref: 	srs_ref field
 must_match	^brief_refs: 	brief_refs field
 must_match	^design_md: 	design_md field
 must_match	Internal QA plan — for PM/QA validation only	internal banner
-must_match	## 1\. QA 범위	section 1
-must_match	## 2\. 테스트 역할 / 계정	section 2
-must_match	## 3\. 전체 플로우 맵	section 3
-must_match	## 4\. P0 핵심 시나리오	section 4
-must_match	## 5\. P1 보조 시나리오	section 5
-must_match	## 6\. Edge / Negative Case	section 6
+must_match	## 1\. QA Scope	section 1
+must_match	## 2\. Test Roles / Accounts	section 2
+must_match	## 3\. End-to-End Flow Map	section 3
+must_match	## 4\. P0 Critical Scenarios	section 4
+must_match	## 5\. P1 Supporting Scenarios	section 5
+must_match	## 6\. Edge / Negative Cases	section 6
 must_match	## 7\. Regression Checklist	section 7
-must_match	## 8\. QA 전달 메시지	section 8
-must_match	## 9\. PM 확인 필요	section 9
-must_match	이 QA plan은 PM/QA 내부 검수용입니다	internal use 마지막 경고
-must_match	다음 단계 \(자동 실행 안 함	"다음 단계" 안내
+must_match	## 8\. QA Handoff Message	section 8
+must_match	## 9\. PM Review Items	section 9
+must_match	This QA plan is for PM/QA internal validation	internal use 마지막 경고
+must_match	Next Steps \(no auto-execution	"Next Steps" guidance
 must_not_match	[0-9]+ ?MD\b	구체 공수(MD) 산정 금지
 must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	구체 공수(hour) 산정 금지
 must_not_match	mcp__nexus-os__	Nexus MCP 호출 미언급
