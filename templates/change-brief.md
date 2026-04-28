@@ -7,10 +7,13 @@ source_ref: {URL or quote}
 srs_ref: {URL or path or "missing"}
 design_md: {path or "missing"}
 created: {YYYY-MM-DD}
+deprecated: true
 ---
 
 # Change Brief — {한 줄 요약}
 
+> ⚠️ **DEPRECATED — 이 템플릿은 `/to-spec`(`templates/request-to-spec.md`)으로 흡수되었습니다.** 신규 작성은 `/to-spec` 사용.
+>
 > Reference draft — official spec lives in Nexus / PM Notion.
 
 ## 1. 변경 요청 요약

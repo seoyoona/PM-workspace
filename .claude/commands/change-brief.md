@@ -1,10 +1,19 @@
 ---
-description: 진행 중 변경 요청 triage — In-Round / Next-Round / Out-of-Scope / Confirm-Needed
+description: "[DEPRECATED — /to-spec 4-bucket triage gate로 흡수됨] 진행 중 변경 요청 triage"
 argument-hint: --client <name> [--project <name>] [--srs <path|URL>] [--design <path>] [요청 내용 또는 Notion URL]
 allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
+deprecated: true
 ---
 
-# Change Brief — Mid-Project Scope Triage
+# ⚠️ DEPRECATED — `/change-brief` is now `/to-spec` 4-Bucket Triage Gate
+
+> **이 스킬은 deprecate 진행 중입니다.** v1 자산(4-bucket 분류 / Section 5 고객 확인 질문 / Section 6 개발팀 전달 문구 / Hard Boundaries / partial-skip / no-invention / 추측성 UI 자동 제안 금지 / 구체 공수 AI 산정 금지)은 모두 `/to-spec`에 흡수되었습니다.
+>
+> **권장 흐름:** 진행 중 변경 요청은 `/to-spec --client <name> [요청 내용 또는 Notion URL]` 단일 호출. `/to-spec`이 4-bucket triage → In-Round PM confirm gate → Notion 자동 생성까지 한 흐름으로 처리합니다.
+>
+> 본 스킬은 deprecate 기간 동안 호출 가능하나, 신규 사용은 `/to-spec` 권장. 1-2주 후 제거 예정.
+
+# Change Brief — Mid-Project Scope Triage (DEPRECATED)
 
 ## Arguments
 사용자 입력: $ARGUMENTS
@@ -14,6 +23,7 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 - 진행 중 프로젝트의 클라이언트 추가 요구 / 미팅 결정 / QA 피드백을 4 버킷(In-Round / Next-Round / Out-of-Scope / Confirm-Needed)으로 분류한 Markdown 1장 생성
 - **로컬 markdown 저장만**. Notion / Nexus / Linear 자동 write 없음
 - design.md / SRS 부재 시 hard-fail 금지 — 해당 섹션만 "확인 필요"로 표시
+- ⚠️ **DEPRECATED**: 본 스킬은 `/to-spec` 4-bucket triage gate로 흡수되었습니다. 신규 사용은 `/to-spec` 권장
 
 ## Hard Boundaries (이 스킬은 절대 안 함)
 
