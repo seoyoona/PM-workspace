@@ -15,6 +15,7 @@
 개발팀에 전달      → /dev-chat
 고객에게 전달      → /client-chat
 진행 중 변경 요청   → /change-brief
+QA 시나리오 작성    → /qa-scenario
 고객 요청이 크다   → /to-spec
 검수 요청이다      → /qa-request
 주간 보고          → /weekly-report
@@ -50,6 +51,7 @@ Nexus 일별 기록    → /nexus-daily
 - **client-chat**: 짧은 메시지 기본 (2-5문장). 합니다체. 섹션 헤더 금지. **인사+용건+질문 setup을 1줄에 병합**, 프로젝트명/완충 표현/의미 중복 금지. 느낌표는 메시지당 1개 이내(친근한 인사용). 구조화는 항목 5개 이상 시에만. CLAUDE.md 언어 지정 시 해당 언어로 출력.
 - **qa-request**: 검수/전달 요청 전용 (client-chat과 분리)
 - **change-brief**: 진행 중 변경 요청 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) — 클라/미팅/QA 피드백 → 영향도·UI 영향·고객 확인 질문·개발팀 전달 문구를 한 페이지로 정리. **로컬 markdown 저장만** (v1), Notion/Nexus/Linear 자동 write 없음. SRS·design.md 부재 시 partial-skip(해당 섹션만 "확인 필요"). status: Draft → PM Review → Dev-Handoff (frontmatter 수동). `/to-spec`·`/dev-chat`·`/client-chat` 자동 트리거 없음 — 다음 단계는 안내만. 구체 공수(MD/hour) 임의 산정 금지, Impact 레벨만(Low/Medium/High/Unknown).
+- **qa-scenario**: PM/QA 내부 시나리오 문서 1장 생성 (v1.5) — SRS REQ ID / Change Brief In-Round / PM 입력을 source로 받아 9-section Markdown(Source Linkage·역할·사전 조건·테스트 목표·단계별 행동·최종 기대·실패 기록·미디어·실행 로그) 작성. **로컬 저장만** (`clients/<c>/<p>/qa/scenarios/SCN-<slug>-NNN.md`, `clients/*/` 룰로 자동 git ignored). source 없는 사용자 흐름·기대결과·권한·데이터 조건 발명 ❌ → 부족한 항목은 `[확인 필요]`. **단계 수 3-tier 가이드**: 권장 6~9 / 10~12 분리 검토 권장 안내 / 13+ cap 초과 경고. scenario ID 충돌 방지(max+1, 명시 ID 충돌 시 자동 덮어쓰기 X). Notion/Nexus auto-write·자동 ticketing·자동 브라우저·자동 스크린샷 모두 ❌ (v3 qa-agent-skills wrapper 영역). status: 작성중 → 검토 → 확정 (frontmatter 수동). 고객·개발팀 전달용 ❌ — 내부용 banner 의무.
 - **to-spec**: 큰 기능/변경사항 → 스펙 페이지 + 태스크 DB (linked view 수동 추가 후 개발자가 티켓으로 확인). **권장 선행 흐름**: `/change-brief`로 4-bucket triage 후 status=`Dev-Handoff` In-Round 항목만 PM이 직접 실행.
 - **daily-scrum**: 프로젝트별 daily check-in → PM Action Hub "오늘"+"진행 중" 자동 추출(해당 프로젝트 필터) + 사용자 추가 입력(blocker/메모) 병합 → Notion DB 저장 + 영어 dev-chat 메시지 생성/Teams 전송. **Dev-chat 구조**: narrative summary(1-2줄) + PM todos + 조건부(Blockers/Team today/Heads-up). Basecamp heartbeat 방식 — 맥락 먼저, bullet 뒤. Summary 생략 조건: todo ≤3 + 같은 테마 + 특별 맥락 없음. Standard 승격: blocker 2+ OR todo 5+ OR scrum 녹취에서 team today 추출. 4지선다(`1.저장+전송(추천) / 2.저장만 / 3.수정 / 4.취소`).
 - **sync-note**: 내부 sync 미팅 → 개발팀 Teams 메시지 + 직접 전송 (선택)
@@ -156,11 +158,12 @@ yoona-workspace/
 ├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
 ├── templates/teams-post.md      # Teams 전송 공통 snippet (U1/U2)
 ├── templates/client-default.md  # --client 보수적 default 규칙 (B1)
-└── .claude/commands/            # 스킬 파일 (19개)
+└── .claude/commands/            # 스킬 파일 (20개)
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
     ├── change-brief.md
+    ├── qa-scenario.md
     ├── to-spec.md
     ├── qa-request.md
     ├── weekly-report.md

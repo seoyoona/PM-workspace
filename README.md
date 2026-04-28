@@ -26,7 +26,7 @@
 → 카톡 한국어 메시지 생성 (복붙용)
 ```
 
-## 19개 스킬
+## 20개 스킬
 
 | 상황 | 스킬 | 출력 |
 |------|------|------|
@@ -34,6 +34,7 @@
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 진행 중 변경 요청 | `/change-brief` | 4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed) Markdown — 로컬 저장. 자동 chain 트리거 없음. SRS/design.md 부재 시 partial-skip. |
+| QA 시나리오 작성 | `/qa-scenario` | PM/QA 내부 9-section 시나리오 Markdown — `clients/<c>/<p>/qa/scenarios/` 자동 git ignored. source 없는 발명 ❌ (`[확인 필요]`). 단계 수 3-tier 가이드(6~9 권장 / 10~12 분리 검토 / 13+ cap 초과). 자동 ticketing·자동 브라우저 ❌. |
 | 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB (Change Brief Dev-Handoff 이후 PM이 별도 실행 권장) |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
@@ -65,7 +66,7 @@ yoona-workspace/
 ├── telegram-bot/                # Telegram 봇 — 모바일 PM 스킬 (AWS Lambda)
 ├── scripts/migrate-pm.sh        # PM 마이그레이션 (수동 fallback)
 ├── docs/pm-onboarding.md        # → 세팅 가이드에 통합됨 (deprecated)
-└── .claude/commands/            # 19개 스킬 파일
+└── .claude/commands/            # 20개 스킬 파일
 ```
 
 ### 레이어드 컨텍스트 자동 로드
@@ -111,6 +112,13 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → 자동 chain 트리거 없음. status=Dev-Handoff 도달 후 PM이 직접 /to-spec 실행
   → SRS/design.md 부재 시 partial-skip (해당 섹션만 "확인 필요")
   → 구체 공수 산정 금지, Impact 레벨만 (Low/Medium/High/Unknown)
+
+/qa-scenario = PM/QA 내부 사용자 시나리오 문서 (v1.5 in-flight delta 레이어)
+  → SRS REQ ID / Change Brief In-Round / PM 입력 → 9-section Markdown → clients/<c>/<p>/qa/scenarios/ (자동 git ignored)
+  → source 없는 흐름·기대결과·권한·데이터 조건 발명 ❌ → [확인 필요]
+  → 단계 수 3-tier 가이드: 6~9 권장 / 10~12 분리 검토 / 13+ cap 초과
+  → /qa-feedback과의 연결: 본문 메타 "시나리오 ID: SCN-..." 보존(수동), DB property 추가 ❌(v1.6 검토)
+  → 자동 ticketing·자동 브라우저·자동 스크린샷·Notion auto-write 모두 ❌ (v3 qa-agent-skills wrapper 영역)
 
 /to-spec = 큰 요청 처리
   → 스펙 페이지 + 태스크 DB 동시 생성
