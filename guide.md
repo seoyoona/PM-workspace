@@ -14,9 +14,8 @@
 미팅 끝났다        → /meeting-note
 개발팀에 전달      → /dev-chat
 고객에게 전달      → /client-chat
-진행 중 변경 요청   → /change-brief
+진행 중 변경 요청 / 큰 요청 / 스펙화 → /to-spec
 QA 플랜 작성        → /qa-plan
-고객 요청이 크다   → /to-spec
 검수 요청이다      → /qa-request
 주간 보고          → /weekly-report
 새 프로젝트        → /new-project
@@ -59,9 +58,9 @@ Nexus 일별 기록    → /nexus-daily
 | `/dev-chat` | 고객 요청/미팅 결과 → 영어 Teams 메시지 (Light/Standard 자동) |
 | `/client-chat` | 개발팀 메시지 → 한국어 카톡 메시지 (질문/업데이트 자동 감지) |
 | `/sync-note` | 내부 sync 미팅 → 개발팀 Teams 메시지 |
-| `/change-brief` | 진행 중 변경 요청 4-bucket triage (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) |
+| `/to-spec` | 클라이언트 요청 4-bucket triage gate (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) → In-Round만 PM confirm 후 Notion 스펙 + 태스크 DB 자동 생성 |
+| `/change-brief` | (deprecated — `/to-spec`으로 흡수됨, 1-2주 후 제거 예정) |
 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (범위·역할·플로우·P0/P1/EDGE/REG·전달·확인) — 자동 git ignored |
-| `/to-spec` | 클라이언트 요청 → Notion 스펙 + 태스크 DB |
 | `/qa-request` | 검수 요청 카톡 메시지 (web/admin/apk/program/testflight 자동 감지) |
 | `/qa-feedback` | 고객 QA DB → 내부 Tasks DB 영문 티켓 (번역+분류) |
 | `/issue-ticket` | Linear 이슈 티켓 (한/영 입력) |
@@ -96,7 +95,7 @@ SRS 받음 (한국어)
 녹취록/메모
   ↓ /meeting-note (3-part: Notion 미팅노트 + Teams + 카톡)
 미팅에서 큰 변경 요청 발생
-  ↓ /change-brief (4-bucket triage)
+  ↓ /to-spec (4-bucket triage gate + In-Round만 PM confirm 후 Notion 자동 생성)
 결정된 dev 액션 (자동 추출)
   ↓ /dev-chat
 고객 follow-up (자동 추출)
@@ -107,12 +106,20 @@ SRS 받음 (한국어)
 
 ```
 클라/미팅/QA 피드백 (scope·design 영향 가능성)
-  ↓ /change-brief — In-Round / Next-Round / Out-of-Scope / Confirm-Needed
-status=Dev-Handoff 도달 + In-Round 항목
-  ↓ PM 직접 /to-spec --source change-brief <path>
+  ↓ /to-spec --client <name> [요청 내용 또는 Notion URL]
+4-bucket triage (In-Round / Next-Round / Out-of-Scope / Confirm-Needed)
+  ↓ In-Round 항목 → PM Confirm Gate (1 진행 / 2 수정 / 3 취소)
+PM 진행 선택 시
+  ↓ Notion 스펙 페이지 + 태스크 DB 자동 생성 + linked view 수동 안내
 Confirm-Needed 항목
-  ↓ Section 5 → /client-chat 별도 실행
+  ↓ §5 → /client-chat 별도 실행
+Out-of-Scope 항목
+  ↓ §5 거절·견적 안내 → /client-chat 별도 실행
+Next-Round 항목
+  ↓ 로컬 markdown 기록만, 다음 라운드 진입 시 재검토
 ```
+
+> 구 `/change-brief`는 `/to-spec`으로 흡수됨 (deprecated, 1-2주 후 제거 예정).
 
 ### 4. QA 라운드
 
@@ -263,7 +270,7 @@ yoona-workspace/
     ├── meeting-note.md
     ├── dev-chat.md
     ├── client-chat.md
-    ├── change-brief.md
+    ├── change-brief.md          # (deprecated — /to-spec으로 흡수, 1-2주 후 제거)
     ├── qa-plan.md
     ├── to-spec.md
     ├── qa-request.md

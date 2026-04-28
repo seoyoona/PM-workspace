@@ -33,9 +33,8 @@
 | 미팅 끝남 | `/meeting-note` | Notion 미팅노트 (한눈에 보기 + 확정 사항 + Action Items 불릿 + 범위 밖 + 메모 이슈 + PM 배경) + Teams(EN) + 카톡(KR) |
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
-| 진행 중 변경 요청 | `/change-brief` | 4-bucket triage Markdown (로컬, gitignored) |
+| 진행 중 변경 요청 / 큰 요청 / 스펙화 | `/to-spec` | 4-bucket triage gate (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) → In-Round만 PM confirm 후 Notion 스펙 + 태스크 DB 자동 생성 |
 | QA 플랜 작성 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (로컬, gitignored) — 범위 / 역할·계정 / 플로우 / P0·P1·EDGE·REG 시나리오 / 전달 메시지 / 확인 필요 |
-| 큰 요청 | `/to-spec` | Notion 스펙 + 태스크 DB |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
@@ -107,18 +106,17 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → 여러 소스 → 한국어 SRS/기능명세 초안
   → /srs-translate, /kickoff-prep의 upstream
 
-/change-brief = 진행 중 변경 요청 triage (in-flight delta)
-  → 4-bucket → 로컬 markdown → status=Dev-Handoff 후 PM이 /to-spec 직접
+/to-spec = 진행 중 변경 요청 + 큰 요청 + 스펙화 단일 진입점 (in-flight delta)
+  → 4-bucket triage gate (In-Round / Next-Round / Out-of-Scope / Confirm-Needed)
+  → In-Round 항목 → PM Confirm Gate → Notion 스펙 페이지 + 태스크 DB 자동 생성
+  → Next-Round / Out-of-Scope / Confirm-Needed → 로컬 markdown만 (Notion auto-write X)
+  → 구 /change-brief는 본 스킬로 흡수 (deprecated)
 
 /qa-plan = 프로젝트 전체 QA 플랜 (in-flight delta)
   → /qa-plan dsa 한 번 호출 → 9-section 단일 Markdown → clients/<c>/<p>/qa/plans/QA-DSA-YYYYMMDD.md
   → P0/P1/EDGE/REG 시나리오 ID 통합 (구 SCN-* 폐기)
   → 검수 후 PM이 /qa-feedback에 "QA Plan: QA-..." 또는 "Scenario: P0-NN" 메타 보존 (수동)
   → design.md는 §3 화면명 인용 보조만, primary source X
-
-/to-spec = 큰 요청 처리
-  → 스펙 페이지 + 태스크 DB
-  → 권장 선행: /change-brief Dev-Handoff 승급 후 In-Round만
 
 /today-brief = 아침 브리핑
   → PM Action Hub "오늘" + "진행 중" + Google Calendar 오늘 미팅 조회 (평일 10:30 자동)
