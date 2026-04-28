@@ -1,0 +1,9 @@
+# case03: 애매한 대형 기능 → default Confirm-Needed (성급 In-Round 승급 방지)
+must_match	^status: Confirm-Needed-only$	status Confirm-Needed-only
+must_match_in_section	In-Round	\(현재 항목 없음	In-Round empty (성급 승급 방지)
+must_match_in_section	Next-Round	\(현재 항목 없음	Next-Round empty
+must_match_in_section	Out-of-Scope	\(현재 항목 없음	Out-of-Scope empty
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items
+must_match	^spec_pages: \[\]$	spec_pages empty (no In-Round)
+must_match_in_section	7. PM Confirm Gate	In-Round 항목 없음	confirm gate skip
+must_match	어드민 회원 점수	Confirm-Needed 항목 명시

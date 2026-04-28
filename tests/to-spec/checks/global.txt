@@ -1,0 +1,32 @@
+# Global checks for /to-spec triage outputs — TAB-separated. Comments start with #.
+must_match	^---$	frontmatter delimiter
+must_match	^status: 	status field
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^source: 	source field
+must_match	^srs_ref: 	srs_ref field
+must_match	^design_md: 	design_md field
+must_match	^spec_pages:	spec_pages field
+must_match	Reference draft	reference-draft banner
+must_match	## 1\. 변경 요청 요약	section 1
+must_match	## 2\. 기존 범위 대비 영향도	section 2
+must_match	## 3\. 화면·UX 영향	section 3
+must_match	## 4\. 4-Bucket Triage	section 4
+must_match	### In-Round	In-Round bucket header
+must_match	### Next-Round	Next-Round bucket header
+must_match	### Out-of-Scope	Out-of-Scope bucket header
+must_match	### Confirm-Needed	Confirm-Needed bucket header
+must_match	## 5\. 고객 확인 / 거절 안내	section 5
+must_match	## 6\. 개발팀 전달 문구	section 6
+must_match	## 7\. PM Confirm Gate	section 7
+must_match	## 8\. Notion 스펙 \+ 태스크	section 8
+must_match	## 9\. PM 다음 단계	section 9
+must_match	다음 단계 \(자동 실행 안 함	"다음 단계" 안내
+must_not_match	[0-9]+ ?MD\b	구체 공수(MD) AI 산정 금지
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	구체 공수(hour) AI 산정 금지
+must_not_match	[0-9]+ ?(일|days?)\b	구체 공수(day) AI 산정 금지
+must_not_match	mcp__nexus-os__	Nexus MCP 호출 미언급
+must_not_match	Auto-Pass	Auto-Pass 라벨 미사용
+must_not_match	→ 자동 실행	자동 chain 트리거 언어 미사용
+must_not_match	Running /(dev-chat|client-chat|qa-feedback|qa-plan|issue-ticket)	자동 sub-skill 실행 언어 미사용
+must_not_match	```mermaid	Mermaid 다이어그램 미사용

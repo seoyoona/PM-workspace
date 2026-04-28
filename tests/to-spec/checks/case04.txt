@@ -1,0 +1,10 @@
+# case04: 계약 외 신규 기능 → Out-of-Scope, §5 거절 + 견적 안내
+must_match	^status: Out-of-Scope-only$	status Out-of-Scope-only
+must_match_in_section	In-Round	\(현재 항목 없음	In-Round empty
+must_match_in_section	Next-Round	\(현재 항목 없음	Next-Round empty
+must_match_in_section	Out-of-Scope	- \[ \]	Out-of-Scope 1+ items
+must_match_in_section	Confirm-Needed	\(현재 항목 없음	Confirm-Needed empty
+must_match	^spec_pages: \[\]$	spec_pages empty
+must_match_in_section	5. 고객 확인 / 거절 안내	계약 범위에 포함되지 않은	거절 안내 문구
+must_match_in_section	5. 고객 확인 / 거절 안내	별도 견적	별도 견적 안내
+must_match	모바일 앱	Out-of-Scope 항목 명시

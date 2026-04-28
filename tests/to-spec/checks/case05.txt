@@ -1,0 +1,11 @@
+# case05: Mixed — In-Round + Next-Round + Confirm-Needed + PM proceed
+must_match	^status: Mixed$	status Mixed
+must_match_in_section	In-Round	- \[ \]	In-Round 1+ items
+must_match_in_section	Next-Round	- \[ \]	Next-Round 1+ items
+must_match_in_section	Out-of-Scope	\(현재 항목 없음	Out-of-Scope empty
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items
+must_match	mock-spec-page-url-payment-order-number	spec_pages URL 채워짐 (In-Round 1건만)
+must_match	PM 선택: \*\*1 \(진행\)\*\*	PM proceed
+must_match	등급별 적립금	Next-Round 항목 명시
+must_match	푸시 알림	Confirm-Needed 항목 명시
+must_match	REQ-CON-PAY-03	SRS REQ ID 인용

@@ -1,0 +1,10 @@
+# case06: SRS / design.md 모두 부재 → partial-skip (해당 섹션 [확인 필요])
+must_match	^status: Confirm-Needed-only$	status Confirm-Needed-only
+must_match	^srs_ref: missing$	srs_ref missing
+must_match	^design_md: missing$	design_md missing
+must_match_in_section	2\. 기존 범위 대비 영향도	\[확인 필요\] SRS 미연결	Section 2 partial-skip
+must_match_in_section	3\. 화면·UX 영향	\[확인 필요\] design.md 부재	Section 3 partial-skip
+must_match_in_section	In-Round	\(현재 항목 없음	In-Round empty
+must_match_in_section	Confirm-Needed	- \[ \]	Confirm-Needed 1+ items
+must_match	^spec_pages: \[\]$	spec_pages empty
+must_match	비밀번호 재설정 링크	Confirm-Needed 항목 명시
