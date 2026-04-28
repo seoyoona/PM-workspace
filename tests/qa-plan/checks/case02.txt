@@ -1,5 +1,6 @@
-# case02: SRS REQ ID 보존
-must_match	^srs_ref: REQ-PAY-01, REQ-AUTH-03$	frontmatter srs_ref REQ list 정확
-must_match	REQ-PAY-01	Source Linkage REQ-PAY-01 인용
-must_match	REQ-AUTH-03	Source Linkage REQ-AUTH-03 인용
-must_match	^brief_ref: none$	Change Brief 미연결
+# case02: SRS 미연결 → partial-skip
+must_match	^srs_ref: missing$	srs_ref missing
+must_match	\[확인 필요 — SRS 미연결\]	SRS 미연결 명시
+must_match	^brief_refs: \[clients	brief_refs는 정상 (Change Brief 1건)
+must_match	### P0-01:	Change Brief 기반 P0 시나리오 존재
+must_not_match	hard-fail	hard-fail 단어 출력에 안 보여야 함

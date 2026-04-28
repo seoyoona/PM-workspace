@@ -1,7 +1,14 @@
-# case04: no-invention — 외부 효과가 source에 없으면 [확인 필요], 추측 금지
-must_match	^scenario_id: SCN-connectory-1-001$	scenario_id
-must_match	users 테이블에 row	source에 명시된 DB 효과 보존
-must_match_in_section	6. 최종 기대 결과 (Final)	\[확인 필요	Section 6 외부 효과 [확인 필요]
-must_not_match	이메일 발송	source 없는 이메일 발송 추측 X
-must_not_match	푸시 알림 발송	source 없는 푸시 발송 추측 X
-must_not_match	SMS 발송	source 없는 SMS 발송 추측 X
+# case04: design.md만 → no-invention 강제 (P0/P1 시나리오 발명 X)
+must_match	^srs_ref: missing$	SRS missing
+must_match	^brief_refs: \[\]$	brief_refs empty
+must_match	^design_md: clients/	design.md만 있음
+must_match	primary source 부족	primary source 부족 명시
+must_match	no-invention 룰	룰 인용
+must_match_in_section	4. P0 핵심 시나리오 (필수 회귀)	\(현재 항목 없음	P0 빈 (발명 X)
+must_match_in_section	5. P1 보조 시나리오	\(현재 항목 없음	P1 빈
+must_not_match	mock_advisor	source 없는데 계정 발명 X
+must_not_match	mock_member	source 없는데 계정 발명 X
+must_not_match	mock_admin	source 없는데 계정 발명 X
+must_not_match	mock_user	source 없는데 계정 발명 X
+must_not_match	토스 결제	source 없는 외부 의존 발명 X
+must_not_match	토스 sandbox	source 없는 외부 의존 발명 X

@@ -1,5 +1,10 @@
-# case01: Change Brief In-Round 항목으로부터 시나리오 생성
-must_match	^scenario_id: SCN-connectory-1-001$	scenario_id 정확 매치
-must_match	^brief_ref: clients/Connectory/Connectory-1/change-briefs/	brief_ref가 Change Brief 경로
-must_match	^srs_ref: missing$	SRS 미연결 partial-skip
-must_match	포인트 충전 화면	source(Change Brief) 키워드 보존
+# case01: 풀-소스 DSA — P0+P1+EDGE+REG 모두 작성
+must_match	^qa_plan_id: QA-DSA-20260428$	QA Plan ID 정확 매치
+must_match	^srs_ref: clients/dsa/DSA/srs\.md$	SRS 경로 정확
+must_match	REQ-DSA-01	SRS REQ ID 인용
+must_match	### P0-01:	P0-01 시나리오 존재
+must_match	### P0-02:	P0-02 시나리오 존재
+must_match	### P1-01:	P1-01 시나리오 존재
+must_match	### EDGE-01:	EDGE-01 존재
+must_match	### REG-01:	REG-01 존재 (이전 라운드 회귀)
+must_match	mock_advisor_dsa01	mock 계정 식별자 사용

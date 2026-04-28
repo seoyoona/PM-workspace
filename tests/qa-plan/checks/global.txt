@@ -1,32 +1,35 @@
 # Global checks — TAB-separated. Comments start with #.
 must_match	^---$	frontmatter delimiter
-must_match	^status: 작성중$	frontmatter status default 작성중
-must_match	^client: 	frontmatter client
-must_match	^project: 	frontmatter project
-must_match	^scenario_id: SCN-[a-z0-9-]+-[0-9]{3}$	scenario_id 형식 SCN-{slug}-{NNN}
-must_match	^priority: P[0-2]$	priority P0/P1/P2
-must_match	^srs_ref: 	frontmatter srs_ref
-must_match	^brief_ref: 	frontmatter brief_ref
-must_match	Internal QA scenario draft — for PM/QA validation only	internal banner
-must_match	## 1\. Source Linkage	section 1
-must_match	## 2\. 사용자 역할	section 2
-must_match	## 3\. 사전 조건	section 3
-must_match	## 4\. 테스트 목표	section 4
-must_match	## 5\. 단계별 행동 \+ 기대 결과	section 5
-must_match	## 6\. 최종 기대 결과	section 6
-must_match	## 7\. 실패 시 기록 체크리스트	section 7
-must_match	## 8\. 미디어 요구	section 8
-must_match	## 9\. 실행 로그	section 9
-must_match	이 시나리오는 PM/QA 내부 검수용입니다	internal use 마지막 경고
+must_match	^status: 작성중$	status default 작성중
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^qa_plan_id: QA-[A-Z0-9]+-[0-9]{8}$	QA Plan ID format QA-<CLIENT>-YYYYMMDD
+must_match	^round: R[0-9]+$	round R{N} format
+must_match	^srs_ref: 	srs_ref field
+must_match	^brief_refs: 	brief_refs field
+must_match	^design_md: 	design_md field
+must_match	Internal QA plan — for PM/QA validation only	internal banner
+must_match	## 1\. QA 범위	section 1
+must_match	## 2\. 테스트 역할 / 계정	section 2
+must_match	## 3\. 전체 플로우 맵	section 3
+must_match	## 4\. P0 핵심 시나리오	section 4
+must_match	## 5\. P1 보조 시나리오	section 5
+must_match	## 6\. Edge / Negative Case	section 6
+must_match	## 7\. Regression Checklist	section 7
+must_match	## 8\. QA 전달 메시지	section 8
+must_match	## 9\. PM 확인 필요	section 9
+must_match	이 QA plan은 PM/QA 내부 검수용입니다	internal use 마지막 경고
 must_match	다음 단계 \(자동 실행 안 함	"다음 단계" 안내
 must_not_match	[0-9]+ ?MD\b	구체 공수(MD) 산정 금지
 must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	구체 공수(hour) 산정 금지
-must_not_match	[0-9]+ ?(일|days?)\b	구체 공수(day) 산정 금지
 must_not_match	mcp__nexus-os__	Nexus MCP 호출 미언급
 must_not_match	notion-create-pages	Notion auto write 미언급
 must_not_match	notion-update-page	Notion auto update 미언급
 must_not_match	→ 자동 실행	자동 chain 트리거 언어 미사용
-must_not_match	Running /(to-spec|dev-chat|client-chat|qa-feedback|issue-ticket)	자동 sub-skill 실행 언어 미사용
-must_not_match	Auto-Pass	Auto-Pass 라벨 미사용 (v3 영역)
-must_not_match	Playwright 실행	Playwright 실행 언급 X (금지 명시는 OK, 실행 지시는 NG)
+must_not_match	Running /(to-spec|dev-chat|client-chat|qa-feedback|issue-ticket|qa-plan)	자동 sub-skill 실행 언어 미사용
+must_not_match	```mermaid	Mermaid 다이어그램 미사용 (v1)
+must_not_match	flowchart [TLBR]D	Mermaid flowchart 키워드 미사용
+must_not_match	graph [TLBR]D	Mermaid graph 키워드 미사용
 must_not_match	자동 스크린샷 캡처	자동 스크린샷 캡처 실행 X
+must_not_match	Playwright 실행	Playwright 실행 X
+must_not_match	expect-cli	expect 자동 호출 X

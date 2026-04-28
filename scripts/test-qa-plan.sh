@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# /qa-scenario v1 자동 검증 하네스
-# 외부 write 없음 (tests/qa-scenario/outputs/ 로컬 파일만 검사)
-# Usage: bash scripts/test-qa-scenario.sh
+# /qa-plan v1 자동 검증 하네스
+# 외부 write 없음 (tests/qa-plan/outputs/ 로컬 파일만 검사)
+# Usage: bash scripts/test-qa-plan.sh
 
 set -o pipefail
 
 cd "$(dirname "$0")/.."
 
 CASES=(case01 case02 case03 case04 case05 case06 case07 case09 case08)
-TESTS_DIR="tests/qa-scenario"
+TESTS_DIR="tests/qa-plan"
 OUTPUTS_DIR="$TESTS_DIR/outputs"
 CHECKS_DIR="$TESTS_DIR/checks"
 
@@ -174,7 +174,7 @@ run_checks_file() {
 }
 
 echo "=========================================="
-echo "/qa-scenario v1 자동 검증 하네스"
+echo "/qa-plan v1 자동 검증 하네스"
 echo "외부 write 없음. local fixture/output 검사만."
 echo "=========================================="
 echo ""

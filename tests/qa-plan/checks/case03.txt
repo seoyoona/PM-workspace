@@ -1,5 +1,7 @@
-# case03: SRS / Change Brief 모두 부재 → partial-skip
-must_match	^srs_ref: missing$	srs_ref missing
-must_match	^brief_ref: none$	brief_ref none
-must_match	\[확인 필요 — Nexus Agent / PM\]	Section 1 partial-skip 안내
-must_not_match	hard-fail	hard-fail 단어 출력 안 됨
+# case03: Change Brief 미연결 → (현재 항목 없음) + SRS 기반 정상 작성
+must_match	^srs_ref: clients/	srs_ref 정상
+must_match	^brief_refs: \[\]$	brief_refs empty
+must_match	REQ-CONNECTORY	SRS REQ ID 인용
+must_match	### P0-01:	SRS 기반 P0 존재
+must_match	\(현재 항목 없음	빈 섹션 명시
+must_match	\(현재 회귀 대상 없음	REG 빈 표시

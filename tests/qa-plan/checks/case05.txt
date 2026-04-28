@@ -1,3 +1,4 @@
-# case05: scenario ID increment — pre-existing 001/002/003 → next 004
-must_match	^scenario_id: SCN-connectory-2-004$	scenario_id 004로 자동 증가
-must_match_filepath	tests/qa-scenario/outputs/case05-cart-order-flow-004.md	output 파일명에 -004 포함
+# case05: project 1개 자동 선택 + 근거 명시
+must_match	^project: DSA$	project 정확
+must_match	선택된 project: DSA	선택 안내 출력
+must_match	근거: clients/dsa/ 하위 project 1개만 존재	선택 근거 명시
