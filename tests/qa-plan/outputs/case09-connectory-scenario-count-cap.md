@@ -9,6 +9,8 @@ author: PM
 srs_ref: clients/Connectory/Connectory-1/srs.md
 brief_refs: [clients/Connectory/Connectory-1/change-briefs/cb-01.md, cb-02.md, cb-03.md, cb-04.md, cb-05.md]
 design_md: clients/Connectory/Connectory-1/design.md
+staging_url: not_inspected
+pages_inspected: []
 scope: all
 ---
 

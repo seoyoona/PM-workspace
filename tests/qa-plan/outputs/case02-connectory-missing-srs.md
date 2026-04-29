@@ -9,6 +9,8 @@ author: PM
 srs_ref: missing
 brief_refs: [clients/Connectory/Connectory-1/change-briefs/2026-04-27-payment-currency-admin-points.md]
 design_md: missing
+staging_url: not_inspected
+pages_inspected: []
 scope: all
 ---
 

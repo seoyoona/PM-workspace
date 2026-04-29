@@ -9,6 +9,8 @@ author: PM
 srs_ref: missing
 brief_refs: []
 design_md: clients/Connectory/Connectory-2/design.md
+staging_url: not_inspected
+pages_inspected: []
 scope: all
 ---
 

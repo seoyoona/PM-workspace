@@ -9,6 +9,8 @@ author: {PM}
 srs_ref: {path or "missing"}
 brief_refs: []
 design_md: {path or "missing"}
+staging_url: {URL or "not_inspected"}
+pages_inspected: []
 scope: {free-text or "all"}
 ---
 

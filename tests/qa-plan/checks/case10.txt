@@ -1,0 +1,10 @@
+# case10: --url given → guided navigation, frontmatter staging_url + pages_inspected populated, read-only enforced
+must_match	^staging_url: https://	staging_url URL recorded
+must_match	^pages_inspected:	pages_inspected list present
+must_match	Read-only guided navigation only	read-only banner
+must_match	URL inspect:	URL inspect annotations within flow map / scenarios
+must_match	staging.booktails.example	host recorded in inspect summary
+must_not_match	clicked .*Submit	no destructive Submit click
+must_not_match	clicked .*Delete	no destructive Delete click
+must_not_match	clicked .*Pay	no payment click
+must_not_match	form .*submitted	no form submission

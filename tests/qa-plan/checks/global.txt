@@ -8,6 +8,8 @@ must_match	^round: R[0-9]+$	round R{N} format
 must_match	^srs_ref: 	srs_ref field
 must_match	^brief_refs: 	brief_refs field
 must_match	^design_md: 	design_md field
+must_match	^staging_url: 	staging_url field
+must_match	^pages_inspected:	pages_inspected field
 must_match	Internal QA plan — for PM/QA validation only	internal banner
 must_match	## 1\. QA Scope	section 1
 must_match	## 2\. Test Roles / Accounts	section 2

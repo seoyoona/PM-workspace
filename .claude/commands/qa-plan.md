@@ -1,7 +1,7 @@
 ---
-description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어 (Vietnamese QA 팀용)
-argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text]
-allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
+description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1 staging URL 입력 시 read-only guided navigation으로 화면 탐색 (depth 2 / max 10 pages)
+argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text] [--url staging-url] [--inspect-depth N] [--max-pages N]
+allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch, mcp__playwright__browser_navigate, mcp__playwright__browser_navigate_back, mcp__playwright__browser_click, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_close
 ---
 
 # QA Plan — 프로젝트 전체 QA 플로우 / 시나리오 세트
@@ -22,13 +22,14 @@ allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch
 
 QA 범위·기능 흐름의 **primary source**는 다음 순서:
 
-1. **SRS / 기능명세** (`clients/<c>/<p>/srs.md` 또는 Notion 프로젝트 문서 DB)
+1. **SRS / 기능명세** (`clients/<c>/<p>/srs.md` 또는 Notion 프로젝트 문서 DB) — **요구사항의 baseline truth**
 2. **Change Brief** (`clients/<c>/<p>/change-briefs/*.md` 중 status=Dev-Handoff)
 3. **기존 QA 피드백 / 버그 히스토리** (`clients/<c>/<p>/qa/` 또는 Notion 태스크 DB)
 4. **client / project context** (`clients/<c>/CLAUDE.md`, `glossary/<c>.md`)
-5. **design.md** — **UI/화면 표현 검증 보조 source만.** QA 범위·기능 흐름·권한·데이터 조건의 primary source로 사용 ❌
+5. **Staging URL inspect** (`--url` 명시 시) — **현재 구현 상태 cross-check (read-only guided navigation, depth 2 / max 10 pages)**. SRS의 baseline 위에 "지금 화면이 어떻게 생겼나" 보조 정보. SRS와 충돌하면 SRS 우선
+6. **design.md** — **UI/화면 표현 검증 보조 source만.** QA 범위·기능 흐름·권한·데이터 조건의 primary source로 사용 ❌
 
-design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 위반.
+design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 위반. Staging URL은 "구현 현황 참고"이지 "기준 정답"이 아님 — 미구현·잘못 구현된 화면을 정답처럼 시나리오에 박지 말 것.
 
 ## Hard Boundaries (이 스킬은 절대 안 함)
 
@@ -39,13 +40,13 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 5. Nexus MCP 호출 (`mcp__nexus-os__*` 어떤 것이든) — read·write 모두 금지
 6. Linear 이슈 생성
 7. `/qa-feedback` / `/issue-ticket` / `/to-spec` / `/dev-chat` / `/client-chat` 자동 트리거 — "다음 단계" 안내만
-8. 자동 브라우저 실행 / Playwright / qa-agent-skills 연동 / expect 호출 (v3 영역)
-9. 자동 스크린샷 / HAR 캡처
+8. **PM이 `--url` 명시 안 했으면 브라우저 실행 X.** `--url` 명시 시 read-only guided navigation만 허용 (자세한 룰은 §URL Inspection Boundaries)
+9. 자동 스크린샷 / HAR 캡처 (단, `--url` 명시 시 페이지당 screenshot 1장은 inspection 결과 path 기록 목적으로 허용)
 10. 구체 공수(MD/hour/day) AI 산정 — priority P0/P1/EDGE/REG만
 11. 추측성 UI 위치·버튼·문구 위치 자동 제안 (source 근거 없으면 ❌)
 12. source 없는 사용자 흐름·기대결과·권한·데이터 조건 발명
 13. **design.md를 QA 범위·기능 흐름의 primary source로 사용** (UI/화면 표현 검증 보조만)
-14. status 자동 승급 (작성중 → 검토 → 확정 자동 X)
+14. status 자동 승급 (Draft → Review → Final 자동 X)
 15. 기존 QA plan 파일 자동 수정·삭제 (수정은 PM이 직접 편집)
 16. 한 라운드 시나리오가 화면 수 × 1.5 초과 시 자동 작성 (경고만)
 17. 한 시나리오가 13 단계 초과 시 자동 분리 (경고만)
@@ -53,8 +54,40 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 19. 실제 QA plan 파일을 git add (정책상 ignored 유지)
 20. `.gitignore` 수정
 21. **Mermaid 다이어그램 기본 출력** (v1은 텍스트 트리·표만, `--diagram` 옵션은 향후 검토)
-22. **9 섹션을 강제로 채우기** — source 부족 시 `[확인 필요]` 또는 `(현재 항목 없음)`로 명시. 발명 X
+22. **9 섹션을 강제로 채우기** — source 부족 시 `[TBD]` 또는 `(none)`로 명시. 발명 X
 23. §4~§7을 고객·개발팀에 그대로 전달 (§8만 전달용)
+24. **qa-agent-skills 연동 / expect / 자동 QA 실행** (v3 영역, v1.1에서도 금지)
+
+## URL Inspection Boundaries (`--url` 명시 시만 적용 / v1.1)
+
+**허용 (read-only guided navigation):**
+- 같은 도메인 내 이동만 (`browser_navigate`로 cross-domain 진입 X)
+- `<a>` 태그 / nav / menu / tab / 상세 페이지 진입 click
+- `browser_navigate_back` (뒤로가기)
+- `browser_snapshot` (DOM 텍스트 / 구조 추출)
+- `browser_take_screenshot` (페이지당 1장, path만 frontmatter `pages_inspected`에 기록)
+- `browser_console_messages` (에러 로그 cross-check)
+- 기본 `--inspect-depth 2` / `--max-pages 10` (override 가능, v1.1 cap)
+- GET 성격 navigation만
+
+**금지 (상태 변경 가능성):**
+- `<form>` submit / `<button>` 중 다음 텍스트·라벨 매칭은 **절대 click X**:
+  - 한국어: 저장, 제출, 삭제, 취소, 신청, 등록, 결제, 주문, 환불, 발송, 업로드, 추가, 수정, 적용, 변경, 동의, 확인, 보내기, 가입, 탈퇴, 로그인, 로그아웃, 비활성화, 활성화, 즐겨찾기, 좋아요, 신고
+  - 영어: save, submit, delete, cancel, apply, register, pay, order, refund, send, upload, add, update, edit, modify, agree, confirm, sign up, sign in, sign out, log in, log out, deactivate, activate, like, favorite, report, follow, unfollow, subscribe, unsubscribe
+- `<input>` / `<textarea>` 입력 X
+- 체크박스 / 라디오 / 토글 / 슬라이더 변경 X
+- production URL (`*.com`이지만 staging/test/dev 도메인 아닌 모든 prod 도메인) **hard-block** — `browser_navigate` 거부 + 사용자 경고
+- 결제 모듈 / OAuth provider / 외부 redirect 진입 X (Toss, KakaoPay, Stripe, Google OAuth 등)
+- 로그인 필요 페이지 진입 시 **자동 로그인 X** — PM에게 "이 페이지는 로그인 필요. 진행할까요?" 4지선다 (1 진행 — PM이 미리 세션 만들어둔 경우 / 2 비인증 페이지만 / 3 mock 계정 정보 입력 / 4 inspection 중단)
+- 같은 페이지 ≥2회 방문 시 자동 skip (loop 방지)
+
+**SRS와 충돌 처리:**
+- URL inspection 결과가 SRS와 다르면 **SRS 우선** + §9 PM Review에 "URL inspect: <page> 미구현 또는 SRS와 불일치 — dev/PM 확인 필요" 표시
+- "지금 화면에 있는 것"을 P0/P1 시나리오 기대결과로 박지 말 것 (구현 미완 가능성)
+
+**Inspection 종료 / 정리:**
+- 종료 시 `browser_close` 의무 호출
+- 화면 출력에 inspect 요약: "방문 페이지 N/10, screenshot N개, 발견 console error N건"
 
 ## Instructions
 
@@ -69,6 +102,9 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 - `--srs <path|URL>` — 자동 탐색 override
 - `--brief <change-brief path>` — 특정 brief 1개만 사용
 - `--scope <free-text>` — 이번 라운드 검수 범위를 PM이 좁히고 싶을 때
+- `--url <staging URL>` — staging 환경 read-only inspect 활성화 (v1.1). 미명시 시 브라우저 실행 X
+- `--inspect-depth N` — `--url` 동반 사용. 클릭 깊이 cap (default 2, v1.1 max 2)
+- `--max-pages N` — `--url` 동반 사용. 방문 페이지 cap (default 10, v1.1 max 10)
 
 **client 미입력 시:**
 - `templates/client-default.md` 24h activity-log 기준 default 제안. activity-log 0건이면 사용자에게 client 입력 요청 (저장 안 하고 화면 출력만 — 3순위 fallback)
@@ -108,6 +144,56 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 5. **design.md** (보조):
    - `clients/<c>/<p>/design.md`
    - **UI/화면 표현 검증 보조에만 사용.** §3 전체 플로우 맵·§4·§5 단계별 행동의 화면명 인용·§9 판단에 보조. QA 범위·기능 흐름·권한 발명에 사용 ❌
+
+### Step 3.5. Staging URL Inspection (`--url` 명시 시만, v1.1)
+
+PM이 `--url <staging URL>` 명시한 경우에만 활성화. 미명시 시 이 step 전체 skip.
+
+**Pre-flight check (의무):**
+1. URL이 production 도메인 패턴인지 확인 — 다음 중 하나라도 매칭되면 **hard-block** (browser_navigate 호출 X):
+   - `prod.`, `production.`, `www.` 시작 + 명백한 staging/test/dev 키워드 부재
+   - 메인 서비스 도메인(예: `*.toss.im`, `*.kakao.com` 등 외부)
+   - PM에게 "이 URL은 production 가능성. staging URL인지 확인 부탁드립니다." 출력 후 inspection 중단
+2. URL host 추출 → `inspect_host` 변수에 저장 (이 호스트만 navigation 허용)
+3. PM에게 진행 의도 confirm 1줄 미리보기:
+   ```
+   [확인 필요]
+   staging URL inspect 시작:
+   - URL: <user input>
+   - host: <inspect_host>
+   - depth cap: <N> / page cap: <M>
+   - read-only (form submit / save / delete / payment 등 금지)
+
+   1. 진행
+   2. 비인증 페이지만
+   3. 취소 (URL 무시하고 SRS만으로 plan 작성)
+
+   추천: 1
+   ```
+
+**Inspection loop (PM이 1 또는 2 선택 시):**
+- `mcp__playwright__browser_navigate(url)` 진입 페이지
+- `mcp__playwright__browser_snapshot()` DOM 텍스트 / 구조 추출
+- `mcp__playwright__browser_take_screenshot()` 1장, path: `clients/<c>/<p>/qa/plans/inspect/<YYYYMMDD>-<page-slug>.png` (clients/*/  rule로 자동 ignored)
+- `mcp__playwright__browser_console_messages()` console error log 1회 수집
+- 다음 페이지 결정 — DOM에서 `<a>` / `<nav>` / role=tab / role=menu 후보 추출 후 우선순위:
+  1. nav / menu / sidebar 항목 (전체 플로우 노출)
+  2. 상세 페이지 link (list → detail)
+  3. tab 전환
+- 클릭 직전 텍스트 매칭으로 **금지 단어 hard-block** (§URL Inspection Boundaries 참조). 매칭 시 해당 link skip + 다음 후보로
+- depth cap / page cap 도달하면 종료
+- 같은 URL 재방문 시 skip (loop 방지)
+- 로그인 wall 도달 (HTTP 401 / "로그인" 라벨 / `/login` redirect) 시 PM에게 4지선다 미리보기 (§URL Inspection Boundaries 로그인 처리 룰)
+
+**Inspection 종료:**
+- `mcp__playwright__browser_close()` 의무
+- frontmatter `staging_url`, `pages_inspected` 기록
+- §3 Flow Map / §4 P0 시나리오 단계 작성에 반영 — 단, **SRS와 충돌 시 SRS 우선** + §9에 불일치 항목 표기
+- screenshot path는 §9 PM Review Items에 list로 안내 (개별 임베드 X)
+
+**SRS 미연결 + URL만 있는 경우:**
+- design.md만 있는 case04와 같은 처리: primary source 부족으로 plan 작성 멈추고 PM에게 SRS / Change Brief 요청
+- URL inspection 결과는 §9 PM Review Items에 raw 정보로 첨부 (시나리오 발명 X — no-invention 룰)
 
 ### Step 4. Round 자동 결정
 
@@ -209,7 +295,8 @@ Copy/paste-ready block for QA / client transmission. **English only** (Vietnames
 
 **화면에 출력 (PM-facing, 한국어 요약 가능):**
 - 생성된 파일 경로 (또는 3순위 fallback 시 "저장 안 됨, 화면 출력만")
-- frontmatter 요약 (qa_plan_id / status / round / srs_ref / brief_refs 수 / design_md)
+- frontmatter 요약 (qa_plan_id / status / round / srs_ref / brief_refs 수 / design_md / staging_url / pages_inspected 수)
+- **URL inspection 요약 (`--url` 명시 시):** 방문 페이지 N/cap, screenshot 저장 N개, 발견 console error N건, hard-block된 클릭 N건
 - §1 QA Scope 요약 (검수 대상 시나리오 N개, P0=X / P1=Y / EDGE=Z / REG=W)
 - §8 QA Handoff Message (영어, PM이 그대로 복사해 QA에 전달)
 - "다음 단계" 안내 블록
