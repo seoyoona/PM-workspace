@@ -34,7 +34,7 @@
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 진행 중 변경 요청 / 큰 요청 / 스펙화 | `/to-spec` | 4-bucket triage gate (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) → In-Round만 PM confirm 후 Notion 스펙 + 태스크 DB 자동 생성 |
-| QA 플랜 작성 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (로컬, gitignored) — 범위 / 역할·계정 / 플로우 / P0·P1·EDGE·REG 시나리오 / 전달 메시지 / 확인 필요 |
+| QA 플랜 작성 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (로컬, gitignored, **출력 영어**) — Scope / Roles·Accounts / Flow / P0·P1·EDGE·REG / Handoff Message / Review. v1.1: `--url <staging>` 명시 시 read-only guided navigation으로 화면 cross-check (depth 2 / max 10 pages) |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
@@ -112,9 +112,11 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
   → Next-Round / Out-of-Scope / Confirm-Needed → 로컬 markdown만 (Notion auto-write X)
   → 구 /change-brief는 본 스킬로 흡수 (deprecated)
 
-/qa-plan = 프로젝트 전체 QA 플랜 (in-flight delta)
+/qa-plan = 프로젝트 전체 QA 플랜 (in-flight delta, 출력 영어)
   → /qa-plan dsa 한 번 호출 → 9-section 단일 Markdown → clients/<c>/<p>/qa/plans/QA-DSA-YYYYMMDD.md
   → P0/P1/EDGE/REG 시나리오 ID 통합 (구 SCN-* 폐기)
+  → v1.1 --url <staging URL> 명시 시 Playwright read-only guided navigation
+    (같은 도메인 / depth 2 / max 10 pages / destructive click 금지 / SRS와 충돌 시 SRS 우선)
   → 검수 후 PM이 /qa-feedback에 "QA Plan: QA-..." 또는 "Scenario: P0-NN" 메타 보존 (수동)
   → design.md는 §3 화면명 인용 보조만, primary source X
 

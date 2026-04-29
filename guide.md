@@ -60,7 +60,7 @@ Nexus 일별 기록    → /nexus-daily
 | `/sync-note` | 내부 sync 미팅 → 개발팀 Teams 메시지 |
 | `/to-spec` | 클라이언트 요청 4-bucket triage gate (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) → In-Round만 PM confirm 후 Notion 스펙 + 태스크 DB 자동 생성 |
 | `/change-brief` | (deprecated — `/to-spec`으로 흡수됨, 1-2주 후 제거 예정) |
-| `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (범위·역할·플로우·P0/P1/EDGE/REG·전달·확인) — 자동 git ignored |
+| `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (Scope·Roles·Flow·P0/P1/EDGE/REG·Handoff·Review) — 영어 출력, 자동 git ignored. v1.1: `--url <staging>` 시 read-only guided navigation (depth 2 / max 10) |
 | `/qa-request` | 검수 요청 카톡 메시지 (web/admin/apk/program/testflight 자동 감지) |
 | `/qa-feedback` | 고객 QA DB → 내부 Tasks DB 영문 티켓 (번역+분류) |
 | `/issue-ticket` | Linear 이슈 티켓 (한/영 입력) |
@@ -125,7 +125,7 @@ Next-Round 항목
 
 ```
 SRS / Change Brief In-Round / QA history / 클라 컨텍스트 기준 전체 QA 플랜 작성 (PM/QA 내부)
-  ↓ /qa-plan <client>   (positional, 대소문자 무관, project/round/srs/brief 모두 자동 탐색)
+  ↓ /qa-plan <client> [--url <staging URL>]   (positional, 대소문자 무관, project/round/srs/brief 자동 탐색. URL 명시 시 Playwright read-only guided navigation으로 화면 cross-check)
 검수 시작 안내 (고객 카톡)
   ↓ /qa-request
 고객 QA 피드백 들어옴
