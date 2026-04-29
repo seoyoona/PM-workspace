@@ -11,6 +11,7 @@ brief_refs: [clients/Connectory/Connectory-1/change-briefs/2026-04-27-payment-cu
 design_md: missing
 staging_url: not_inspected
 pages_inspected: []
+auth_used: none
 scope: all
 ---
 

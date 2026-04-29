@@ -11,6 +11,7 @@ brief_refs: [clients/Connectory/Connectory-1/change-briefs/cb-01.md, cb-02.md, c
 design_md: clients/Connectory/Connectory-1/design.md
 staging_url: not_inspected
 pages_inspected: []
+auth_used: none
 scope: all
 ---
 

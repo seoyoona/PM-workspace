@@ -11,6 +11,7 @@ brief_refs: []
 design_md: clients/Connectory/Connectory-1/design.md
 staging_url: not_inspected
 pages_inspected: []
+auth_used: none
 scope: all
 ---
 

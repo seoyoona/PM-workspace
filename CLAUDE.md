@@ -173,5 +173,5 @@ All document outputs go to Notion, not local files. Local workspace is for templ
 - Templates are in `templates/` — use them as structure guides, not rigid forms
 - Glossaries are in `glossary/{client-name}.md` — always check before translating
 - `clients/{client-name}/CLAUDE.md` — client context, auto-loaded when working in that directory
-- `clients/{client-name}/{project}/qa/plans/QA-*.md` — `/qa-plan`으로 생성한 PM/QA 내부 검수 플랜 (9 섹션 — Scope·Roles·Flow·P0/P1/EDGE/REG·Handoff Message·Review). **출력 영어** (Vietnamese QA 팀용). v1.1부터 `--url <staging URL>` 명시 시 Playwright read-only guided navigation으로 화면 cross-check (depth 2 / max 10 pages). **고객·개발팀 §8만 전달**, §1~§7은 내부용. `clients/*/` 룰로 자동 git ignored. 로컬 markdown만, Notion 자동 write 없음.
+- `clients/{client-name}/{project}/qa/plans/QA-*.md` — `/qa-plan`으로 생성한 PM/QA 내부 검수 플랜 (9 섹션 — Scope·Roles·Flow·P0/P1/EDGE/REG·Handoff Message·Review). **출력 영어** (Vietnamese QA 팀용). v1.1부터 `--url <staging URL>` 명시 시 Playwright read-only guided navigation으로 화면 cross-check (depth 2 / max 10 pages). `--login-as <mock_account>` 동반 시 credentials 파일(`clients/<c>/<p>/qa/credentials/<mock_account>.yaml`, gitignored) 기반 자동 로그인 1회 예외 허용 (post-login도 read-only 유지). **고객·개발팀 §8만 전달**, §1~§7은 내부용. `clients/*/` 룰로 자동 git ignored. 로컬 markdown만, Notion 자동 write 없음.
 - `handoffs/` — for local drafts only, final output goes to Notion

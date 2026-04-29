@@ -11,6 +11,7 @@ brief_refs: []
 design_md: {path or "missing"}
 staging_url: {URL or "not_inspected"}
 pages_inspected: []
+auth_used: {mock_account or "none"}
 scope: {free-text or "all"}
 ---
 

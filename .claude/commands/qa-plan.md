@@ -1,7 +1,7 @@
 ---
 description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1 staging URL 입력 시 read-only guided navigation으로 화면 탐색 (depth 2 / max 10 pages)
 argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text] [--url staging-url] [--inspect-depth N] [--max-pages N]
-allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch, mcp__playwright__browser_navigate, mcp__playwright__browser_navigate_back, mcp__playwright__browser_click, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_close
+allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch, mcp__playwright__browser_navigate, mcp__playwright__browser_navigate_back, mcp__playwright__browser_click, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_close, mcp__playwright__browser_type, mcp__playwright__browser_fill_form
 ---
 
 # QA Plan — 프로젝트 전체 QA 플로우 / 시나리오 세트
@@ -71,15 +71,55 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 - GET 성격 navigation만
 
 **금지 (상태 변경 가능성):**
-- `<form>` submit / `<button>` 중 다음 텍스트·라벨 매칭은 **절대 click X**:
-  - 한국어: 저장, 제출, 삭제, 취소, 신청, 등록, 결제, 주문, 환불, 발송, 업로드, 추가, 수정, 적용, 변경, 동의, 확인, 보내기, 가입, 탈퇴, 로그인, 로그아웃, 비활성화, 활성화, 즐겨찾기, 좋아요, 신고
-  - 영어: save, submit, delete, cancel, apply, register, pay, order, refund, send, upload, add, update, edit, modify, agree, confirm, sign up, sign in, sign out, log in, log out, deactivate, activate, like, favorite, report, follow, unfollow, subscribe, unsubscribe
-- `<input>` / `<textarea>` 입력 X
+- `<form>` submit / `<button>` 중 다음 텍스트·라벨 매칭은 **절대 click X** (단, **로그인 단계 1회는 §Login Exception 룰로 예외**):
+  - 한국어: 저장, 제출, 삭제, 취소, 신청, 등록, 결제, 주문, 환불, 발송, 업로드, 추가, 수정, 적용, 변경, 동의, 확인, 보내기, 가입, 탈퇴, 로그아웃, 비활성화, 활성화, 즐겨찾기, 좋아요, 신고
+  - 영어: save, submit, delete, cancel, apply, register, pay, order, refund, send, upload, add, update, edit, modify, agree, confirm, sign up, sign out, log out, deactivate, activate, like, favorite, report, follow, unfollow, subscribe, unsubscribe
+- `<input>` / `<textarea>` 입력 X (단, **로그인 폼의 email·password 필드는 §Login Exception 룰로 예외**)
 - 체크박스 / 라디오 / 토글 / 슬라이더 변경 X
 - production URL (`*.com`이지만 staging/test/dev 도메인 아닌 모든 prod 도메인) **hard-block** — `browser_navigate` 거부 + 사용자 경고
 - 결제 모듈 / OAuth provider / 외부 redirect 진입 X (Toss, KakaoPay, Stripe, Google OAuth 등)
-- 로그인 필요 페이지 진입 시 **자동 로그인 X** — PM에게 "이 페이지는 로그인 필요. 진행할까요?" 4지선다 (1 진행 — PM이 미리 세션 만들어둔 경우 / 2 비인증 페이지만 / 3 mock 계정 정보 입력 / 4 inspection 중단)
 - 같은 페이지 ≥2회 방문 시 자동 skip (loop 방지)
+
+**Login Exception (단일 허용 — 로그인 1회만):**
+
+`--login-as <mock_account>` 명시 + credentials 파일 존재 시 **로그인 form 입력·submit을 1회만** 허용. 그 외 모든 destructive 룰은 그대로 적용.
+
+**Credentials 파일 형식 (`clients/<c>/<p>/qa/credentials/<mock_account>.yaml`, `clients/*/` 룰로 자동 git ignored):**
+```yaml
+account: mock_admin_dsa01
+role: org_admin
+login_url: https://staging.example/admin/login   # optional, 미지정 시 inspect 중 발견된 첫 로그인 wall URL 사용
+email: mock_admin_dsa01@example.com
+password: <staging-only mock password>
+login_selectors:                                  # optional, custom form 일 때만
+  email_input: 'input[name="email"]'
+  password_input: 'input[name="password"]'
+  submit_button: 'button[type="submit"]'
+notes: |
+  staging-only credentials. Do NOT use for production.
+```
+
+**로그인 처리 룰:**
+1. 로그인 wall 도달 (HTTP 401, `/login` redirect, "로그인" / "Sign in" 라벨 발견) 시:
+   - `--login-as` 명시되어 있고 credentials 파일 존재 → **자동 로그인 시도** (예외 발동)
+   - `--login-as` 미명시 또는 파일 부재 → 기존 PM 4지선다 fallback (1 진행 — PM이 미리 세션 만들어둔 경우 / 2 비인증 페이지만 / 3 mock 계정 정보 입력 / 4 inspection 중단)
+2. 자동 로그인 시도:
+   - email 필드 fill → password 필드 fill → submit button click — 이 3개 액션만 허용
+   - selectors 미지정 시 표준 selector 시도 순서: `input[type="email"]` / `input[name*="email" i]` / `input[name*="login" i]` / `input[name*="user" i]` → password는 `input[type="password"]` → submit은 `button[type="submit"]` / `button:has-text("로그인")` / `button:has-text("Sign in")`
+   - **OAuth / SSO 버튼 (Google / Kakao / Naver / Apple 등) 절대 click X** — 외부 redirect 금지
+   - 캡차 / 2FA 발견 시 즉시 중단 + PM에게 "수동 로그인 후 다시 호출" 안내
+3. 로그인 성공 검증:
+   - URL이 로그인 페이지 외로 변경 OR `로그아웃` / `Sign out` / `Logout` 버튼 발견 → 성공
+   - 3회 시도 실패 시 inspection 중단 + PM에게 credentials 점검 요청
+4. **로그인 후에도 destructive 룰은 그대로 적용** — 로그인 성공이 다른 form submit / 저장 / 삭제 / 결제 click 허용을 의미하지 않음. PM이 명시적으로 다른 예외를 추가 도입하기 전까지 read-only navigation만
+5. 로그인 시도는 **세션 1회**. inspection 중 추가 로그인 wall (재인증 등) 도달 시 시도 X (loop 방지)
+6. credentials 파일은 staging-only. production 도메인 인증 시도는 hard-block 대상 (URL 자체가 production이면 그 전에 차단됨)
+7. inspection 종료 시 `mcp__playwright__browser_close()`로 세션 즉시 폐기 (자격증명 잔존 X)
+
+**보안 / 감사 룰:**
+- credentials 파일 내용은 plan markdown에 임베드 X (frontmatter `auth_used`에 mock_account 식별자만 기록)
+- 비밀번호 / 토큰을 `[추론]` 또는 인용 블록에 노출 X
+- 로그인 시도·결과는 §9 PM Review Items에 1줄 로그 ("auth: mock_admin_dsa01 — success / 1회 / post-login pages: N개")
 
 **SRS와 충돌 처리:**
 - URL inspection 결과가 SRS와 다르면 **SRS 우선** + §9 PM Review에 "URL inspect: <page> 미구현 또는 SRS와 불일치 — dev/PM 확인 필요" 표시
@@ -105,6 +145,7 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 - `--url <staging URL>` — staging 환경 read-only inspect 활성화 (v1.1). 미명시 시 브라우저 실행 X
 - `--inspect-depth N` — `--url` 동반 사용. 클릭 깊이 cap (default 2, v1.1 max 2)
 - `--max-pages N` — `--url` 동반 사용. 방문 페이지 cap (default 10, v1.1 max 10)
+- `--login-as <mock_account>` — `--url` 동반 사용 (선택). 로그인 wall 통과를 위한 단일 예외. credentials 파일 `clients/<c>/<p>/qa/credentials/<mock_account>.yaml` 자동 read (`clients/*/` 룰로 git ignored). 파일 부재 시 PM 4지선다로 fallback. 로그인 1회만 허용 — 로그인 후 다른 form submit / save / delete는 여전히 금지
 
 **client 미입력 시:**
 - `templates/client-default.md` 24h activity-log 기준 default 제안. activity-log 0건이면 사용자에게 client 입력 요청 (저장 안 하고 화면 출력만 — 3순위 fallback)
@@ -183,7 +224,10 @@ PM이 `--url <staging URL>` 명시한 경우에만 활성화. 미명시 시 이 
 - 클릭 직전 텍스트 매칭으로 **금지 단어 hard-block** (§URL Inspection Boundaries 참조). 매칭 시 해당 link skip + 다음 후보로
 - depth cap / page cap 도달하면 종료
 - 같은 URL 재방문 시 skip (loop 방지)
-- 로그인 wall 도달 (HTTP 401 / "로그인" 라벨 / `/login` redirect) 시 PM에게 4지선다 미리보기 (§URL Inspection Boundaries 로그인 처리 룰)
+- 로그인 wall 도달 (HTTP 401 / "로그인" 라벨 / `/login` redirect) 시:
+  - `--login-as <mock_account>` 명시되어 있고 `clients/<c>/<p>/qa/credentials/<mock_account>.yaml` 존재 → §Login Exception 룰로 자동 로그인 1회 시도
+  - 둘 중 하나라도 부재 → PM 4지선다 fallback (§URL Inspection Boundaries 로그인 처리 룰)
+  - 자동 로그인 성공 시 frontmatter `auth_used: <mock_account>` 기록, §9에 1줄 로그
 
 **Inspection 종료:**
 - `mcp__playwright__browser_close()` 의무

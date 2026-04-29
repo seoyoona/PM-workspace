@@ -16,6 +16,7 @@ pages_inspected:
   - /catalog/{id}
   - /cart
   - /checkout
+auth_used: none
 scope: all
 ---
 

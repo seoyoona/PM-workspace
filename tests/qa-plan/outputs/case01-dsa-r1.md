@@ -11,6 +11,7 @@ brief_refs: [clients/dsa/DSA/change-briefs/2026-04-25-report-preview-risk-emphas
 design_md: clients/dsa/DSA/design.md
 staging_url: not_inspected
 pages_inspected: []
+auth_used: none
 scope: all
 ---
 

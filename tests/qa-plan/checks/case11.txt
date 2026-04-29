@@ -1,0 +1,12 @@
+# case11: --url + --login-as → 자동 로그인 1회 후 admin 페이지 inspect, read-only enforced
+must_match	^auth_used: mock_org_admin_dsa01$	auth_used recorded
+must_match	^staging_url: https://	staging URL recorded
+must_match	1 login attempt, success	login event logged
+must_match	/admin/dashboard	admin page inspected
+must_match	read-only	read-only banner
+must_match	NOT clicked	destructive button not clicked annotation
+must_not_match	password:	plaintext password not embedded
+must_not_match	Bearer	auth token not embedded
+must_not_match	clicked Approve	post-login destructive click forbidden
+must_not_match	clicked Reject	post-login destructive click forbidden
+must_not_match	clicked Save	post-login destructive click forbidden

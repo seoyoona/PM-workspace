@@ -34,7 +34,7 @@
 | 개발팀에 전달 | `/dev-chat` | 영어 Teams 메시지 (Light: 클라 원문→`Client ...` 중계 / 내부 메모→직접 번역 / Standard: 브리프) |
 | 고객에게 전달 | `/client-chat` | 한국어 카톡 메시지 |
 | 진행 중 변경 요청 / 큰 요청 / 스펙화 | `/to-spec` | 4-bucket triage gate (In-Round/Next-Round/Out-of-Scope/Confirm-Needed) → In-Round만 PM confirm 후 Notion 스펙 + 태스크 DB 자동 생성 |
-| QA 플랜 작성 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (로컬, gitignored, **출력 영어**) — Scope / Roles·Accounts / Flow / P0·P1·EDGE·REG / Handoff Message / Review. v1.1: `--url <staging>` 명시 시 read-only guided navigation으로 화면 cross-check (depth 2 / max 10 pages) |
+| QA 플랜 작성 | `/qa-plan` | 프로젝트 전체 QA 9-section 플랜 (로컬, gitignored, **출력 영어**) — Scope / Roles·Accounts / Flow / P0·P1·EDGE·REG / Handoff Message / Review. v1.1: `--url <staging>` 명시 시 read-only guided navigation으로 화면 cross-check (depth 2 / max 10 pages). `--login-as <mock_account>` 동반 시 자동 로그인 1회 예외 (admin 페이지 inspect 가능) |
 | 검수 요청 | `/qa-request` | 카톡 검수 요청 메시지 |
 | QA 피드백 전달 | `/qa-feedback` | 내부 Tasks DB 영문 티켓 |
 | 주간 보고 | `/weekly-report` | Notion 주간 리포트 |
