@@ -169,6 +169,64 @@ All document outputs go to Notion, not local files. Local workspace is for templ
 - 사용자 고유 선호를 반드시 확인해야 할 때
 - 확인 없이 진행하면 의미 있는 리스크가 있을 때
 
+## Skill Write Permissions & Harness Contract (Wave 0)
+
+이 섹션은 PM workspace skill governance 기준의 요약. 자세한 harness 표준 / fixture / check 규약은 `docs/harness-contract.md` 참조.
+
+### Source Priority 표준 형식
+
+여러 primary source를 읽는 스킬은 본문에 다음 형식으로 priority를 명시한다:
+
+```
+[skill] 의 primary source는 다음 순서:
+1. <highest-priority>
+2. <second>
+3. <third>
+4. <fourth>
+5. <auxiliary / lowest>
+```
+
+필수 사항:
+- 충돌 처리 룰 명시 (예: "SRS와 충돌 시 SRS 우선")
+- 보조 source(`design.md`, client `CLAUDE.md`, `glossary/<c>.md`)는 "primary로 사용 ❌" 명시 + 역할을 UI cross-check / 용어 lookup으로 한정
+- partial-skip 룰 명시 ("hard-fail 금지 — 해당 영역만 `[TBD]` 또는 `(none)`")
+
+참조 구현: `/qa-plan` v1.1.2 §"Source 우선순위 (중요)" + `/to-spec` v2 §"Source 우선순위".
+
+### Write Permission Inventory (2026-05-10)
+
+| Skill | Write destination | Risk |
+|---|---|---|
+| /to-spec | Notion 스펙+태스크 (In-Round only) | Critical |
+| /qa-feedback | Notion 내부 Tasks DB + 고객 QA DB Status | Critical |
+| /srs-translate | Notion 프로젝트 문서 DB | Critical |
+| /create-srs | Notion 프로젝트 문서 DB | Critical |
+| /weekly-report | Notion 커뮤니케이션 DB | Critical |
+| /meeting-note | Notion 커뮤니케이션 DB + dev-chat + client-chat | Critical |
+| /kickoff-prep | Notion 프로젝트 문서 DB (Part A 한 + Part B 영) | Critical |
+| /issue-ticket | Linear API | Critical |
+| /daily-scrum | Notion Daily Scrum Log + PM Hub + Teams | Critical |
+| /nexus-daily | Nexus OS API | Critical |
+| /todo | PM Action Hub DB | High |
+| /new-project | 로컬 + Notion 5 DB schema | High |
+| /setup-workspace | 로컬 + Notion 5 DB | High |
+| /qa-plan | 로컬 markdown만 | Medium |
+| /dev-chat | terminal + 선택 Teams | Low |
+| /sync-note | terminal + 선택 Teams | Low |
+| /client-chat | terminal | Read-only |
+| /qa-request | terminal | Read-only |
+| /today-brief | terminal | Read-only |
+
+### Confirm Gate 기준
+
+Critical / High write-risk 스킬은 외부 write 직전 사용자 명시 confirm gate가 필수. 형식은 `## 확인 / 승인 요청 방식` 섹션의 표준을 인용:
+
+- PM이 1 (proceed) / 2 (defer or modify) / 3 (cancel) 중 명시 선택할 수 있어야 함
+- **취소 / defer 시 외부 write 발생 ❌** — 로컬 draft 보존 또는 cancel marker만
+- 게이트 우회 자동 write 절대 금지 (skill body Hard Boundary로 명문화)
+
+게이트 부재 / 약한 스킬은 Wave 1에서 게이트 도입 / 강화 예정. 현 시점 게이트 부재: `/kickoff-prep` (직접 Notion write).
+
 ## Working With Files (local)
 - Templates are in `templates/` — use them as structure guides, not rigid forms
 - Glossaries are in `glossary/{client-name}.md` — always check before translating
