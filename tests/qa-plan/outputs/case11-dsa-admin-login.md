@@ -21,6 +21,16 @@ auth_used: mock_org_admin_dsa01
 scope: admin review flow
 ---
 
+## Source Coverage
+- SRS: found
+- URL inspect: done
+- design.md: found
+- Change Brief: missing
+- QA history: missing
+- Confidence: High
+
+---
+
 # QA Plan — dsa DSA R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.

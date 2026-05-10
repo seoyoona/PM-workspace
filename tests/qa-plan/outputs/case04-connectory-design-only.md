@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: Draft only
 client: connectory
 project: Connectory-2
 qa_plan_id: QA-CONNECTORY-20260428
@@ -15,6 +15,18 @@ auth_used: none
 scope: all
 ---
 
+## Source Coverage
+- SRS: missing
+- URL inspect: not provided
+- design.md: found
+- Change Brief: missing
+- QA history: missing
+- Confidence: Draft only
+
+> ⚠️ Plan body blocked — source insufficient. design.md alone does not pass the minimum source gate (v1.1.1). primary source insufficient — no-invention rule applies. Provide SRS or staging URL and re-invoke.
+
+---
+
 # QA Plan — connectory Connectory-2 R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.
@@ -23,65 +35,59 @@ scope: all
 
 **Test Targets:**
 - SRS requirements: [TBD — SRS not linked]
-- Screens: [TBD — primary source insufficient]
+- Screens: design.md exists for UI cross-check only. Per no-invention rule, design.md cannot be used as primary source for QA scope or feature flow.
 - Change Brief In-Round items: (none)
 
 **Out of Scope (acknowledged, not tested):**
-- Out-of-Scope items: [TBD — Change Brief missing, cannot identify]
-- Confirm-Needed items: [TBD]
+- (blocked — see Source Coverage)
 
 ## 2. Test Roles / Accounts
-- Primary roles: [TBD — SRS / Change Brief / QA history all missing, roles not identifiable]
-- Mock account mapping: [TBD]
-- External dependencies: [TBD]
+- (blocked — see Source Coverage)
 
 ## 3. End-to-End Flow Map
-[TBD — primary sources for user flow (SRS / Change Brief / QA history) are missing. design.md alone cannot be used to invent scenario flows ❌]
+- (blocked — see Source Coverage)
 
-(design.md screen components / tokens may be referenced, but "how the user flows" is not inferred)
+(design.md screen components / tokens may be referenced for UI representation cross-check only, but "how the user flows" is not inferred — primary source insufficient.)
 
 ## 4. P0 Critical Scenarios (mandatory regression)
 
-(none — primary source insufficient, P0 scenarios cannot be authored)
+(blocked — see Source Coverage)
 
 ## 5. P1 Supporting Scenarios
 
-(none)
+(blocked — see Source Coverage)
 
 ## 6. Edge / Negative Cases
 
-(none — Edge cases require source-defined flows)
+(blocked — see Source Coverage)
 
-## 7. Regression Checklist (previous → R1)
+## 7. Regression Checklist
 
-(no regression items in this round)
+(blocked — see Source Coverage)
 
 ## 8. QA Handoff Message
 
-```
-[TBD — primary source insufficient, QA plan body cannot be authored. Please re-run after securing one or more of:
-- SRS / functional spec
-- Change Brief
-- prior-round QA history
-design.md alone cannot be used to invent scenarios (no-invention rule)]
-```
+(not generated — plan blocked)
 
 ## 9. PM Review Items
 
-- **SRS not linked** — confirm clients/Connectory/Connectory-2/srs.md or Notion project doc DB
+- **Plan body blocked due to insufficient source.** primary source insufficient — no-invention rule applies. design.md alone cannot be used to invent scenarios.
+- **SRS missing** — confirm clients/Connectory/Connectory-2/srs.md or Notion project doc DB
 - **Change Brief missing** — clients/Connectory/Connectory-2/change-briefs/ is empty
 - **QA history missing** — no prior-round feedback materials
-- **design.md only** — UI tokens / components are defined, but design.md is not a primary source for QA scope or feature flow (no-invention rule)
-- → secure primary source then re-run `/qa-plan`
+- **design.md found** — UI tokens / components are defined and may be used for §3 screen-name cross-check only. design.md is NOT a primary source for QA scope, feature flow, permissions, or data conditions (no-invention rule).
+- To unblock §4–§7, provide one of the following and re-invoke:
+  - `--srs <path or Notion URL>` for SRS reference
+  - `--url <staging URL>` for read-only guided navigation
 
 ---
 
 ## Next Steps (no auto-execution, guidance only)
 
-- This QA plan cannot be used for testing due to insufficient source
-- PM should secure ≥1 of SRS / Change Brief / QA history, then re-run `/qa-plan connectory --project Connectory-2`
-- design.md alone cannot be used to invent scenarios (rule violation)
+- Provide SRS or staging URL and re-invoke `/qa-plan connectory --project Connectory-2 --srs <...>` or `... --url <...>`
+- §8 QA Handoff Message → not generated this round (plan blocked)
+- Status change: re-run with sufficient source (status: Draft only → Draft once §4–§7 are populated)
 
 ---
 
-> ⚠️ **This QA plan is for PM/QA internal validation.** Do not forward §1–§7 to client or dev team directly. §8 is the only client/QA-facing section — but in this case §8 is also [TBD], so do not forward.
+> ⚠️ **This QA plan is for PM/QA internal validation.** Do not forward §1–§7 to client or dev team directly. §8 is the only client/QA-facing section.

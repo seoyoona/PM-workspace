@@ -1,14 +1,14 @@
 ---
 status: Draft only
 client: connectory
-project: Connectory-1
-qa_plan_id: QA-CONNECTORY-20260428
+project: connectory
+qa_plan_id: QA-CONNECTORY-20260510
 round: R1
-created: 2026-04-28
+created: 2026-05-10
 author: PM
 srs_ref: missing
-brief_refs: [clients/Connectory/Connectory-1/change-briefs/2026-04-27-payment-currency-admin-points.md]
-design_md: missing
+brief_refs: []
+design_md: clients/connectory/connectory/design.md
 staging_url: not_inspected
 pages_inspected: []
 auth_used: none
@@ -18,16 +18,16 @@ scope: all
 ## Source Coverage
 - SRS: missing
 - URL inspect: not provided
-- design.md: missing
-- Change Brief: found
+- design.md: found
+- Change Brief: missing
 - QA history: missing
 - Confidence: Draft only
 
-> ⚠️ Plan body blocked — source insufficient. Change Brief alone (without SRS or staging URL inspect) does not pass the minimum source gate (v1.1.1). Provide SRS or staging URL and re-invoke.
+> ⚠️ Plan body blocked — source insufficient. Provide SRS or staging URL and re-invoke. design.md and CLAUDE.md alone do not pass the minimum source gate (v1.1.1).
 
 ---
 
-# QA Plan — connectory Connectory-1 R1
+# QA Plan — connectory connectory R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.
 
@@ -35,11 +35,12 @@ scope: all
 
 **Test Targets:**
 - SRS requirements: [TBD — SRS not linked]
-- Screens: Point top-up screen (mentioned in Change Brief, but baseline scope cannot be confirmed without SRS)
-- Change Brief In-Round items: Add CNY-KRW currency notice on payment screen (Change Brief found, but cannot promote to scenarios without SRS context to assess regression scope — primary source insufficient)
+- Screens: design.md screen names available for cross-check only (not used as primary source)
+- Change Brief In-Round items: (none)
 
 **Out of Scope (acknowledged, not tested):**
-- (blocked — see Source Coverage)
+- Out-of-Scope items: (none)
+- Confirm-Needed items: (none)
 
 ## 2. Test Roles / Accounts
 - (blocked — see Source Coverage)
@@ -70,12 +71,12 @@ scope: all
 ## 9. PM Review Items
 
 - **Plan body blocked due to insufficient source.** SRS 또는 staging URL 제공 후 재호출 필요.
-- **SRS missing** — confirm clients/Connectory/Connectory-1/srs.md or Notion project doc DB. Change Brief alone is incremental and cannot be used to scope a full QA round without SRS baseline.
-- **Change Brief found** but not actionable in isolation: `2026-04-27-payment-currency-admin-points.md` references CNY-KRW currency notice on payment screen. To promote this to a P0 scenario, baseline SRS for payment flow is required.
-- **design.md missing** — UI cross-check unavailable.
+- design.md alone is insufficient — design.md is a UI representation aid only, not a primary source for QA scope / functional flow / permissions / data conditions
+- CLAUDE.md and glossary alone are insufficient — client context is not a baseline requirement source
 - To unblock §4–§7, provide one of the following and re-invoke:
   - `--srs <path or Notion URL>` for SRS reference
-  - `--url <staging URL>` for read-only guided navigation
+  - `--url <staging URL>` for read-only guided navigation (URL inspect role = implementation evidence, used to cross-check SRS-defined features)
+  - Both together yield Confidence: High
 
 ---
 

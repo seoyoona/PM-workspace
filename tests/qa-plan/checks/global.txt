@@ -1,6 +1,6 @@
 # Global checks — TAB-separated. Comments start with #.
 must_match	^---$	frontmatter delimiter
-must_match	^status: Draft$	status default Draft
+must_match	^status: (Draft|Draft only|Review|Final|Discarded)$	status one of allowed values (v1.1.1 adds "Draft only")
 must_match	^client: 	client field
 must_match	^project: 	project field
 must_match	^qa_plan_id: QA-[A-Z0-9]+-[0-9]{8}$	QA Plan ID format QA-<CLIENT>-YYYYMMDD
@@ -36,3 +36,5 @@ must_not_match	graph [TLBR]D	Mermaid graph 키워드 미사용
 must_not_match	자동 스크린샷 캡처	자동 스크린샷 캡처 실행 X
 must_not_match	Playwright 실행	Playwright 실행 X
 must_not_match	expect-cli	expect 자동 호출 X
+must_match	^## Source Coverage$	Source Coverage block present (v1.1.1)
+must_match	^- Confidence: (High|Medium|Low|Draft only)$	Confidence label one of 4 tiers (v1.1.1)

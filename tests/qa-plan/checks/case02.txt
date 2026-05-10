@@ -1,6 +1,13 @@
-# case02: SRS not linked → partial-skip
+# case02: SRS missing + Change Brief found + URL not provided → v1.1.1 Draft only gate triggers
 must_match	^srs_ref: missing$	srs_ref missing
-must_match	\[TBD — SRS not linked\]	SRS-not-linked marker
 must_match	^brief_refs: \[clients	brief_refs has Change Brief
-must_match	### P0-01:	P0-01 (Change Brief based) present
+must_match	^- SRS: missing$	Source Coverage SRS missing
+must_match	^- URL inspect: not provided$	Source Coverage URL not provided
+must_match	^- Confidence: Draft only$	Confidence = Draft only (gate triggered)
+must_match	^status: Draft only$	frontmatter status = Draft only
+must_match	\(blocked — see Source Coverage\)	blocked-body marker present
+must_match_in_section	9. PM Review Items	SRS 또는 staging URL 제공 후 재호출 필요	source request guidance in §9
+must_not_match	^### P0-[0-9]+:	No P0 scenario headings (gate blocks)
+must_not_match	^### P1-[0-9]+:	No P1 scenario headings (gate blocks)
+must_not_match	^### EDGE-[0-9]+:	No EDGE scenario headings (gate blocks)
 must_not_match	hard-fail	hard-fail wording must not appear

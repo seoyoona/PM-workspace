@@ -20,6 +20,16 @@ auth_used: none
 scope: all
 ---
 
+## Source Coverage
+- SRS: found
+- URL inspect: done
+- design.md: missing
+- Change Brief: missing
+- QA history: missing
+- Confidence: High
+
+---
+
 # QA Plan — booktails Booktails R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.

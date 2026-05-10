@@ -1,11 +1,18 @@
-# case04: design.md only → no-invention enforced (no P0/P1 invention)
+# case04: design.md only → v1.1.1 Draft only gate triggers + no-invention enforced
 must_match	^srs_ref: missing$	SRS missing
 must_match	^brief_refs: \[\]$	brief_refs empty
 must_match	^design_md: clients/	design.md only
+must_match	^- SRS: missing$	Source Coverage SRS missing
+must_match	^- URL inspect: not provided$	Source Coverage URL not provided
+must_match	^- design.md: found$	Source Coverage design.md found
+must_match	^- Confidence: Draft only$	Confidence = Draft only (gate triggered)
+must_match	^status: Draft only$	frontmatter status = Draft only
 must_match	primary source insufficient	primary-source-insufficient marker
-must_match	no-invention rule	rule cited
-must_match_in_section	4. P0 Critical Scenarios (mandatory regression)	\(none	P0 empty (no invention)
-must_match_in_section	5. P1 Supporting Scenarios	\(none	P1 empty
+must_match	no-invention rule	no-invention rule cited
+must_match	\(blocked — see Source Coverage\)	blocked-body marker present
+must_not_match	^### P0-[0-9]+:	No P0 scenario headings (gate blocks)
+must_not_match	^### P1-[0-9]+:	No P1 scenario headings (gate blocks)
+must_not_match	^### EDGE-[0-9]+:	No EDGE scenario headings (gate blocks)
 must_not_match	mock_advisor	no account invention without source
 must_not_match	mock_member	no account invention without source
 must_not_match	mock_admin	no account invention without source

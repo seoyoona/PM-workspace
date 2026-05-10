@@ -1,0 +1,24 @@
+# case13: minimum source gate — SRS missing + URL not provided + only design.md/CLAUDE.md → Draft only, plan body blocked
+# Source Coverage block reflects the gate state
+must_match	^- SRS: missing$	SRS missing
+must_match	^- URL inspect: not provided$	URL inspect not provided
+must_match	^- Confidence: Draft only$	Confidence = Draft only
+
+# Frontmatter status reflects gate
+must_match	^status: Draft only$	frontmatter status field
+
+# Blocked-body markers
+must_match	\(blocked — see Source Coverage\)	blocked-body marker present
+
+# Source request guidance in §9
+must_match_in_section	9. PM Review Items	SRS 또는 staging URL 제공 후 재호출 필요	source request guidance in §9
+
+# Plan body MUST NOT contain any P0/P1/EDGE/REG scenario headings
+must_not_match	^### P0-[0-9]+:	No P0-NN scenario headings (gate fails if present)
+must_not_match	^### P1-[0-9]+:	No P1-NN scenario headings (gate fails if present)
+must_not_match	^### EDGE-[0-9]+:	No EDGE-NN scenario headings (gate fails if present)
+must_not_match	^### REG-[0-9]+:	No REG-NN scenario headings (gate fails if present)
+
+# CLAUDE.md / glossary alone must not promote scenarios
+must_not_match	derived from CLAUDE.md	No CLAUDE.md-derived scenario claim
+must_not_match	per glossary	No glossary-derived scenario claim

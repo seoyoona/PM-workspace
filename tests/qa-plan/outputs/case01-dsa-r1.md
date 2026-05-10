@@ -15,6 +15,16 @@ auth_used: none
 scope: all
 ---
 
+## Source Coverage
+- SRS: found
+- URL inspect: not provided
+- design.md: found
+- Change Brief: found
+- QA history: missing
+- Confidence: High
+
+---
+
 # QA Plan — DSA DSA R1
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.

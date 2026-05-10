@@ -1,0 +1,33 @@
+# case12: no-invention regression — SRS + URL inspect both given, but AI must NOT promote unsourced UI to scenarios
+# Source Coverage block must reflect both sources present
+must_match	^- SRS: found$	SRS marked found
+must_match	^- URL inspect: done$	URL inspect marked done
+must_match	^- Confidence: High$	Confidence = High when SRS + URL inspect both present
+
+# Frontmatter signals
+must_match	^staging_url: https://	staging_url URL recorded
+must_match	^pages_inspected:	pages_inspected list present
+
+# Deviations section anchor
+must_match	SRS-Implementation Deviation	deviations sub-heading present
+
+# Invented scenarios MUST NOT appear as P0/P1/EDGE entries
+must_not_match	^### P[01]-[0-9]+: [Ee]mail.*(signup|login|password)	No email/password auth scenario in P0/P1
+must_not_match	^### P[01]-[0-9]+: [Pp]assword reset	No password reset scenario in P0/P1
+must_not_match	^### P[01]-[0-9]+:.*자녀.*프로필	No 자녀 profile scenario in P0/P1
+must_not_match	^### P[01]-[0-9]+:.*/support.*internal	No internal /support form scenario in P0/P1
+must_not_match	^### P[01]-[0-9]+:.*Collection Behavior Update	No "per Collection Behavior Update" assertion (no Change Brief)
+
+# Inferred tags must not appear inside step expected-outcomes (Steps 1. ... [inferred])
+must_not_match	^  [0-9]+\. .*\[inferred\]	No [inferred] tag inside step lines
+
+# Read-only inspection rules still hold
+must_not_match	clicked .*Submit	no destructive Submit click
+must_not_match	clicked .*Delete	no destructive Delete click
+must_not_match	clicked .*Pay	no payment click
+
+# Deviations must be routed to §9
+must_match_in_section	9. PM Review Items	[Ee]mail	Email auth deviation in §9
+must_match_in_section	9. PM Review Items	[Pp]assword reset	Password reset deviation in §9
+must_match_in_section	9. PM Review Items	자녀	자녀 profile deviation in §9
+must_match_in_section	9. PM Review Items	/support	/support form deviation in §9

@@ -1,5 +1,5 @@
 ---
-description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1 staging URL 입력 시 read-only guided navigation으로 화면 탐색 (depth 2 / max 10 pages)
+description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1.1 Source Coverage gate + no-invention 강화 (v1.1 URL inspect 유지 — depth 2 / max 10 pages, --login-as 1회 예외)
 argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text] [--url staging-url] [--inspect-depth N] [--max-pages N]
 allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch, mcp__playwright__browser_navigate, mcp__playwright__browser_navigate_back, mcp__playwright__browser_click, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_close, mcp__playwright__browser_type, mcp__playwright__browser_fill_form
 ---
@@ -31,6 +31,35 @@ QA 범위·기능 흐름의 **primary source**는 다음 순서:
 
 design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 위반. Staging URL은 "구현 현황 참고"이지 "기준 정답"이 아님 — 미구현·잘못 구현된 화면을 정답처럼 시나리오에 박지 말 것.
 
+## Source Coverage Gate (v1.1.1)
+
+**모든 생성된 plan은 §1 위에 `## Source Coverage` 블록을 의무 출력한다.** 6 라인 fixed schema:
+
+```
+## Source Coverage
+- SRS: found / missing
+- URL inspect: done / not provided / not available
+- design.md: found / missing
+- Change Brief: found / missing
+- QA history: found / missing
+- Confidence: High / Medium / Low / Draft only
+```
+
+**Confidence 결정 규칙:**
+- **High** — SRS found AND (URL inspect done OR Change Brief found)
+- **Medium** — SRS found alone OR URL inspect done alone (1개 strong primary source)
+- **Low** — SRS partial (예: Notion fetch는 됐지만 본문이 placeholder) + 다른 source도 약함
+- **Draft only** — SRS missing AND URL inspect ∈ {not provided, not available}. 아래 "최소 source 게이트" 발동
+
+**최소 source 게이트 (hard rule):**
+- `SRS = missing` AND `URL inspect ∈ {not provided, not available}` → §4·§5·§6·§7 본문 작성 중단. 해당 섹션은 `(blocked — see Source Coverage)` 단일 줄로만 채우고, §9 PM Review에 "source 부족으로 P0/P1/EDGE/REG 시나리오 작성 차단됨. SRS 또는 staging URL 제공 후 재호출 필요" 안내. §1·§2·§3·§8은 partial-skip으로 작성 가능
+- **CLAUDE.md / glossary 만으로는 게이트 통과 X.** Source 우선순위 4번(client context)은 baseline 요구사항을 정의하는 source가 아니므로 P0/P1 시나리오의 primary source로 사용 금지
+- design.md 도 단독으로는 게이트 통과 X (이미 기존 룰)
+
+**Confidence 라벨이 Draft only일 때 frontmatter:**
+- `status: Draft only` (Draft 와 다름 — 일반 Draft 는 검토 후 승급 가능, Draft only 는 source 보강 후 재호출 필요)
+- 화면 출력에 "⚠️ Plan body blocked — source insufficient" 1줄 강조
+
 ## Hard Boundaries (이 스킬은 절대 안 함)
 
 1. SRS / Change Brief / design.md / 프로젝트 문서 편집 — read-only 참조만
@@ -44,7 +73,15 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 9. 자동 스크린샷 / HAR 캡처 (단, `--url` 명시 시 페이지당 screenshot 1장은 inspection 결과 path 기록 목적으로 허용)
 10. 구체 공수(MD/hour/day) AI 산정 — priority P0/P1/EDGE/REG만
 11. 추측성 UI 위치·버튼·문구 위치 자동 제안 (source 근거 없으면 ❌)
-12. source 없는 사용자 흐름·기대결과·권한·데이터 조건 발명
+12. **No-invention rule (강화 v1.1.1)** — 다음 카테고리는 source(SRS / Change Brief / QA history)에 명시 없으면 §4·§5·§6·§7에 작성 금지. **URL inspect는 implementation evidence이지 source가 아니다** — URL에서만 관찰된 신규 기능·권한·DB 변화·외부 연동·결제·알림은 §4·§5·§6·§7로 promote X, §9 PM Review의 "SRS-Implementation Deviation" sub-heading으로만 라우팅:
+    - **Features** — 화면, 페이지, 버튼, 폼, 모달, 다이얼로그, 라우트
+    - **Permissions / role boundaries** — 누가 무엇을 할 수 있는가, 인증 후 접근 가능한 페이지
+    - **Notifications** — push / email / SMS / in-app toast / banner
+    - **Payments** — 금액, 결제 수단, PG provider, 실패 / 환불 / 부분환불 동작
+    - **Admin actions** — CRUD 단계, modal 내부 입력, confirm dialog 라벨
+    - **External APIs** — 호출 횟수, prompt count, retry 횟수, timeout
+    - **DB state changes** — row count, ledger entry shape, idempotency key, soft vs hard delete
+    `[inferred]` 태그는 §9 안에서만 허용 — step expected-outcome 안에 `[inferred]` 박는 것 금지
 13. **design.md를 QA 범위·기능 흐름의 primary source로 사용** (UI/화면 표현 검증 보조만)
 14. status 자동 승급 (Draft → Review → Final 자동 X)
 15. 기존 QA plan 파일 자동 수정·삭제 (수정은 PM이 직접 편집)
@@ -59,6 +96,8 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 24. **qa-agent-skills 연동 / expect / 자동 QA 실행** (v3 영역, v1.1에서도 금지)
 
 ## URL Inspection Boundaries (`--url` 명시 시만 적용 / v1.1)
+
+> **v1.1.1: URL inspect = implementation evidence only.** URL inspect의 역할은 SRS / Change Brief / QA history 에 이미 정의된 기능에 대한 화면명·현재 노출 상태·UI text cross-check 한정이다. URL에서만 관찰된 신규 기능·권한·DB 변화·외부 연동·결제·알림은 §4·§5·§6·§7로 promote X. §9 PM Review의 "SRS-Implementation Deviation" sub-heading으로만 라우팅한다.
 
 **허용 (read-only guided navigation):**
 - 같은 도메인 내 이동만 (`browser_navigate`로 cross-domain 진입 X)
@@ -121,9 +160,10 @@ notes: |
 - 비밀번호 / 토큰을 `[추론]` 또는 인용 블록에 노출 X
 - 로그인 시도·결과는 §9 PM Review Items에 1줄 로그 ("auth: mock_admin_dsa01 — success / 1회 / post-login pages: N개")
 
-**SRS와 충돌 처리:**
-- URL inspection 결과가 SRS와 다르면 **SRS 우선** + §9 PM Review에 "URL inspect: <page> 미구현 또는 SRS와 불일치 — dev/PM 확인 필요" 표시
-- "지금 화면에 있는 것"을 P0/P1 시나리오 기대결과로 박지 말 것 (구현 미완 가능성)
+**SRS와 implementation 차이 처리 (v1.1.1):**
+- URL inspection 결과가 SRS와 다르거나 SRS에 없는 surface가 staging에서 관찰되면 → §4·§5·§6·§7에 작성 X. §9 PM Review Items의 "SRS-Implementation Deviation" sub-heading에 1줄씩 기록 ("URL inspect: <page/feature> — SRS에 없음 또는 SRS와 불일치. PM 확인 후 SRS 업데이트 또는 구현 수정 방향 결정 필요")
+- PM이 SRS 업데이트 또는 구현 수정 방향을 확정하기 전까지 P0/P1/EDGE/REG 시나리오에 포함하지 않는다
+- "지금 화면에 있는 것"을 시나리오 expected-outcome 으로 박지 말 것 (구현 미완 / 잘못 구현 가능성)
 
 **Inspection 종료 / 정리:**
 - 종료 시 `browser_close` 의무 호출
@@ -372,6 +412,8 @@ Copy/paste-ready block for QA / client transmission. **English only** (Vietnames
 - 시나리오 ID 형식: `P0-NN` / `P1-NN` / `EDGE-NN` / `REG-NN` (zero-pad 2자리)
 - QA Plan ID 형식: `QA-<CLIENT>-YYYYMMDD` (CLIENT는 대문자)
 - design.md는 §3 화면명 인용 / UI 표현 검증 보조에만. QA 범위·기능 흐름 발명 X
+- **Source Coverage 블록 의무 출력** (v1.1.1) — 모든 plan은 §1 위에 6-line Source Coverage 블록 + Confidence 라벨 출력
+- **Confidence = Draft only 시 §4–§7 본문 작성 중단** (v1.1.1) — source 보강 요청만 §9에 표기
 
 ### 금지
 - 자동 chain 트리거 (`/qa-feedback` / `/issue-ticket` / `/to-spec` / `/dev-chat` / `/client-chat`)
@@ -387,6 +429,7 @@ Copy/paste-ready block for QA / client transmission. **English only** (Vietnames
 - Mermaid 다이어그램 기본 출력 (v1)
 - 9 섹션을 강제로 채우기 (source 부족 시 [확인 필요])
 - §4~§7을 고객·개발팀 직접 전달 (§8만)
+- **Inferred 항목을 P0/P1/EDGE step expected-outcome에 임베드** (v1.1.1) — `[inferred]` 태그는 §9 안에서만 사용. §4·§5·§6 step 본문에 추론 내용 박지 말 것
 
 ### PM 판단이 불가능할 때
 - primary source(SRS / Change Brief / QA history) 모두 부족 + design.md만 있을 때 → QA plan 작성 자체를 멈추고 PM에게 source 입력 요청. design.md만으로 시나리오 발명 ❌

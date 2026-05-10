@@ -15,6 +15,18 @@ auth_used: {mock_account or "none"}
 scope: {free-text or "all"}
 ---
 
+## Source Coverage
+- SRS: {found / missing}
+- URL inspect: {done / not provided / not available}
+- design.md: {found / missing}
+- Change Brief: {found / missing}
+- QA history: {found / missing}
+- Confidence: {High / Medium / Low / Draft only}
+
+> If Confidence = Draft only, §4–§7 are blocked. Provide SRS or staging URL and re-invoke.
+
+---
+
 # QA Plan — {client} {project} R{N}
 
 > Internal QA plan — for PM/QA validation only. Not a client-facing spec or dev ticket.
