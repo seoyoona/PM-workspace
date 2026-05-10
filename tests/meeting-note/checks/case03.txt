@@ -1,0 +1,15 @@
+# case03: gate=2 (new despite existing match — different meeting)
+must_match	^status: Confirmed-2$	status Confirmed-2
+must_match	^gate_choice: "2"$	gate_choice = 2
+must_match	^existing_match_count: 1$	1 existing match
+must_match	^archive_target: none$	archive NOT triggered (gate=2)
+must_match	^notion_page_url: https://notion\.so/	new page URL recorded
+must_match	^action_items_count: 1$	1 action item
+
+# §2 PM Choice = 2
+must_match_in_section	2. PM Choice	gate_choice: "2"	gate_choice in §2
+must_match_in_section	2. PM Choice	기존 page 보존	preservation language
+must_match_in_section	2. PM Choice	새 page 추가 생성	additive language
+
+# §1 still includes verbatim gate prompt
+must_match_in_section	1. Step 3 Confirm Gate	2\. 새로 생성 \(다른 미팅이면\)	option 2 verbatim

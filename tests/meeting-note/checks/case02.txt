@@ -1,0 +1,23 @@
+# case02: gate=1 (archive existing + new)
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "1"$	gate_choice = 1
+must_match	^existing_match_count: 1$	1 existing match
+must_match	^archive_target: https://notion\.so/	archive_target URL recorded
+must_match	^notion_page_url: https://notion\.so/	new page URL recorded
+must_match	^action_items_count: 2$	2 action items
+
+# §1 contains the verbatim gate prompt block
+must_match_in_section	1. Step 3 Confirm Gate	같은 날짜의 미팅 노트가 이미 있습니다	gate prompt header
+must_match_in_section	1. Step 3 Confirm Gate	1\. 덮어쓰기 \(기존 archive \+ 새로 생성\)	option 1 verbatim
+must_match_in_section	1. Step 3 Confirm Gate	2\. 새로 생성 \(다른 미팅이면\)	option 2 verbatim
+must_match_in_section	1. Step 3 Confirm Gate	3\. 취소	option 3 verbatim
+must_match_in_section	1. Step 3 Confirm Gate	추천: 1	recommendation marker
+
+# §2 = PM選 1
+must_match_in_section	2. PM Choice	gate_choice: "1"	gate_choice in §2
+must_match_in_section	2. PM Choice	archive	archive language
+must_match_in_section	2. PM Choice	새 page 생성	new page language
+
+# Action Items present
+must_match	^- \*\*Dev \(Tuan\)\*\*	Dev owner
+must_match	^- \*\*PM \(Yoona\)\*\*	PM owner

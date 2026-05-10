@@ -1,0 +1,23 @@
+# case04: gate=3 (cancel) — nothing written
+must_match	^status: Cancelled$	status Cancelled
+must_match	^gate_choice: "3"$	gate_choice = 3
+must_match	^archive_target: none$	archive NOT triggered
+must_match	^notion_page_url: ""$	notion_page_url empty
+must_match	^action_items_count: 0$	zero action items
+
+# §2 PM Choice = 3
+must_match_in_section	2. PM Choice	gate_choice: "3"	gate_choice in §2
+must_match_in_section	2. PM Choice	cancelled	cancellation marker
+must_match_in_section	2. PM Choice	Part 2/3 미생성	parts not generated
+
+# Cancellation markers in §3, §4, §5
+# §3 has ### sub-headings — file-level grep for the cancellation language directly under sub-heading
+must_match	^\(취소됨 — Notion 저장 미실행\)$	§3 미팅 정보 cancelled body
+must_match	^\(취소됨\)$	generic cancellation marker (한눈에 보기 / Action Items 등)
+must_match_in_section	4. Part 2	취소됨	§4 cancelled (no sub-headings)
+must_match_in_section	5. Part 3	취소됨	§5 cancelled (no sub-headings)
+
+# No actual generated content (no Action Item bullets, no Teams critical/this-round content)
+must_not_match	^- \*\*(Dev|PM|Client)	no Action Item bullets
+must_not_match	^Critical context:$	no Part 2 substantive content
+must_not_match	^오늘 논의된 핵심 내용:$	no Part 3 substantive content

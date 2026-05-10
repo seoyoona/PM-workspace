@@ -1,0 +1,43 @@
+# case01: gate-skip (existing_match_count=0) clean meeting
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "0"$	gate_choice = "0" (no prompt)
+must_match	^existing_match_count: 0$	zero existing matches
+must_match	^action_items_count: 3$	3 action items
+must_match	^out_of_scope_count: 1$	1 out-of-scope
+must_match	^memo_only_count: 1$	1 memo-only
+must_match	^to_spec_recommendation: no$	no /to-spec trigger
+must_match	^notion_page_url: https://notion\.so/	new page URL recorded
+must_match	^archive_target: none$	no archive (gate-skip)
+
+# §1 explicitly states gate-skip
+must_match_in_section	1. Step 3 Confirm Gate	매치 0건	0 match note
+must_match_in_section	1. Step 3 Confirm Gate	gate prompt 미발동	gate not triggered
+
+# §2 PM Choice = "0"
+must_match_in_section	2. PM Choice	gate_choice: "0"	gate_choice in §2
+
+# Action Items present (file-level — §3 has ### sub-headings)
+must_match	^#### 바로 진행할 일$	바로 진행할 일 sub-heading
+must_match	^- \*\*Client \(Kim\)\*\*	Client owner bold
+must_match	^- \*\*PM \(Yoona\)\*\*	PM owner bold
+must_match	^- \*\*Dev \(Tuan\)\*\*	Dev owner bold
+
+# Single source of truth — phrase repetition guard (file-level — §3 has ### sub-headings)
+must_match	R2 admin 페이지 사이드바 정렬 확정	한눈에 보기 line 1
+must_not_match	^- 오늘 미팅 노트 정리해서 내일까지 공유드릴게요$	exact verbatim from transcript should not appear as standalone bullet
+
+# Part 2 (EN) audience
+must_match	📌 \[Dsa\] Meeting follow-up — 2026-05-08	Part 2 header
+must_match	This round:	Part 2 section
+must_match	Maintenance later:	Part 2 section (out-of-scope routed)
+
+# Part 3 (KR formal, 합니다체) — NO English filler / NO PM internal action / NO [추론]
+must_match	확정된 사항:	Part 3 section
+must_match	진행 예정 사항:	Part 3 section
+must_match	추가 확인 부탁드리는 사항:	Part 3 section
+must_not_match_in_section	5. Part 3	오늘 미팅 노트 정리	PM internal action excluded from §5
+must_not_match_in_section	5. Part 3	\[추론\]	[추론] tag excluded from §5
+
+# /to-spec recommendation NOT triggered (case07 covers the trigger)
+must_not_match_in_section	6. 추가 제안	/to-spec 추천 trigger 발동	no /to-spec trigger this case
+must_match_in_section	6. 추가 제안	미발동	trigger미발동 explicit

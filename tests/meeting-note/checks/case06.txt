@@ -1,0 +1,28 @@
+# case06: audience separation across Part 1 / 2 / 3
+must_match	^action_items_count: 3$	3 action items
+must_match	^- \*\*Dev \(Tuan\)\*\*	Dev owner present
+must_match	^- \*\*PM \(Yoona\)\*\*	PM owner present
+
+# Part 1 contains all (technical detail + PM action + [추론] tag)
+must_match	srcset	srcset in Part 1 OK
+must_match	picture element	picture element in Part 1 OK
+must_match	mobile breakpoint	breakpoint in Part 1 OK
+must_match	\[추론\]	[추론] tag present in Part 1
+
+# Part 2 (EN) contains technical detail (Dev audience)
+must_match_in_section	4. Part 2	srcset	srcset in Part 2 OK
+must_match_in_section	4. Part 2	picture element	picture element in Part 2 OK
+must_match_in_section	4. Part 2	Mobile breakpoint	breakpoint in Part 2
+
+# Part 3 (KR formal) MUST NOT contain technical detail / [추론] / PM internal action
+must_not_match_in_section	5. Part 3	srcset	no srcset leak in Part 3
+must_not_match_in_section	5. Part 3	picture element	no picture element leak in Part 3
+must_not_match_in_section	5. Part 3	breakpoint	no breakpoint leak in Part 3
+must_not_match_in_section	5. Part 3	\[추론\]	no [추론] leak in Part 3
+must_not_match_in_section	5. Part 3	SRS	no SRS internal-action leak in Part 3
+must_not_match_in_section	5. Part 3	follow-up	no follow-up internal action in Part 3
+must_not_match_in_section	5. Part 3	내부 운영	no PM-internal phrasing in Part 3
+
+# Part 3 합니다체 (formal Korean)
+must_match_in_section	5. Part 3	확정되었습니다	합니다체 verb form
+must_match_in_section	5. Part 3	부탁드립니다	합니다체 verb form

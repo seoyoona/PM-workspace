@@ -1,0 +1,30 @@
+# case05: source_quote enforcement — vague utterance → NO Action Item, memo-only routing
+must_match	^action_items_count: 0$	zero action items (no invention)
+must_match	^memo_only_count: 2$	2 memo-only entries
+
+# §3 Action Items header still present BUT body must indicate empty
+must_match	^### Action Items$	Action Items heading
+must_match	^\(없음 — 모든 발화가 owner/action/요청 주체 중 2개 이상 불명확	empty Action Items with rationale
+
+# §3 메모해둘 이슈 contains the vague utterances quoted verbatim
+must_match	^### 메모해둘 이슈$	메모해둘 이슈 heading
+must_match	"그냥 좀 봐주세요"	original vague phrase preserved
+must_match	"잘 좀 부탁드려요"	original vague phrase preserved
+must_match	"신경 좀 써주시면"	original vague phrase preserved
+
+# Action 승격 보수 룰 explicit reference
+must_match	Action 승격 보수 룰	rule reference
+
+# NO invented owners or due in this output
+must_not_match	^- \*\*Dev \(Tuan\)\*\*	no invented Dev action
+must_not_match	^- \*\*Client \(Kim\)\*\*	no invented Client action
+must_not_match	^- \*\*PM \(Yoona\)\*\*	no invented PM action
+
+# NO inferred speculation
+must_not_match	\[추론\]	no [추론] tag (inappropriate when source itself vague)
+must_not_match	may be a database lag	no DB speculation
+must_not_match	likely related to	no likely-related speculation
+
+# §7 Notes explicitly invokes the rule
+must_match_in_section	7. Notes	source_quote	source_quote rule reference
+must_match_in_section	7. Notes	발명한 owner나 due 부재	no-invention statement

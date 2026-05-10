@@ -1,0 +1,26 @@
+# case07: /to-spec recommendation trigger — recommended ONLY, never auto-invoked
+must_match	^to_spec_recommendation: yes$	frontmatter trigger flag = yes
+must_match	^action_items_count: 1$	1 action item
+
+# §6 추가 제안 contains the trigger marker
+must_match_in_section	6. 추가 제안	/to-spec 추천 trigger 발동	trigger marker
+must_match_in_section	6. 추가 제안	자동 실행 안 함	auto-execution explicitly forbidden
+must_match_in_section	6. 추가 제안	권장 호출	recommended invocation phrasing
+
+# Trigger conditions documented in §7 Notes
+must_match_in_section	7. Notes	Dev 추정 2일 이상	condition (a)
+must_match_in_section	7. Notes	여러 컴포넌트	condition (b)
+must_match_in_section	7. Notes	owner=Dev	condition (c)
+must_match_in_section	7. Notes	스펙 합의 명확	condition (d)
+must_match_in_section	7. Notes	자동 실행 금지	auto-execution explicitly forbidden in Notes
+
+# /to-spec MUST NOT be auto-executed (no Running / pattern, file-level guard via global)
+# Recommended invocation must be quoted, not executed
+must_match	`/to-spec --client dsa --project Dsa	recommended invocation quoted
+
+# /to-spec must NEVER appear as a "Running" line (auto-chain trigger forbidden globally)
+must_not_match	^Running /to-spec	no auto-execution of /to-spec
+
+# Action Item must remain in §3 (not absorbed by추가 제안)
+must_match	^#### 바로 진행할 일$	Action Items sub-heading
+must_match	^- \*\*Dev \(Tuan\)\*\*	Dev action item
