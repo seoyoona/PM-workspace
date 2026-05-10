@@ -1,0 +1,19 @@
+# case04: custom domain code (LMS) approved at preview
+must_match	^custom_domain_codes: \[LMS\]$	custom code recorded
+must_match	^preview_gate_choice: "1"$	preview gate 1 (with custom approval)
+must_match	^save_gate_choice: "1"$	save gate 1
+
+# Custom REQ ID format
+must_match	REQ-LMS-01	custom code applied
+must_match	REQ-LMS-02	custom code applied 2
+
+# Standard codes still allowed alongside custom
+must_match	REQ-AUTH-01	standard code still used
+
+# Preview explicitly mentions custom code approval (file-level — extract terminates at inner ## in code block)
+must_match	커스텀 도메인 코드: LMS	custom code mention
+must_match	LMS — 사용 승인 필요	approval language in preview
+
+# Excluded item is inline marker, not a separate REQ
+must_match	\*\*제외:\*\* 결제	inline 제외 marker for excluded payment
+must_not_match	REQ-PAY-	no payment REQ (excluded)

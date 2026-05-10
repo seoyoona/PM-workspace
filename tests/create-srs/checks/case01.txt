@@ -1,0 +1,22 @@
+# case01: standard SRS draft, both gates proceed
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^preview_gate_choice: "1"$	preview gate 1
+must_match	^save_gate_choice: "1"$	save gate 1
+must_match	^req_total: 11$	11 REQs
+must_match	^output_mode: full$	full mode
+must_match	^custom_domain_codes: \[\]$	no custom codes
+must_match	^new_page_url: https://notion\.so/	page URL recorded
+
+# REQ ID format with fixed domain codes
+must_match	REQ-AUTH-01	AUTH code
+must_match	REQ-PAY-01	PAY code
+must_match	REQ-ADMIN-01	ADMIN code
+must_match	REQ-UI-01	UI code
+
+# 비창작 원칙: 비밀번호 찾기는 §7 확인 필요에만, 본문에는 없음
+# (§5 has ### sub-sections; using file-level grep)
+must_match	비밀번호 찾기 미언급 — 포함 여부	password recovery in confirm-needed (file-level)
+must_not_match	REQ-AUTH-04: 비밀번호 찾기	no invented REQ for password recovery
+
+# 추론 tag used legitimately
+must_match	REQ-PAY-02 \| 결제 검증 \[추론\]	[추론] tag in body for derivable item

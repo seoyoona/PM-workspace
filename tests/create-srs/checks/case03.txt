@@ -1,0 +1,15 @@
+# case03: preview proceed but save cancel
+must_match	^status: Cancelled-Save$	status Cancelled-Save
+must_match	^preview_gate_choice: "1"$	preview gate 1
+must_match	^save_gate_choice: "3"$	save gate 3
+must_match	^new_page_url: ""$	no page URL
+
+# §4 PM 1
+must_match_in_section	4. Preview Gate Choice	preview_gate_choice: "1"	preview gate
+# §7 PM 3
+must_match_in_section	7. Save Gate Choice	save_gate_choice: "3"	save gate
+must_match_in_section	7. Save Gate Choice	cancelled at save	save cancellation
+
+# §5 SRS draft was generated (preview proceed)
+must_match	^### 5\. 기능명세 요약	SRS draft index section
+must_match	^\| REQ-AUTH-01	REQ ID present in body

@@ -1,0 +1,44 @@
+# /create-srs offline harness global checks (Wave 2-2)
+
+# Frontmatter
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Confirmed-2|Cancelled-Preview|Cancelled-Save)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^source_ref: 	source_ref field
+must_match	^project_doc_db: 	project doc DB ref
+must_match	^preview_gate_choice: 	preview_gate_choice present
+must_match	^save_gate_choice: 	save_gate_choice present
+must_match	^req_total: [0-9]+$	req_total integer
+must_match	^confirm_needed_count: [0-9]+$	confirm_needed_count integer
+must_match	^output_mode: (full|excerpt)$	output_mode enum
+
+# Required top-level sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. REQ Extraction Summary	section 2
+must_match	## 3\. Step 3 Preview	section 3
+must_match	## 4\. Preview Gate Choice	section 4
+must_match	## 5\. SRS Draft	section 5
+must_match	## 6\. Step 6 Save Gate	section 6
+must_match	## 7\. Save Gate Choice	section 7
+must_match	## 8\. Notes	section 8
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|issue-ticket|to-spec|client-chat|dev-chat|srs-translate)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler
+
+# 비창작 원칙 — model speculation phrases forbidden in body (allowed only as meta in §8)
+must_not_match	보통 이런 서비스에는	no "보통 이런" speculation
+must_not_match	일반적으로 있을 법한	no "일반적으로 있을 법한" speculation

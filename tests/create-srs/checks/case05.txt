@@ -1,0 +1,15 @@
+# case05: excerpt mode (16+ REQ)
+must_match	^output_mode: excerpt$	excerpt mode
+must_match	^req_total: 18$	18 REQs
+
+# Excerpt mode marker
+must_match_in_section	5. SRS Draft	excerpt mode	excerpt mode label
+must_match_in_section	5. SRS Draft	전문이 필요하면	full-doc on-request language
+
+# Index still present (§5 inside SRS Draft)
+must_match	REQ-AUTH-01	first REQ
+must_match	REQ-SYS-02	last REQ in 18
+must_match	rate-limit 정책 \[확인 필요\]	confirm-needed marker inline
+
+# §7 confirm needed has 4 items
+must_match	^confirm_needed_count: 4$	4 items

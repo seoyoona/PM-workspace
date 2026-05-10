@@ -1,0 +1,23 @@
+# case06: non-invention strict — narrow source, 일반 부속 기능 본문 추가 금지
+must_match	^req_total: 4$	4 REQs (narrow)
+must_match	^confirm_needed_count: 3$	3 confirm needed
+
+# Body has only the 4 explicit REQs
+must_match	REQ-AUTH-01 \| 이메일 회원 가입	REQ 1
+must_match	REQ-AUTH-02 \| 비밀번호 회원 가입	REQ 2
+must_match	REQ-AUTH-03 \| 로그인	REQ 3
+must_match	REQ-AUTH-04 \| 세션 처리 \[추론\]	REQ 4 with [추론]
+
+# Body MUST NOT contain invented features
+must_not_match	REQ-AUTH-05 \| 비밀번호 찾기	no invented password recovery REQ
+must_not_match	REQ-AUTH-05 \| 이메일 인증	no invented email verification REQ
+must_not_match	REQ-AUTH-05 \| 회원 탈퇴	no invented account deletion REQ
+
+# These items appear ONLY in §7 confirm-needed (file-level grep — §7 has table, in-section extract works)
+must_match	비밀번호 찾기 미언급	password recovery is in confirm-needed
+must_match	이메일 인증 미언급	email verification is in confirm-needed
+must_match	회원 탈퇴 미언급	account deletion is in confirm-needed
+
+# §8 explicitly invokes 비창작 원칙
+must_match_in_section	8. Notes	비창작 원칙	rule reference
+must_match_in_section	8. Notes	소스 미언급	missing-source language

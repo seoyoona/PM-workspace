@@ -1,0 +1,19 @@
+# case02: preview cancel — Step 4·5·6 미실행
+must_match	^status: Cancelled-Preview$	status Cancelled-Preview
+must_match	^preview_gate_choice: "3"$	preview gate 3
+must_match	^save_gate_choice: "n/a"$	save gate n/a
+must_match	^new_page_url: ""$	no page URL
+
+# §4 PM 3
+must_match_in_section	4. Preview Gate Choice	preview_gate_choice: "3"	gate in §4
+must_match_in_section	4. Preview Gate Choice	cancelled at preview	cancellation marker
+
+# §5 cancelled
+must_match_in_section	5. SRS Draft	취소됨	§5 cancelled
+
+# §6 not reached
+must_match_in_section	6. Step 6 Save Gate	미실행	save gate not reached
+must_match_in_section	7. Save Gate Choice	n/a	save gate n/a in §7
+
+# No Notion URL fabricated
+must_not_match	notion\.so/cigroio/.*srs-draft	no fabricated Notion URL
