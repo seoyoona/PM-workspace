@@ -184,6 +184,32 @@ CLAUDE.md (전체 규칙)           → 항상 자동 로드
 | **Figma** | 디자인 파일 스펙 확인, 컴포넌트 정보 조회 (선택) | MCP (npx figma-developer-mcp, Personal Access Token) |
 | **Telegram Bot** | 비활성 — cigro API 토큰 미발급으로 Notion 연동 불가 | AWS Lambda (아카이브) |
 
+## 회귀 테스트 (Offline Harness)
+
+Track B 회귀 테스트 framework이 도입됐습니다 (Wave 0 ~ Wave 1-D + 2-1 ~ 2-7 ship 완료, 2026-05-10 기준). write-risk가 있는 모든 스킬 + 기존 3 harness까지 13개 harness, 95 cases가 PASS 상태로 운영됩니다.
+
+| Skill | Cases | Skill | Cases |
+|---|---|---|---|
+| qa-plan | 17 | weekly-report | 6 |
+| to-spec | 9 | meeting-note | 7 |
+| change-brief (deprecated) | 8 | qa-feedback | 8 |
+| daily-scrum | 8 | srs-translate | 6 |
+| create-srs | 6 | issue-ticket | 5 |
+| kickoff-prep | 5 | nexus-daily | 5 |
+| todo | 5 | | |
+
+**Offline static assertion model** — 실제 외부 write(Notion / Linear / Teams / Nexus) 발생 X. PM이 손으로 curate한 synthetic snapshot을 fixture/output으로 사용합니다. 표준은 `docs/harness-contract.md`, 공통 라이브러리는 `scripts/lib/harness-common.sh`.
+
+**운영 모드 (post-2026-05-10):** 새 실무 이슈가 발생하면 해당 skill의 harness에 regression case를 추가하는 안정화 모드. skill body 동작 자체를 바꿔야 하는 경우는 hotfix track으로 별도 처리 (예: qa-plan v1.1.2 BookTails hotfix). 모든 리스크가 영구적으로 사라지는 것은 아니며, "이미 알려진 회귀 패턴"만 차단합니다.
+
+```bash
+# 단일 skill 회귀
+bash scripts/test-qa-plan.sh
+
+# 전체 smoke
+for h in scripts/test-*.sh; do bash "$h" | tail -1; done
+```
+
 ## License
 
 MIT

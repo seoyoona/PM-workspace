@@ -348,3 +348,41 @@ yoona-workspace/
 - cigro workspace API 토큰 발급 불가로 Notion 연동 비활성
 - dev_chat, client_chat, sync_note는 Notion 불필요라 작동 가능하나, todo/today_brief의 Notion 접근 불가
 - 코드: `telegram-bot/` 디렉토리 (아카이브)
+
+## 회귀 테스트 (Offline Harness)
+
+Track B 회귀 테스트 framework — Wave 0 ~ Wave 1-D + 2-1 ~ 2-7 ship 완료 (2026-05-10).
+
+### 적용 범위
+- 13개 harness, 95 cases (write-risk 있는 모든 skill + 기존 3 harness)
+- skill 별 1 runner: `scripts/test-<skill>.sh`
+- skill 별 fixture/check/output: `tests/<skill>/{fixtures,checks,outputs}/`
+- 공통 라이브러리: `scripts/lib/harness-common.sh`
+- 표준: `docs/harness-contract.md` (10 sections — directory, naming, check format, global checks, gate verification, source priority, write-risk, fixturing workflow, rollout)
+
+### Offline static assertion model
+- harness는 skill CLI를 호출하지 않는다 (외부 write 0건 보장)
+- 검증 대상: `tests/<skill>/outputs/` 에 PM이 손으로 curate한 synthetic snapshot markdown
+- LLM 비결정성을 받아들이는 trade-off — 빠르고 결정론적이지만 live skill 회귀는 별도 (PM 매뉴얼 검수 또는 hotfix)
+
+### 단일 skill 회귀
+```bash
+bash scripts/test-qa-plan.sh
+```
+
+### 전체 smoke
+```bash
+for h in scripts/test-*.sh; do bash "$h" | tail -1; done
+```
+
+### 새 case 추가 (안정화 모드 운영)
+1. `tests/<skill>/fixtures/caseNN-<desc>.md` 작성 (input scenario)
+2. PM이 실제 `/<skill>` 1회 실행 → 출력 검수 → `tests/<skill>/outputs/caseNN-*.md` curate
+3. `tests/<skill>/checks/caseNN.txt` 작성 (must_match / must_not_match / must_match_in_section / etc.)
+4. runner의 `CASES=` 배열에 caseNN 등록
+5. `bash scripts/test-<skill>.sh` PASS 확인 후 commit
+
+### 운영 표현 약속
+- 신규 실무 이슈 발생 시 regression case 추가하는 운영 안정화 모드
+- "모든 리스크가 영구적으로 사라짐" 같은 과장 표현 금지 — harness는 "이미 알려진 회귀 패턴"만 차단
+- skill body 동작 변경 필요 시 hotfix track으로 별도 처리 (예: qa-plan v1.1.2 BookTails hotfix)
