@@ -1,0 +1,24 @@
+# case05: non-invention — vague KR preserved as direct EN, no model speculation
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "0"$	gate_choice 0
+must_match	^new_terms_count: 0$	zero new terms
+
+# Direct translations (no invention) preserved verbatim
+must_match	will be defined later	direct EN of "나중에 정리 예정"
+must_match	adjusted so as not to be excessive	direct EN of "너무 많지 않게"
+must_match	to be confirmed in a separate meeting	direct EN of "별도 회의에서 확정"
+
+# 원문 인용 retained alongside EN
+must_match	"나중에 정리 예정"	original Korean preserved
+must_match	"상세는 별도 회의에서 확정"	original Korean preserved
+
+# Forbidden inventions — model must NOT enrich vague text with technical jargon
+must_not_match	to be detailed in the next sprint	no sprint speculation
+must_not_match	throttled	no throttle term invention
+must_not_match	rate-limited	no rate-limit invention
+must_not_match	will be designed in	no design speculation
+must_not_match	subject to further specification	no formal spec invention
+
+# §7 explicitly invokes 비창작 원칙
+must_match_in_section	7. Notes	비창작 원칙	rule reference
+must_match_in_section	7. Notes	직역	direct-translation language

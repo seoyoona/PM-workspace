@@ -1,0 +1,15 @@
+# case03: gate=2 (new version with v2 suffix, existing preserved)
+must_match	^status: Confirmed-2$	status Confirmed-2
+must_match	^gate_choice: "2"$	gate_choice 2
+must_match	^existing_match_count: 1$	1 match
+must_match	^archive_target: none$	archive NOT triggered
+must_match	^version_suffix: " \(v2\)"$	v2 suffix recorded
+must_match	^new_page_url: https://notion\.so/	new page URL
+
+# §4 PM 2
+must_match_in_section	4. PM Choice	gate_choice: "2"	gate_choice in §4
+must_match_in_section	4. PM Choice	기존 R1 페이지 보존	preservation language
+must_match_in_section	4. PM Choice	v2	v2 suffix mention
+
+# Translation header has (v2) suffix
+must_match	^# SRS — Dsa \(EN translation\) \(v2\)	translation header with v2

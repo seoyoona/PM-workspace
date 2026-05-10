@@ -1,0 +1,18 @@
+# case06: New Terms warning — first-time client, glossary missing
+must_match	^client: koboom$	new client koboom
+must_match	^new_terms_count: 4$	4 new terms detected
+must_match	^translation_section_count: 3$	3 sections
+
+# §2 explicitly notes glossary absence
+must_match_in_section	2. Glossary Lookup	glossary/koboom.md 부재	glossary missing note
+must_match_in_section	2. Glossary Lookup	도메인 신규 용어 4건	new terms count
+
+# §6 lists New Terms with mapping
+must_match	활동지\(워크시트\) \| worksheet	worksheet mapping
+must_match	컬렉션 \| collection	collection mapping
+must_match	게이트키퍼 \| Gatekeeper	Gatekeeper mapping
+must_match	클래시파이어 / 제너레이터	Classifier/Generator mapping
+
+# Glossary creation recommendation
+must_match	glossary/koboom\.md	glossary file path
+must_match_in_section	6. New Terms	신규 작성 권고	creation recommendation

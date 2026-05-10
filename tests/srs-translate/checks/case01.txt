@@ -1,0 +1,26 @@
+# case01: fresh translation (gate-skip, 0 match)
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "0"$	gate_choice 0
+must_match	^existing_match_count: 0$	zero existing matches
+must_match	^archive_target: none$	no archive
+must_match	^version_suffix: none$	no version suffix
+must_match	^new_terms_count: 0$	zero new terms
+must_match	^translation_section_count: 4$	4 sections translated
+must_match	^new_page_url: https://notion\.so/	new page URL recorded
+
+# §3 explicitly says gate-skip
+must_match_in_section	3. Confirm Gate	매치 0건	0 match
+must_match_in_section	3. Confirm Gate	gate prompt 미발동	gate not triggered
+
+# Glossary applied — Korean → English mapping shown
+must_match	조직 관리자 → Organization admin	glossary mapping 1
+must_match	권한 경계 → Permission boundary	glossary mapping 2
+
+# Translation preview shows EN content
+must_match	^# SRS — Dsa	translation header
+must_match	Organization admins	English usage
+must_match	Permission Boundary Validation	preserved phrase
+
+# §6 New Terms = 0
+must_match_in_section	6. New Terms	0건	zero new terms
+must_match_in_section	6. New Terms	glossary 추가 불필요	glossary unchanged

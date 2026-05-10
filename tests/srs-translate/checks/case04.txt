@@ -1,0 +1,16 @@
+# case04: gate=3 (cancel) — nothing written
+must_match	^status: Cancelled$	status Cancelled
+must_match	^gate_choice: "3"$	gate_choice 3
+must_match	^archive_target: none$	no archive
+must_match	^new_page_url: ""$	no new page URL
+must_match	^translation_section_count: 0$	0 sections (cancelled)
+
+# §4 PM 3
+must_match_in_section	4. PM Choice	gate_choice: "3"	gate_choice in §4
+must_match_in_section	4. PM Choice	cancelled	cancellation marker
+must_match_in_section	4. PM Choice	archive X	no archive language
+
+# Cancellation markers in §1, §2, §5
+must_match_in_section	1. Source Summary	취소됨	§1 cancelled
+must_match_in_section	2. Glossary Lookup	취소됨	§2 cancelled
+must_match_in_section	5. Translation Output	취소됨	§5 cancelled

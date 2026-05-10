@@ -1,0 +1,23 @@
+# case02: gate=1 (update, archive existing + new same title)
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "1"$	gate_choice 1
+must_match	^existing_match_count: 1$	1 match
+must_match	^archive_target: https://notion\.so/	archive_target URL
+must_match	^new_page_url: https://notion\.so/	new page URL
+must_match	^version_suffix: none$	no version suffix (same title)
+must_match	^new_terms_count: 1$	1 new term
+
+# §3 contains verbatim gate prompt
+must_match_in_section	3. Confirm Gate	1\. 업데이트 \(기존 archive \+ 새로 생성\)	option 1 verbatim
+must_match_in_section	3. Confirm Gate	2\. 새 버전으로 생성	option 2 verbatim
+must_match_in_section	3. Confirm Gate	3\. 취소	option 3 verbatim
+must_match_in_section	3. Confirm Gate	추천: 1	recommendation marker
+
+# §4 PM 1
+must_match_in_section	4. PM Choice	gate_choice: "1"	gate_choice in §4
+must_match_in_section	4. PM Choice	archive	archive language
+must_match_in_section	4. PM Choice	제목 동일	same title preserved
+
+# New term in §6 with glossary recommendation
+must_match	활동 로그 → \*\*audit log\*\*	new term mapping
+must_match_in_section	6. New Terms	glossary	glossary recommendation

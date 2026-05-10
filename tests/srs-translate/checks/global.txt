@@ -1,0 +1,46 @@
+# /srs-translate offline harness global checks (Wave 2-1)
+# global checks support must_match / must_not_match only.
+
+# Frontmatter
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Confirmed-2|Cancelled)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^source_type: (notion|text)$	source_type enum
+must_match	^source_ref: 	source_ref field
+must_match	^project_doc_db: 	project doc DB ref
+must_match	^gate_choice: 	gate_choice present
+must_match	^existing_match_count: [0-9]+$	existing_match_count integer
+must_match	^new_terms_count: [0-9]+$	new_terms_count integer
+must_match	^translation_section_count: [0-9]+$	translation_section_count integer
+
+# Required top-level sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. Glossary Lookup	section 2
+must_match	## 3\. Confirm Gate	section 3
+must_match	## 4\. PM Choice	section 4
+must_match	## 5\. Translation Output	section 5
+must_match	## 6\. New Terms	section 6
+must_match	## 7\. Notes	section 7
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|issue-ticket|to-spec|client-chat|dev-chat)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+must_not_match	mcp__notion-cigro__notion-update-page\b	no raw update-page trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler
+
+# Non-invention rule — no model speculation phrases
+must_not_match	likely related to	no likely speculation
+must_not_match	probably caused by	no probably speculation
+must_not_match	might be due to	no might speculation
