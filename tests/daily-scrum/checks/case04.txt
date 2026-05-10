@@ -1,0 +1,20 @@
+# case04: gate=4 cancel — all writes skipped
+must_match	^status: Cancelled$	status Cancelled
+must_match	^gate_choice: "4"$	gate 4
+must_match	^pm_hub_new_count: 0$	zero PM Hub new
+must_match	^pm_hub_skip_count: 0$	zero skip
+must_match	^pm_hub_failed_count: 0$	zero failed
+must_match	^teams_send_status: skip$	teams skip
+must_match	^daily_scrum_log_url: ""$	empty DSL URL
+
+# §7 cancellation markers (sub-headings — file-level grep)
+must_match	\(취소됨 — 미생성	DSL cancellation marker
+must_match	신규 등록 0건	PM Hub zero new
+must_match	Step 9 미실행	Step 9 skip language
+
+# §8 final terminal indicates cancel
+must_match	❌ 취소됨	cancel emoji marker
+must_match	활동 로그 미기록	activity-log skip
+
+# Preview was still generated (PM 검토용) but not committed
+must_match	총 신규 1건 / skip 0건	preview count visible

@@ -1,0 +1,24 @@
+# case01: gate=1 happy path
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "1"$	gate 1
+must_match	^pm_hub_new_count: 2$	2 new PM Hub
+must_match	^pm_hub_skip_count: 0$	zero skip
+must_match	^pm_hub_failed_count: 0$	zero failed
+must_match	^daily_scrum_existing_match_count: 0$	no DSL dup
+must_match	^team_today_count: 1$	1 team today
+must_match	^teams_send_status: success$	teams success
+must_match	^daily_scrum_log_url: https://notion\.so/	DSL URL recorded
+
+# §5 PM Hub Register Preview shows count
+must_match	총 신규 2건 / skip 0건	preview count
+
+# §7.2 dedup filter mentions date condition (Patch B)
+must_match	title \+ project \+ 작성일\(2026-05-10\)	dedup filter date condition
+
+# Team today not promoted to PM Hub (file-level — §7 has sub-headings)
+must_not_match	^- \[Dsa\] admin 검색 정렬 우선순위 정리 — 신규	team today not in PM Hub register
+must_not_match	^### REG-	no REG sub-heading from /qa-plan leak
+
+# §11 terminal output has all 3 write summaries
+must_match	🎯 PM Action Hub 신규 등록: 2건	terminal PM Hub
+must_match	💬 Dev-chat: ✅ Teams 전송 완료	terminal Teams success

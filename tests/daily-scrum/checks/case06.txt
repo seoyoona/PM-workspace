@@ -1,0 +1,15 @@
+# case06: PM Hub partial success
+must_match	^pm_hub_new_count: 2$	2 success
+must_match	^pm_hub_failed_count: 1$	1 fail
+must_match	^teams_send_status: success$	teams independent success
+
+# §7.2 partial success language
+must_match	partial success — 3건 중 2건 성공 / 1건 실패	partial success line
+must_match	자동 retry 금지	no auto-retry rule
+
+# §11 ⚠️ failure line (Patch C)
+must_match	⚠️ PM Hub 등록 실패: 1건 — 수동 보정 필요	terminal failure line
+
+# DSL and Teams unaffected
+must_match	🎯 PM Action Hub 신규 등록: 2건	terminal new count
+must_match	💬 Dev-chat: ✅ Teams 전송 완료	terminal Teams success

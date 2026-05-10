@@ -1,0 +1,13 @@
+# case02: gate=2 — Notion + PM Hub only, Teams fallback-copy
+must_match	^status: Confirmed-2$	status Confirmed-2
+must_match	^gate_choice: "2"$	gate 2
+must_match	^teams_send_status: fallback-copy$	teams fallback
+must_match	^pm_hub_new_count: 1$	1 PM Hub new
+must_match	^daily_scrum_log_url: https://notion\.so/	DSL URL still saved
+
+# Step 8 still runs in gate=2 (skill body rule)
+must_match	총 신규 1건 / skip 0건	PM Hub preview count
+
+# Teams not auto-sent
+must_match	💬 Dev-chat: ⚠️ 복사해서 수동 전송	terminal Teams fallback
+must_not_match	HTTP 200	no auto-send confirmation

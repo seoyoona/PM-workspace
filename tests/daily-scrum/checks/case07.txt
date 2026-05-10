@@ -1,0 +1,17 @@
+# case07: DSL same-date dup → PM confirm prompt
+must_match	^daily_scrum_existing_match_count: 1$	1 existing dup
+
+# Step 7 dup prompt verbatim
+must_match	오늘 dsa daily scrum이 이미 등록되어 있습니다	dup prompt header
+must_match	1\. 추가	dup option 1
+must_match	2\. 취소	dup option 2
+
+# PM choice on dup prompt
+must_match	PM 응답: \*\*1 \(추가\)\*\*	PM dup choice
+
+# Both pages exist (new + old)
+must_match	기존: https://notion\.so/cigroio/dsa-daily-2026-05-10-old	old page preserved
+must_match	신규: https://notion\.so/cigroio/dsa-daily-2026-05-10-second	new page created
+
+# Auto-overwrite forbidden
+must_match	자동 덮어쓰기 ❌	no auto-overwrite rule

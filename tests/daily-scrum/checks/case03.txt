@@ -1,0 +1,15 @@
+# case03: gate=3 → 수정 후 다시 1
+must_match	^status: Modified-Then-Confirmed$	status Modified-Then-Confirmed
+must_match	^gate_choice: "3-then-1"$	gate 3-then-1
+must_match	^pm_hub_new_count: 1$	1 PM Hub new
+must_match	^teams_send_status: success$	teams success
+
+# §6 has both choices recorded
+must_match	첫 PM Choice: \*\*3 \(수정\)\*\*	first choice 3
+must_match	두 번째 PM Choice: \*\*1	second choice 1
+
+# Patch A 옵션 3 description rule reference: 추출 룰 재적용
+must_match	PM Hub 추출 룰 모두 재적용	rule re-application language
+
+# Status update tone in dev-chat (after revision)
+must_match	closing API spec round 1	revised dev-chat content

@@ -1,0 +1,11 @@
+# case08: PM Hub today-only dedup (Patch B regression)
+must_match	^pm_hub_new_count: 1$	1 new (not skipped)
+must_match	^pm_hub_skip_count: 0$	zero skip (date filter prevents past-day match)
+
+# Patch B date filter explicit in §7.2
+must_match	"property": "작성일", "date": \{"equals": "2026-05-10"\}	date filter present
+must_match	어제 항목 \(작성일 2026-05-09\)은 date 조건으로 매치 안 됨	regression explanation
+
+# Patch B regression note in §9
+must_match_in_section	9. Notes	Patch B 회귀	Patch B reference
+must_match_in_section	9. Notes	date 조건	date condition reference

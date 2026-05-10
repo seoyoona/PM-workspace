@@ -1,0 +1,58 @@
+# /daily-scrum offline harness global checks (Wave 1-D)
+# Baseline: daily-scrum stabilization commit 21604c1 (PM Action Hub preview/gate).
+
+# Frontmatter
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Confirmed-2|Cancelled|Modified-Then-Confirmed)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^date: [0-9]{4}-[0-9]{2}-[0-9]{2}$	date YYYY-MM-DD
+must_match	^gate_choice: 	gate_choice present
+must_match	^daily_scrum_log_db: 	Daily Scrum Log DB ref
+must_match	^pm_action_hub_db: 	PM Action Hub DB ref
+must_match	^pm_hub_new_count: [0-9]+$	pm_hub_new_count integer
+must_match	^pm_hub_skip_count: [0-9]+$	pm_hub_skip_count integer
+must_match	^pm_hub_failed_count: [0-9]+$	pm_hub_failed_count integer
+must_match	^daily_scrum_existing_match_count: [0-9]+$	daily_scrum dup count
+must_match	^team_today_count: [0-9]+$	team_today_count integer
+must_match	^teams_send_status: (success|fallback-copy|skip)$	teams send status enum
+
+# Required sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. Item Classification	section 2
+must_match	## 3\. Notion Daily Scrum Log Preview	section 3
+must_match	## 4\. Dev-chat Preview	section 4
+must_match	## 5\. PM Hub Register Preview	section 5
+must_match	## 6\. Confirm Gate	section 6
+must_match	## 7\. Write Results	section 7
+must_match	## 8\. Final Terminal Output	section 8
+must_match	## 9\. Notes	section 9
+
+# Step 6 confirm gate verbatim options (file-level — §6 may have sub-block)
+must_match	1\. Notion 저장 \+ Teams 전송 \(추천\)	gate option 1
+must_match	2\. Notion 저장만 \(dev-chat 복사해서 수동 전송\)	gate option 2
+must_match	3\. 수정	gate option 3
+must_match	4\. 취소	gate option 4
+
+# No auto-chain triggers
+must_not_match	^Running /	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces (snapshot represents intent)
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+must_not_match	mcp__notion-cigro__notion-update-page\b	no raw update-page trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases (dev-chat is EN)
+must_not_match	(Please consider|It seems|There is a problem with)	no filler
+# Closing-line forbidden in dev-chat (skill body L187 rule)
+must_not_match	Please review and let	no Please-review closing
+must_not_match	Let me know if anything	no Let-me-know closing
+
+# Section 5 PM Hub Register Preview: must indicate count (Patch A baseline)
+must_match	총 신규 [0-9]+건 / skip [0-9]+건	PM Hub register preview count line

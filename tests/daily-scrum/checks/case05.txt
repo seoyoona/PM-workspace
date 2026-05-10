@@ -1,0 +1,13 @@
+# case05: PM Hub 신규 0건 (모두 fetched)
+must_match	^pm_hub_new_count: 0$	zero new
+must_match	^pm_hub_fetched_count: 4$	4 fetched
+must_match	^teams_send_status: success$	teams success (independent)
+
+# §5 explicit "신규 0건" language
+must_match	신규 0건 — 모두 PM Hub fetched	zero-new explanation
+
+# Step 8 batch skipped per exception rule
+must_match	batch 호출 미실행	batch skip language
+
+# Final terminal shows 0
+must_match	🎯 PM Action Hub 신규 등록: 0건	terminal zero

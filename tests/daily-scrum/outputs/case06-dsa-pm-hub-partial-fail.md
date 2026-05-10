@@ -1,0 +1,122 @@
+---
+status: Confirmed-1
+case: case06
+client: dsa
+project: Dsa
+created: 2026-05-10
+date: 2026-05-10
+gate_choice: "1"
+daily_scrum_log_db: collection://9e03aae9-a894-8377-bbaf-0717f5d7f2ef
+pm_action_hub_db: collection://a183aae9-a894-8379-8708-87cf507ec8e8
+daily_scrum_existing_match_count: 0
+daily_scrum_log_url: https://notion.so/cigroio/dsa-daily-2026-05-10
+pm_hub_fetched_count: 1
+pm_hub_new_count: 2
+pm_hub_skip_count: 0
+pm_hub_failed_count: 1
+teams_send_status: success
+team_today_count: 0
+blocker_count: 0
+---
+
+## 1. Source Summary
+
+- PM Hub fetched: 1건 / PM 신규: 3건
+
+## 2. Item Classification
+
+- 오늘 할 일:
+  - [DSA] R2 디자인 검토 (PM Hub fetched, 오늘)
+  - [DSA] 결제 환불 정책 초안 (PM 신규)
+  - [DSA] 다음 라운드 SRS 정정 (PM 신규)
+  - [DSA] 클라이언트 회신 정리 (PM 신규)
+
+## 3. Notion Daily Scrum Log Preview
+
+```
+📝 Daily — 2026-05-10
+## 오늘 할 일
+- R2 디자인 검토 (오늘)
+- 결제 환불 정책 초안
+- 다음 라운드 SRS 정정
+- 클라이언트 회신 정리
+```
+
+## 4. Dev-chat Preview
+
+```
+[Dsa] — May 10
+PM today
+• Review R2 design
+• Draft refund policy
+• Correct SRS for next round
+• Compile client replies
+```
+
+## 5. PM Hub Register Preview
+
+```
+🎯 PM Action Hub 신규 등록 예정 (자동, 옵션 1·2 공통)
+━━━━━━━━━━━━━━━━━━━━━━
+- [Dsa] 결제 환불 정책 초안 — 신규
+- [Dsa] 다음 라운드 SRS 정정 — 신규
+- [Dsa] 클라이언트 회신 정리 — 신규
+(skip: 0건 — 이미 등록됨)
+
+총 신규 3건 / skip 0건
+```
+
+## 6. Confirm Gate
+
+```
+1. Notion 저장 + Teams 전송 (추천)
+2. Notion 저장만 (dev-chat 복사해서 수동 전송)
+3. 수정
+4. 취소
+추천: 1
+```
+
+PM Choice: **1**
+
+## 7. Write Results
+
+### 7.1 Notion Daily Scrum Log
+- URL: https://notion.so/cigroio/dsa-daily-2026-05-10
+
+### 7.2 PM Action Hub
+- batch 호출 결과: partial success — 3건 중 2건 성공 / 1건 실패
+- 성공 (2건):
+  - [Dsa] 결제 환불 정책 초안 — 액션 유형: 운영 체크
+  - [Dsa] 다음 라운드 SRS 정정 — 액션 유형: 운영 체크
+- 실패 (1건):
+  - [Dsa] 클라이언트 회신 정리 — Notion API 일시 오류 (HTTP 502)
+- 자동 retry 금지 (Patch C 룰). PM이 수동 보정.
+
+### 7.3 Teams
+- HTTP 200 — send success
+
+## 8. Final Terminal Output
+
+```
+✅ Daily Scrum 저장 완료
+
+📅 2026-05-10 | dsa — Dsa
+상태: 정상
+
+오늘 할 일:
+- R2 디자인 검토 (오늘)
+- 결제 환불 정책 초안
+- 다음 라운드 SRS 정정
+- 클라이언트 회신 정리
+
+🎯 PM Action Hub 신규 등록: 2건 (skip: 0건 — 이미 존재)
+⚠️ PM Hub 등록 실패: 1건 — 수동 보정 필요
+💬 Dev-chat: ✅ Teams 전송 완료 (HTTP 200)
+```
+
+## 9. Notes
+
+- pm_hub_new_count=2 / pm_hub_failed_count=1 — partial success.
+- 자동 retry 금지 (Patch C 룰, Teams Flow timeout 정신과 동일).
+- Step 7 (DSL) / Step 9 (Teams)는 영향 없이 정상 진행.
+- PM 다음 단계: 실패 1건 ([Dsa] 클라이언트 회신 정리)을 `/todo` 또는 PM Action Hub 직접 입력으로 보정.
