@@ -1,0 +1,27 @@
+# case09: PM 선택=2 (수정) — In-Round defer, no Notion write
+must_match	^spec_pages: \[\]$	spec_pages empty
+must_match	^status: In-Round-only$	status In-Round-only
+
+# §7 PM 선택: 2 explicit
+must_match	PM 선택: \*\*2 \(수정\)\*\*	PM 선택 2 marker
+
+# §8 보류 explicit
+must_match_in_section	8. Notion 스펙 + 태스크	보류	hold marker
+must_match_in_section	8. Notion 스펙 + 태스크	PM 선택=2	gate=2 reason
+must_match_in_section	8. Notion 스펙 + 태스크	Notion 생성 미실행	no creation language
+must_match_in_section	8. Notion 스펙 + 태스크	spec_pages: \[\] 유지	empty spec_pages preserved
+
+# §9 PM next steps mention re-classify
+must_match_in_section	9. PM 다음 단계	4-bucket 재분류	re-classify guidance
+must_match_in_section	9. PM 다음 단계	다시 invoke	re-invoke guidance
+
+# §6 dev message blocked (defer mode)
+must_match_in_section	6. 개발팀 전달 문구	보류	dev message hold
+
+# 4-Bucket headers all present (global) and In-Round has 1 item
+must_match	^- 회원 관리 화면 정렬 옵션 추가	In-Round item exists
+must_match	^- 회원 통계 표시	Confirm-Needed item
+
+# No Notion auto-write trace
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no auto create-pages trace
+must_not_match	notion\.so/cigroio/.*sort	no fabricated Notion URL when defer
