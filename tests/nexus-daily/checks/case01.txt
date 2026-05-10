@@ -1,0 +1,18 @@
+# case01: auto mode standard, 3 projects, 8h split
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^mode: auto$	auto mode
+must_match	^total_hours: 8$	8 total hours
+must_match	^nexus_api_status: ok$	API ok
+must_match	^detected_projects_count: 3$	3 projects detected
+must_match	^matched_rows_count: 3$	3 rows matched
+
+# Distribution sums to 100%
+must_match	\| 100% \| \*\*8h\*\*	100% / 8h totals
+
+# Each row has saved status
+must_match	DSA-DSA-Apr: 4h	DSA distribution
+must_match	Connectory-Connectory-1: 2h	Connectory distribution
+must_match	Booktails-Booktails: 2h	Booktails distribution
+
+# All matches via alias (1순위)
+must_match_in_section	3. Nexus Row Matching	1순위 alias	alias-tier matches

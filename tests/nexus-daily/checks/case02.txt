@@ -1,0 +1,17 @@
+# case02: auto mode 0 detection → fallback
+must_match	^status: Confirmed-1$	final status (fallback path still confirmed)
+must_match	^mode: auto$	auto mode
+must_match	^detected_projects_count: 0$	0 detection
+must_match	^matched_rows_count: 2$	2 rows manually selected
+must_match	^total_hours: 8$	8 total hours
+
+# Fallback prompt visible
+must_match	📋 오늘 Notion 활동 기록 없음	0-detect marker
+must_match	활성 태스크 row	manual selection prompt
+
+# Equal distribution
+must_match	DSA-DSA-Apr: 4h	equal split 1
+must_match	Connectory-Connectory-1: 4h	equal split 2
+
+# Default memo
+must_match	"프로젝트 관리"	default memo

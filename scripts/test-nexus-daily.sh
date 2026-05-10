@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# /nexus-daily offline regression harness (Wave 2-6)
+# 외부 write 없음 — tests/nexus-daily/outputs/ synthetic snapshot 검사.
+# Sources scripts/lib/harness-common.sh.
+# Usage: bash scripts/test-nexus-daily.sh
+
+set -o pipefail
+cd "$(dirname "$0")/.."
+# shellcheck source=lib/harness-common.sh
+source "$(dirname "$0")/lib/harness-common.sh"
+
+CASES=(case01 case02 case03 case04 case05)
+TESTS_DIR="tests/nexus-daily"
+OUTPUTS_DIR="$TESTS_DIR/outputs"
+CHECKS_DIR="$TESTS_DIR/checks"
+
+PASS=0
+FAIL=0
+declare -a FAIL_DETAILS=()
+
+find_output_for_case() {
+  local case_id="$1"
+  ls "$OUTPUTS_DIR"/${case_id}-*.md 2>/dev/null | head -1
+}
+
+echo "/nexus-daily Wave 2-6 자동 검증 하네스"
+printf "%-8s %-8s %-8s %-8s %s\n" "CASE" "STATUS" "PASS" "FAIL" "OUTPUT"
+
+for case_id in "${CASES[@]}"; do
+  output_file=$(find_output_for_case "$case_id")
+  if [ -z "$output_file" ]; then
+    printf "%-8s %-8s %-8s %-8s %s\n" "$case_id" "FAIL" "0" "1" "(missing output file)"
+    FAIL=$((FAIL+1))
+    FAIL_DETAILS+=("$case_id: outputs/ 디렉토리에 ${case_id}-*.md 없음")
+    continue
+  fi
+  read global_pass global_fail < <(run_checks_file "$CHECKS_DIR/global.txt" "$output_file" "$case_id" "global")
+  read specific_pass specific_fail < <(run_checks_file "$CHECKS_DIR/${case_id}.txt" "$output_file" "$case_id" "case")
+  total_pass=$((global_pass + specific_pass))
+  total_fail=$((global_fail + specific_fail))
+  if [ "$total_fail" -eq 0 ]; then
+    printf "%-8s %-8s %-8s %-8s %s\n" "$case_id" "PASS" "$total_pass" "0" "$(basename "$output_file")"
+    PASS=$((PASS+1))
+  else
+    printf "%-8s %-8s %-8s %-8s %s\n" "$case_id" "FAIL" "$total_pass" "$total_fail" "$(basename "$output_file")"
+    FAIL=$((FAIL+1))
+  fi
+done
+
+echo "Summary: PASS=$PASS / FAIL=$FAIL (out of ${#CASES[@]} cases)"
+if [ "$FAIL" -gt 0 ]; then
+  for detail in "${FAIL_DETAILS[@]}"; do echo "  - $detail"; done
+  exit 1
+fi
+exit 0

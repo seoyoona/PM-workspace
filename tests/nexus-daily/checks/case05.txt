@@ -1,0 +1,18 @@
+# case05: Nexus API timeout — safe abort, no writes
+must_match	^status: API-Error$	status API-Error
+must_match	^nexus_api_status: timeout$	timeout status
+must_match	^total_hours: 0$	zero hours (no writes)
+must_match	^matched_rows_count: 0$	no rows matched
+
+# Timeout marker
+must_match	CURL_EXIT=28	curl timeout exit code
+must_match	안전 중단	safe abort language
+must_match	자동 재시도 금지	no auto-retry rule
+
+# §4, §5, §6 explicit non-execution
+must_match_in_section	4. Distribution	분배 미실행	distribution skipped
+must_match_in_section	5. PM Confirm	미실행	PM confirm skipped
+must_match_in_section	6. Write Result	어떤 Nexus row에도 write 발생 안 함	no writes
+
+# No partial write attempts
+must_not_match	saved$	no saved markers

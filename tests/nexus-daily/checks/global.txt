@@ -1,0 +1,32 @@
+# /nexus-daily offline harness global checks (Wave 2-6)
+
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Cancelled|Source-Empty|API-Error)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^mode: (auto|manual)$	mode enum
+must_match	^total_hours: (8|0)$	total hours (8 normal, 0 cancelled)
+must_match	^nexus_api_status: (ok|timeout|error|skipped)$	API status enum
+
+# Required sections
+must_match	## 1\. Mode & Source Summary	section 1
+must_match	## 2\. Detected Activities	section 2
+must_match	## 3\. Nexus Row Matching	section 3
+must_match	## 4\. Distribution	section 4
+must_match	## 5\. PM Confirm	section 5
+must_match	## 6\. Write Result	section 6
+must_match	## 7\. Notes	section 7
+
+# No auto-chain triggers
+must_not_match	^Running /	no auto-chain trigger
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw API mutation traces (snapshot represents intent)
+must_not_match	"jsonrpc":"2\.0".*"method":"tools/call"	no raw JSON-RPC trace
+must_not_match	Bearer nxs_	no auth token leak
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler

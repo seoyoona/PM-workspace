@@ -1,0 +1,7 @@
+# case04: substring match (4-tier) requires PM confirm + alias-register prompt
+must_match	^matched_rows_count: 2$	2 rows matched
+must_match	4순위 substring	substring tier marker
+must_match	PM 확인 필요	PM confirm required language
+must_match	alias 미등록	alias not registered marker
+must_match	이 row가 맞나요	PM confirmation prompt
+must_match	alias에 등록할까요	alias-add prompt

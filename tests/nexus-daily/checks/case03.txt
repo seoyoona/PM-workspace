@@ -1,0 +1,11 @@
+# case03: manual mode
+must_match	^mode: manual$	manual mode
+must_match	^matched_rows_count: 2$	2 manual rows
+must_match	^total_hours: 8$	8 total
+
+# Manual input language
+must_match	자동 수집 skip	auto collect skipped
+
+# Custom memos preserved
+must_match	"디자인 검토"	memo 1 preserved
+must_match	"마이그레이션 정리"	memo 2 preserved
