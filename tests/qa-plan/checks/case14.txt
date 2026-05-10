@@ -1,0 +1,25 @@
+# case14: production URL pre-flight hard-block — v1.1.2 regression
+# SRS present + production URL passed → URL inspect refused, plan still written from SRS
+must_match	^- SRS: found$	SRS marked found
+must_match	^- URL inspect: not available$	URL inspect rejected (not_available)
+must_match	^- Confidence: Medium$	Confidence = Medium (SRS alone)
+
+# Frontmatter signals — URL was rejected
+must_match	^status: Draft$	frontmatter status Draft (not Draft only — SRS present)
+must_match	^staging_url: rejected	staging_url marked rejected
+must_match	^pages_inspected: \[\]$	pages_inspected empty (no navigation)
+must_match	^auth_used: none$	auth_used none
+
+# Plan body NOT blocked (SRS found → body written)
+must_match	^### P0-[0-9]+:	P0 scenarios written from SRS
+must_not_match	\(blocked — see Source Coverage\)	body NOT blocked (SRS present)
+
+# §9 records production-URL rejection
+must_match_in_section	9. PM Review Items	[Pp]roduction URL	production URL mention in §9
+must_match_in_section	9. PM Review Items	rejected	rejection in §9
+must_match_in_section	9. PM Review Items	staging	staging URL re-request in §9
+
+# Read-only inspection rules — no destructive clicks (URL was never inspected)
+must_not_match	browser_navigate.*www\.booktails\.com	no actual navigate to production
+must_not_match	clicked .*Submit	no Submit click
+must_not_match	clicked .*Delete	no Delete click

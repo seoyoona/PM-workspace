@@ -1,0 +1,20 @@
+# case17: Confidence=Low when SRS body is placeholder
+must_match	^- SRS: found$	SRS marked found (file exists / fetch succeeded)
+must_match	^- URL inspect: not provided$	URL inspect not provided
+must_match	^- Confidence: Low$	Confidence = Low (SRS partial)
+
+# Frontmatter — body NOT blocked but skeletal
+must_match	^status: Draft$	status Draft (not Draft only — SRS technically found)
+must_match	^srs_ref: clients/	srs_ref valid path
+
+# Plan body must be written (skeletal) — REQ IDs cited
+must_match	REQ-CONNECTORY	SRS REQ ID cited
+must_match	^### P0-[0-9]+:	P0 scenarios present (skeletal)
+must_not_match	\(blocked — see Source Coverage\)	body NOT blocked
+
+# §9 has prominent SRS-body warning
+must_match_in_section	9. PM Review Items	SRS 본문	SRS body warning in §9
+
+# No invented destructive steps
+must_not_match	clicked .*Submit	no destructive Submit
+must_not_match	clicked .*Pay	no payment click

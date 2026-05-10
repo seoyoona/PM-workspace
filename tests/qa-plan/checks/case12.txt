@@ -21,6 +21,19 @@ must_not_match	^### P[01]-[0-9]+:.*Collection Behavior Update	No "per Collection
 # Inferred tags must not appear inside step expected-outcomes (Steps 1. ... [inferred])
 must_not_match	^  [0-9]+\. .*\[inferred\]	No [inferred] tag inside step lines
 
+# [inferred] tag must NOT appear in §1–§8 (only §9 PM Review Items allowed) — v1.1.1 strict
+must_not_match_in_section	1. QA Scope	\[inferred\]	No [inferred] in §1
+must_not_match_in_section	2. Test Roles / Accounts	\[inferred\]	No [inferred] in §2
+must_not_match_in_section	3. End-to-End Flow Map	\[inferred\]	No [inferred] in §3
+must_not_match_in_section	4. P0 Critical Scenarios (mandatory regression)	\[inferred\]	No [inferred] in §4
+must_not_match_in_section	5. P1 Supporting Scenarios	\[inferred\]	No [inferred] in §5
+must_not_match_in_section	6. Edge / Negative Cases	\[inferred\]	No [inferred] in §6
+must_not_match_in_section	7. Regression Checklist	\[inferred\]	No [inferred] in §7
+must_not_match_in_section	8. QA Handoff Message	\[inferred\]	No [inferred] in §8
+
+# "SRS-Implementation Deviation" sub-heading must be inside §9 (not just somewhere in file)
+must_match_in_section	9. PM Review Items	SRS-Implementation Deviation	Deviation sub-heading inside §9
+
 # Read-only inspection rules still hold
 must_not_match	clicked .*Submit	no destructive Submit click
 must_not_match	clicked .*Delete	no destructive Delete click

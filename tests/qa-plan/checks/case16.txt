@@ -1,0 +1,44 @@
+# case16: URL-only Draft only — v1.1.2 핵심 회귀
+# SRS missing + URL inspect done → Draft only (URL 단독은 Medium 으로 승급 ❌)
+must_match	^- SRS: missing$	SRS missing
+must_match	^- URL inspect: done$	URL inspect done
+must_match	^- Confidence: Draft only$	Confidence = Draft only (URL alone does NOT promote)
+
+# Frontmatter — Draft only status
+must_match	^status: Draft only$	status Draft only
+must_match	^staging_url: https?://	staging_url recorded (URL was provided)
+must_match	^pages_inspected:$	pages_inspected list header present
+
+# §4–§7 blocked (gate triggered by SRS missing)
+must_not_match	^### P0-[0-9]+:	No P0 scenario headings (gate blocks)
+must_not_match	^### P1-[0-9]+:	No P1 scenario headings (gate blocks)
+must_not_match	^### EDGE-[0-9]+:	No EDGE scenario headings (gate blocks)
+must_not_match	^### REG-[0-9]+:	No REG scenario headings (gate blocks)
+must_match	\(blocked — see Source Coverage\)	blocked-body marker present
+
+# §3 NOT blocked (URL inspect = done allows observation summary)
+must_not_match_in_section	3. End-to-End Flow Map	\(blocked — see Source Coverage\)	§3 NOT blocked when URL=done
+must_match_in_section	3. End-to-End Flow Map	[Oo]bserved	§3 contains observation language
+
+# §4–§7 each must contain blocked marker
+must_match_in_section	4. P0 Critical Scenarios (mandatory regression)	\(blocked — see Source Coverage\)	§4 blocked
+must_match_in_section	5. P1 Supporting Scenarios	\(blocked — see Source Coverage\)	§5 blocked
+must_match_in_section	6. Edge / Negative Cases	\(blocked — see Source Coverage\)	§6 blocked
+must_match_in_section	7. Regression Checklist	\(blocked — see Source Coverage\)	§7 blocked
+
+# §9 has SRS-Implementation Deviation sub-heading
+must_match_in_section	9. PM Review Items	SRS-Implementation Deviation	deviation sub-heading in §9
+must_match_in_section	9. PM Review Items	SRS 제공 후 재호출	source request in §9
+
+# No invented mock accounts (only design.md / CLAUDE.md available, but no SRS for role definitions)
+must_not_match	mock_admin_	No invented admin mock account
+must_not_match	mock_member_	No invented member mock account
+
+# Read-only inspection rules
+must_not_match	clicked .*Submit	no destructive Submit click
+must_not_match	clicked .*Delete	no destructive Delete click
+must_not_match	clicked .*Pay	no payment click
+
+# CLAUDE.md / glossary alone must not promote scenarios
+must_not_match	derived from CLAUDE.md	No CLAUDE.md-derived scenario claim
+must_not_match	per glossary	No glossary-derived scenario claim

@@ -1,0 +1,16 @@
+# case15: Confidence=Medium when SRS alone (URL not provided, Change Brief missing)
+must_match	^- SRS: found$	SRS marked found
+must_match	^- URL inspect: not provided$	URL inspect not provided
+must_match	^- Change Brief: missing$	Change Brief missing
+must_match	^- Confidence: Medium$	Confidence = Medium (SRS alone)
+
+# Frontmatter — body NOT blocked
+must_match	^status: Draft$	status Draft (not Draft only)
+must_match	^staging_url: not_inspected$	staging_url placeholder
+must_match	^pages_inspected: \[\]$	pages_inspected empty
+must_match	^srs_ref: clients/	srs_ref valid path
+
+# Plan body must be written from SRS
+must_match	REQ-DSA	SRS REQ ID cited
+must_match	^### P0-[0-9]+:	P0 scenarios present
+must_not_match	\(blocked — see Source Coverage\)	body NOT blocked

@@ -1,5 +1,5 @@
 ---
-description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1.1 Source Coverage gate + no-invention 강화 (v1.1 URL inspect 유지 — depth 2 / max 10 pages, --login-as 1회 예외)
+description: 프로젝트 전체 QA 플랜 1번 호출로 생성 — 9 섹션(Scope·Roles·Flow·P0·P1·Edge·Regression·Handoff Message·PM Review). 출력 영어. v1.1.2 SRS 미연결 시 Draft only (URL 단독은 §3 observation + §9 deviation만 허용, §4~§7 차단). v1.1.1 Source Coverage gate + no-invention 강화 유지. v1.1 URL inspect (depth 2 / max 10 pages, --login-as 1회 예외).
 argument-hint: <client> [--project name] [--round R{N}] [--srs path|URL] [--brief path] [--scope text] [--url staging-url] [--inspect-depth N] [--max-pages N]
 allowed-tools: Read, Glob, Grep, Bash, mcp__notion-cigro__notion-fetch, mcp__playwright__browser_navigate, mcp__playwright__browser_navigate_back, mcp__playwright__browser_click, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_console_messages, mcp__playwright__browser_close, mcp__playwright__browser_type, mcp__playwright__browser_fill_form
 ---
@@ -45,16 +45,18 @@ design.md를 1~4 대신 사용해 시나리오를 발명하면 no-invention 룰 
 - Confidence: High / Medium / Low / Draft only
 ```
 
-**Confidence 결정 규칙:**
+**Confidence 결정 규칙 (v1.1.2):**
 - **High** — SRS found AND (URL inspect done OR Change Brief found)
-- **Medium** — SRS found alone OR URL inspect done alone (1개 strong primary source)
+- **Medium** — SRS found alone (URL inspect not provided AND Change Brief missing). primary는 SRS, plan 작성 가능
 - **Low** — SRS partial (예: Notion fetch는 됐지만 본문이 placeholder) + 다른 source도 약함
-- **Draft only** — SRS missing AND URL inspect ∈ {not provided, not available}. 아래 "최소 source 게이트" 발동
+- **Draft only** — `SRS = missing` (URL inspect 상태 무관). 아래 "최소 source 게이트" 발동. URL inspect = done 인 경우에도 Confidence는 Draft only (URL 단독 = Medium 으로 승급 ❌). URL inspect 결과는 §3 화면 관찰 요약과 §9 SRS-Implementation Deviation 후보로만 라우팅
 
-**최소 source 게이트 (hard rule):**
-- `SRS = missing` AND `URL inspect ∈ {not provided, not available}` → §4·§5·§6·§7 본문 작성 중단. 해당 섹션은 `(blocked — see Source Coverage)` 단일 줄로만 채우고, §9 PM Review에 "source 부족으로 P0/P1/EDGE/REG 시나리오 작성 차단됨. SRS 또는 staging URL 제공 후 재호출 필요" 안내. §1·§2·§3·§8은 partial-skip으로 작성 가능
-- **CLAUDE.md / glossary 만으로는 게이트 통과 X.** Source 우선순위 4번(client context)은 baseline 요구사항을 정의하는 source가 아니므로 P0/P1 시나리오의 primary source로 사용 금지
-- design.md 도 단독으로는 게이트 통과 X (이미 기존 룰)
+**최소 source 게이트 (hard rule, v1.1.2):**
+- `SRS = missing` 인 모든 경우 → §4·§5·§6·§7 본문 작성 중단. URL inspect 상태 무관. 해당 섹션은 `(blocked — see Source Coverage)` 단일 줄로만 채우고, §9 PM Review에 "source 부족으로 P0/P1/EDGE/REG 시나리오 작성 차단됨. SRS 제공 후 재호출 필요" 안내
+- §1·§2·§8은 partial-skip으로 작성 가능 (TBD 마커)
+- §3 End-to-End Flow Map: URL inspect = done 인 경우 "URL inspect로 관찰된 화면 사실"로 작성 가능. 단 의도된 기능·기대 동작·권한·결제·알림·DB 변화 해석 ❌ — 관찰된 페이지 / 노출 텍스트 / 링크 구조만. URL inspect = not provided / not available 인 경우 §3도 `(blocked — see Source Coverage)` 단일 줄
+- §9 PM Review Items: URL inspect = done 인 경우 "SRS-Implementation Deviation" sub-heading에 SRS 외 surface 목록 라우팅 + "SRS 제공 후 재호출 필요" 안내
+- **CLAUDE.md / glossary / design.md 단독으로는 게이트 통과 X.** Source 우선순위 4·6번(client context, design.md)은 baseline 요구사항을 정의하는 source가 아님. P0/P1 시나리오의 primary source로 사용 금지
 
 **Confidence 라벨이 Draft only일 때 frontmatter:**
 - `status: Draft only` (Draft 와 다름 — 일반 Draft 는 검토 후 승급 가능, Draft only 는 source 보강 후 재호출 필요)
@@ -275,9 +277,12 @@ PM이 `--url <staging URL>` 명시한 경우에만 활성화. 미명시 시 이 
 - §3 Flow Map / §4 P0 시나리오 단계 작성에 반영 — 단, **SRS와 충돌 시 SRS 우선** + §9에 불일치 항목 표기
 - screenshot path는 §9 PM Review Items에 list로 안내 (개별 임베드 X)
 
-**SRS 미연결 + URL만 있는 경우:**
-- design.md만 있는 case04와 같은 처리: primary source 부족으로 plan 작성 멈추고 PM에게 SRS / Change Brief 요청
-- URL inspection 결과는 §9 PM Review Items에 raw 정보로 첨부 (시나리오 발명 X — no-invention 룰)
+**SRS 미연결 + URL만 있는 경우 (v1.1.2):**
+- Source Coverage Confidence = Draft only. frontmatter `status: Draft only`. §4·§5·§6·§7 본문 작성 차단 (최소 source 게이트 발동 — URL 단독은 Medium으로 승급 ❌)
+- §3 End-to-End Flow Map은 "URL inspect로 관찰된 화면 사실"로 작성 가능 — 의도된 기능·권한·결제·알림·DB 변화 해석 금지. 관찰된 페이지 / 노출 텍스트 / 링크 구조만
+- §9 PM Review Items에 "SRS-Implementation Deviation" sub-heading으로 URL 관찰 surface 목록 라우팅 ("URL inspect: <page/feature> — SRS에 없음. PM 확인 후 SRS 보강 또는 구현 수정 결정 필요")
+- 시나리오 발명 ❌ — URL은 implementation evidence이지 baseline truth가 아님 (no-invention 룰)
+- design.md만 있는 case와는 다르게 §3 관찰 요약은 작성 가능 — URL inspect는 staging UI 사실, design.md는 사실 보장 안 됨
 
 ### Step 4. Round 자동 결정
 
@@ -413,7 +418,7 @@ Copy/paste-ready block for QA / client transmission. **English only** (Vietnames
 - QA Plan ID 형식: `QA-<CLIENT>-YYYYMMDD` (CLIENT는 대문자)
 - design.md는 §3 화면명 인용 / UI 표현 검증 보조에만. QA 범위·기능 흐름 발명 X
 - **Source Coverage 블록 의무 출력** (v1.1.1) — 모든 plan은 §1 위에 6-line Source Coverage 블록 + Confidence 라벨 출력
-- **Confidence = Draft only 시 §4–§7 본문 작성 중단** (v1.1.1) — source 보강 요청만 §9에 표기
+- **Confidence = Draft only 시 §4–§7 본문 작성 중단** (v1.1.2) — `SRS = missing` 인 모든 경우 발동. URL inspect 상태 무관. URL inspect = done 시 §3 관찰 요약과 §9 deviation 라우팅만 허용
 
 ### 금지
 - 자동 chain 트리거 (`/qa-feedback` / `/issue-ticket` / `/to-spec` / `/dev-chat` / `/client-chat`)

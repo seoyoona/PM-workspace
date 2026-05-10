@@ -7,7 +7,7 @@ set -o pipefail
 
 cd "$(dirname "$0")/.."
 
-CASES=(case01 case02 case03 case04 case05 case06 case07 case09 case10 case11 case12 case13 case08)
+CASES=(case01 case02 case03 case04 case05 case06 case07 case09 case10 case11 case12 case13 case14 case15 case16 case17 case08)
 TESTS_DIR="tests/qa-plan"
 OUTPUTS_DIR="$TESTS_DIR/outputs"
 CHECKS_DIR="$TESTS_DIR/checks"
@@ -116,6 +116,18 @@ run_case_check() {
       fi
       FAIL_DETAILS+=("$case_id: must_match_in_section FAIL — $desc (section: $section_name, pattern: $section_pattern)")
       return 1
+      ;;
+    must_not_match_in_section)
+      local section_name="$f2"
+      local section_pattern="$f3"
+      local desc="$f4"
+      local section_content
+      section_content="$(extract_section "$file" "$section_name")"
+      if grep_pattern "$section_pattern" "$section_content"; then
+        FAIL_DETAILS+=("$case_id: must_not_match_in_section FAIL — $desc (section: $section_name, matched: $section_pattern)")
+        return 1
+      fi
+      return 0
       ;;
     file_must_not_exist)
       local matches
