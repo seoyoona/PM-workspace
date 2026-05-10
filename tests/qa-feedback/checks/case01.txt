@@ -1,0 +1,53 @@
+# case01: gate=1 happy path
+must_match	^status: Confirmed-1$	status Confirmed-1 (gate=1)
+must_match	^gate_choice: "1"$	gate_choice = 1
+must_match	^new_count: 3$	3 new tickets
+must_match	^duplicate_skip_count: 0$	no duplicates
+must_match	^status_update_count: 3$	3 status updates
+
+# All 3 tickets present
+must_match	^### TICKET-1$	TICKET-1 heading
+must_match	^### TICKET-2$	TICKET-2 heading
+must_match	^### TICKET-3$	TICKET-3 heading
+
+# Title format `[Page] Issue ...`
+must_match	^- Title: `\[Home\]	TICKET-1 title format
+must_match	^- Title: `\[Member\]	TICKET-2 title format
+must_match	^- Title: `\[Worksheet\]	TICKET-3 title format
+
+# Priority enum (only allowed values)
+must_match	^- Priority: Middle$	TICKET-1 Middle
+must_match	^- Priority: 🔥Highest🔥$	TICKET-2 Highest
+must_match	^- Priority: High$	TICKET-3 High
+
+# QA Category enum
+must_match	^- QA Category: UI Bug$	TICKET-1 UI Bug
+must_match	^- QA Category: Logic Bug$	Logic Bug present (TICKET-2, TICKET-3)
+
+# Mode markers in Description
+must_match	Description \(Mode A\):	Mode A on TICKET-1
+must_match	Description \(Mode B\):	Mode B on TICKET-2
+must_match	Description \(Mode C\):	Mode C on TICKET-3
+
+# UI element Korean preservation
+must_match	"선택 정지 처리" \(suspend\)	UI Korean preserved with English gloss
+must_match	"완료" \(Done\)	UI Korean preserved with English gloss
+
+# Mode A: Expected line for TICKET-1 (file-level — §5 sub-headings prevent in-section extraction)
+must_match	Expected: Home banner	Mode A Expected line present
+
+# Mode C: Context line for TICKET-3
+must_match	Context: Intermittent	Mode C context present
+
+# Status updates present (Korean note in §7 audience-appropriate)
+must_match_in_section	7. Customer QA DB Status Updates	대기중 → 진행중	Korean status note
+
+# §6 duplicates is empty
+must_match_in_section	6. Duplicates Skipped	\(none\)	no duplicates this round
+
+# No Round prefix in Title (검수회차 = 1)
+must_not_match	\[Round [2-9]\]	no Round prefix
+
+# No invented filler phrases
+must_not_match	Please consider	no Please filler
+must_not_match	It seems	no It seems filler

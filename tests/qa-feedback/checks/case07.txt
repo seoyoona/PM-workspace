@@ -1,0 +1,23 @@
+# case07: no-invention regression — vague feedback must NOT be expanded
+must_match	^### TICKET-1$	ticket present
+must_match	^- Priority: Low$	Low priority for vague feedback
+must_match	^- QA Category: UX / Non-functional Optimization$	UX category for vague reports
+
+# Original Korean preserved verbatim with English gloss
+must_match	"뭔가 이상해요"	original phrase 1 preserved
+must_match	"잘 안 돼요"	original phrase 2 preserved
+must_match	"something is off"	English gloss for phrase 1
+must_match	"doesn't work well"	English gloss for phrase 2
+
+# Expected MUST be [TBD], not invented
+must_match	Expected: \[TBD — clarification needed	TBD expected for vague input
+
+# Forbidden inventions (these phrases would indicate AI hallucination)
+must_not_match	may be a database lag	no DB lag invention
+must_not_match	perhaps related to	no perhaps speculation
+must_not_match	likely caused by	no likely cause speculation
+must_not_match	probably a	no probably speculation
+must_not_match	could be due to	no could-be speculation
+
+# §8 explicitly invokes no-invention rule
+must_match_in_section	8. Notes	No-invention rule applied	rule reference in §8

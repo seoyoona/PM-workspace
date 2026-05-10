@@ -1,0 +1,22 @@
+# case04: C1 idempotency — duplicate skip
+must_match	^status: Confirmed-1$	status Confirmed-1 (gate=1)
+must_match	^new_count: 2$	2 new tickets (row 1·3)
+must_match	^duplicate_skip_count: 1$	1 duplicate (row 2)
+must_match	^status_update_count: 2$	2 status updates (row 2 skipped)
+
+# Only TICKET-1 and TICKET-3 — NOT TICKET-2
+must_match	^### TICKET-1$	TICKET-1 present
+must_match	^### TICKET-3$	TICKET-3 present
+must_not_match	^### TICKET-2$	TICKET-2 NOT created (skipped)
+
+# Preview table shows skip marker for row 2
+must_match	⏭️ 중복 skip	skip emoji + label
+
+# §6 names the existing ticket link
+must_match_in_section	6. Duplicates Skipped	existing-suspend-bug	existing ticket link cited
+must_match_in_section	6. Duplicates Skipped	row-002	source URL cited
+
+# §7 only updates row 1 and row 3
+must_match_in_section	7. Customer QA DB Status Updates	Row 1.*대기중 → 진행중	row 1 progressed
+must_match_in_section	7. Customer QA DB Status Updates	Row 3.*대기중 → 진행중	row 3 progressed
+must_match_in_section	7. Customer QA DB Status Updates	Row 2.*skipped	row 2 explicitly noted as skipped

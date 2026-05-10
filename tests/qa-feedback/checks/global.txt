@@ -1,0 +1,56 @@
+# /qa-feedback offline harness global checks (Wave 1-A)
+# TAB-separated. Comments start with #.
+
+# Frontmatter delimiters
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Preview|Confirmed-1|Confirmed-2|Cancelled|Confirm-Needed)$	status enum
+must_match	^case: case[0-9]+$	case ID present
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^customer_qa_db: 	customer QA DB ref
+must_match	^internal_tasks_db: 	internal Tasks DB ref
+must_match	^gate_choice: 	gate_choice present (value verified per case)
+must_match	^new_count: [0-9]+$	new_count integer
+must_match	^duplicate_skip_count: [0-9]+$	duplicate_skip_count integer
+must_match	^status_update_count: [0-9]+$	status_update_count integer
+must_match	^round: R[0-9]+$	round R{N} format
+
+# Required sections (Wave 1-A snapshot template)
+must_match	## 1\. Input Summary	section 1
+must_match	## 2\. Preview Table	section 2
+must_match	## 3\. Confirm Gate Prompt	section 3
+must_match	## 4\. PM Choice	section 4
+must_match	## 5\. Generated Tickets	section 5
+must_match	## 6\. Duplicates Skipped	section 6
+must_match	## 7\. Customer QA DB Status Updates	section 7
+must_match	## 8\. Notes	section 8
+
+# Confirm gate prompt format (verbatim per skill body Step 3) — file-level (run_global_check only supports must_match / must_not_match)
+must_match	1\. 생성 \+ 고객 QA DB Status	gate option 1 verbatim
+must_match	2\. 생성만	gate option 2 verbatim
+must_match	3\. 취소	gate option 3 verbatim
+must_match	추천: 1	recommendation marker
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|issue-ticket|to-spec|client-chat|dev-chat)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution language
+
+# No AI-invented effort estimates
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No Mermaid diagrams (v1 baseline)
+must_not_match	```mermaid	no Mermaid block
+must_not_match	flowchart [TLBR]D	no Mermaid flowchart
+must_not_match	graph [TLBR]D	no Mermaid graph
+
+# Snapshot is offline — no raw MCP write call traces (the snapshot represents intent, not actual calls)
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+must_not_match	mcp__notion-cigro__notion-update-page\b	no raw update-page trace
+
+# No filler phrases anywhere in the snapshot (file-level — §5 sub-headings prevent in-section extraction)
+must_not_match	(Please consider|It seems|There is a problem with)	no filler phrases
+
+# No Linear API trace (qa-feedback writes to Notion Tasks DB, not Linear)
+must_not_match	linear\.app/.*\?session=	no Linear session
+must_not_match	mutation IssueCreate	no Linear GraphQL trace

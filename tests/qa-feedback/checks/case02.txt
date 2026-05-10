@@ -1,0 +1,24 @@
+# case02: gate=2 (create only)
+must_match	^status: Confirmed-2$	status Confirmed-2 (gate=2)
+must_match	^gate_choice: "2"$	gate_choice = 2
+must_match	^new_count: 3$	3 new tickets
+must_match	^status_update_count: 0$	no status updates (deferred)
+
+# All 3 tickets present (same as case01)
+must_match	^### TICKET-1$	TICKET-1 heading
+must_match	^### TICKET-2$	TICKET-2 heading
+must_match	^### TICKET-3$	TICKET-3 heading
+
+# §4 PM Choice = 2
+must_match_in_section	4. PM Choice	Selected: 2	PM selected option 2
+must_match_in_section	4. PM Choice	create only	PM choice resulting action
+
+# §7 must explicitly note status updates skipped
+must_match_in_section	7. Customer QA DB Status Updates	gate=2	gate=2 noted in §7
+must_match_in_section	7. Customer QA DB Status Updates	대기중	original status preserved
+
+# §7 must NOT show 진행중 transitions (no updates happened)
+must_not_match_in_section	7. Customer QA DB Status Updates	→ 진행중	no progressed status
+
+# UI preservation still applies
+must_match	"선택 정지 처리" \(suspend\)	UI Korean preserved

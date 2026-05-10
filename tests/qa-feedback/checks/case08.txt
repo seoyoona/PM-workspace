@@ -1,0 +1,28 @@
+# case08: schema field missing → Confirm-Needed (lightweight, no enum invention)
+must_match	^status: Confirm-Needed$	status Confirm-Needed
+must_match	^gate_choice: "pending"$	gate_choice pending (not 1/2/3)
+must_match	^new_count: 0$	zero new tickets
+must_match	^status_update_count: 0$	zero status updates
+
+# §4 explicitly says paused
+must_match_in_section	4. PM Choice	pending	pending choice
+must_match_in_section	4. PM Choice	paused	paused action
+
+# §5 must NOT contain any TICKET sub-headings
+must_not_match	^### TICKET-[0-9]+$	no tickets generated
+
+# AI must NOT invent a Priority enum value for the schema-missing case
+must_not_match	^- Priority: Critical$	no invented Critical
+must_not_match	^- Priority: 🔥Highest🔥$	no invented Highest
+must_not_match	^- Priority: High$	no invented High
+must_not_match	^- Priority: Middle$	no invented Middle
+must_not_match	^- Priority: Low$	no invented Low
+
+# §8 must explicitly name the missing field and route to PM
+must_match_in_section	8. Notes	Priority	Priority field named
+must_match_in_section	8. Notes	missing	missing keyword
+must_match_in_section	8. Notes	PM confirmation needed	PM routing
+must_match_in_section	8. Notes	No-invention rule	no-invention rule referenced
+
+# Preview table marks the row as paused (not 신규/중복)
+must_match	⏸️ paused	paused emoji marker

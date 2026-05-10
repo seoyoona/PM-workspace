@@ -1,0 +1,14 @@
+# case05: Round prefix (검수회차 = 2)
+must_match	^round: R2$	round R2
+must_match	^new_count: 1$	1 ticket
+must_match	^### TICKET-1$	ticket present
+
+# Title MUST have [Round 2] prefix
+must_match	^- Title: `\[Round 2\] \[Payment\]	Title with Round prefix
+must_match	\[Round 2\] \[Payment\] Receipt	Round prefix in preview row too
+
+# Round field on ticket
+must_match	^- Round: 2$	Round metadata on ticket
+
+# UI preservation
+must_match	"확인" \(Confirm\)	UI Korean preserved

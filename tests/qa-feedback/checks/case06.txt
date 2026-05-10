@@ -1,0 +1,17 @@
+# case06: QA Plan / Scenario meta preservation
+must_match	^qa_plan_meta_in_input: "QA Plan: QA-DSA-20260510 / Scenario: P0-02"$	meta declared in frontmatter
+must_match	^new_count: 1$	1 ticket
+must_match	^### TICKET-1$	ticket present
+
+# Description body MUST contain the exact meta lines unchanged
+must_match	^  QA Plan: QA-DSA-20260510$	QA Plan line preserved (indented 2 spaces inside code fence)
+must_match	^  Scenario: P0-02$	Scenario line preserved
+
+# Meta must NOT be translated or reformatted
+must_not_match	QA-Plan: QA-DSA	no hyphen variant
+must_not_match	Plan ID:	no relabeled meta
+must_not_match	scenario id:	no lowercased relabel
+
+# Mode B body still applies (Issue + Expected)
+must_match	Description \(Mode B\):	Mode B
+must_match	"선택 정지 처리" \(suspend\)	UI preservation still applies
