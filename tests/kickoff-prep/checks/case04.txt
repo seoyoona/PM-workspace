@@ -1,0 +1,11 @@
+# case04: glossary gaps in Part B
+must_match	^glossary_gaps_count: 3$	3 gaps
+must_match	^client: koboom$	new client koboom
+must_match	^tone: 합니다체$	합니다체 tone
+
+# Part B Glossary Gaps section
+must_match	## Glossary Gaps	Glossary Gaps heading
+must_match	Gatekeeper	gap term 1
+must_match	Classifier	gap term 2
+must_match	Generator	gap term 3
+must_match	glossary/koboom\.md to be created	creation recommendation

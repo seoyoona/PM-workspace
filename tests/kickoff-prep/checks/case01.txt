@@ -1,0 +1,22 @@
+# case01: standard kickoff prep
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^ambiguities_reflected_count: 4$	4 ambiguities
+must_match	^glossary_gaps_count: 0$	no glossary gaps
+must_match	^tone: 해요체$	해요체 tone
+must_match	^part_a_page_url: https://notion\.so/	Part A URL
+must_match	^part_b_page_url: https://notion\.so/	Part B URL
+
+# Part A is KR (해요체 sample)
+must_match	확인할게요	해요체 verb form
+# Part B is EN headers
+must_match	^## Key Risks$	Part B EN heading
+must_match	^## Blocking Questions$	Part B EN heading
+
+# Two separate pages required (skill body L38)
+must_match_in_section	5. Notion Save Result	"고객사 킥오프"	Part A title
+must_match_in_section	5. Notion Save Result	"Dev kick-off"	Part B title
+must_match_in_section	5. Notion Save Result	별도 생성	separate page rule
+
+# Ambiguities reflected in Part A
+must_match	자체 / 외부 SaaS	ambiguity 1
+must_match	활동 로그 보존 기간	ambiguity 2

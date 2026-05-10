@@ -1,0 +1,7 @@
+# case03: 8 ambiguities reflected
+must_match	^ambiguities_reflected_count: 8$	8 ambiguities
+must_match	SRS Ambiguities 8건 반영	count language in Part A
+
+# All 8 items appear (1 ~ 8 numbering)
+must_match	^1\. 멤버 초대 메일	item 1
+must_match	^8\. 다국어 지원 범위	item 8

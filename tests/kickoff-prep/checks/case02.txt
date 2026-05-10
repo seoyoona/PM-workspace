@@ -1,0 +1,13 @@
+# case02: SRS 번역본 미연결 → source-missing 안전 중단
+must_match	^status: Source-Missing$	status Source-Missing
+must_match	^srs_translation_url: ""$	empty SRS URL
+must_match	^part_a_page_url: ""$	no Part A
+must_match	^part_b_page_url: ""$	no Part B
+must_match	^ambiguities_reflected_count: 0$	0 ambiguities
+
+# §3, §4 explicit non-execution
+must_match_in_section	3. Part A	작성 미실행	Part A not generated
+must_match_in_section	4. Part B	작성 미실행	Part B not generated
+
+# §6 next-step guidance
+must_match_in_section	6. Notes	srs-translate	srs-translate referenced

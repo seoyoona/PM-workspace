@@ -1,0 +1,36 @@
+# /kickoff-prep offline harness global checks (Wave 2-5)
+
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Source-Missing|Cancelled)$	status enum (no gate, but source-missing is a path)
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^srs_translation_url: 	srs_translation_url field
+must_match	^part_a_page_url: 	Part A page URL field
+must_match	^part_b_page_url: 	Part B page URL field
+must_match	^ambiguities_reflected_count: [0-9]+$	ambiguities count
+must_match	^glossary_gaps_count: [0-9]+$	glossary gaps count
+must_match	^tone: (해요체|합니다체)$	tone enum
+
+# Required top-level sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. Glossary & Tone	section 2
+must_match	## 3\. Part A	section 3 — Part A
+must_match	## 4\. Part B	section 4 — Part B
+must_match	## 5\. Notion Save Result	section 5
+must_match	## 6\. Notes	section 6
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|to-spec|client-chat|dev-chat|qa-feedback|issue-ticket|srs-translate)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases (Part B is EN; filler must not leak there)
+must_not_match	(Please consider|It seems|There is a problem with)	no filler
