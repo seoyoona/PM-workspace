@@ -1,0 +1,18 @@
+# case01: gate-skip (0 match) fresh weekly report
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "0"$	gate 0
+must_match	^existing_match_count: 0$	0 match
+must_match	^archive_targets: \[\]$	no archives
+must_match	^tone: 해요체$	해요체 tone
+must_match	^new_page_url: https://notion\.so/	new page URL
+
+# §3 explicitly says gate-skip
+must_match_in_section	3. Confirm Gate	매치 0건	0 match
+must_match_in_section	3. Confirm Gate	gate prompt 미발동	gate not triggered
+
+# Report body in 해요체 (informal-formal Korean)
+must_match	마무리했어요	해요체 sample 1
+must_match	확정됐어요	해요체 sample 2
+
+# Week range frontmatter consistency
+must_match	2026-05-04 ~ 2026-05-10	week range mention

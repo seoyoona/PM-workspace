@@ -1,0 +1,15 @@
+# case02: gate=1 update (archive + new)
+must_match	^gate_choice: "1"$	gate 1
+must_match	^existing_match_count: 1$	1 match
+must_match	^archive_targets: \[https://notion\.so	archive targets non-empty
+must_match	^new_page_url: https://notion\.so/	new page URL
+
+# Verbatim gate prompt
+must_match_in_section	3. Confirm Gate	1\. 업데이트 \(기존 페이지 archive \+ 새로 생성\)	option 1 verbatim
+must_match_in_section	3. Confirm Gate	2\. 새로 생성 \(중복 허용\)	option 2 verbatim
+must_match_in_section	3. Confirm Gate	3\. 취소	option 3 verbatim
+must_match_in_section	3. Confirm Gate	추천: 1	recommendation marker
+
+# §4 PM 1 with archive language
+must_match_in_section	4. PM Choice	gate_choice: "1"	gate in §4
+must_match_in_section	4. PM Choice	archive 실패 시 생성 중단	archive failure rule

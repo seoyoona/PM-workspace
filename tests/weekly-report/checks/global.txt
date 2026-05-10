@@ -1,0 +1,38 @@
+# /weekly-report offline harness global checks (Wave 2-3)
+
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Confirmed-2|Cancelled)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^project: 	project field
+must_match	^comm_db: 	comm DB ref
+must_match	^gate_choice: 	gate_choice present
+must_match	^existing_match_count: [0-9]+$	existing_match_count integer
+must_match	^week_monday: [0-9]{4}-[0-9]{2}-[0-9]{2}$	week_monday YYYY-MM-DD
+must_match	^week_sunday: [0-9]{4}-[0-9]{2}-[0-9]{2}$	week_sunday YYYY-MM-DD
+must_match	^tone: (해요체|합니다체)$	tone enum
+
+# Required top-level sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. Tone & Audience	section 2
+must_match	## 3\. Confirm Gate	section 3
+must_match	## 4\. PM Choice	section 4
+must_match	## 5\. Report Body	section 5
+must_match	## 6\. Customer Confirmation	section 6
+must_match	## 7\. Notes	section 7
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|issue-ticket|to-spec|client-chat|dev-chat)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+must_not_match	mcp__notion-cigro__notion-update-page\b	no raw update-page trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler

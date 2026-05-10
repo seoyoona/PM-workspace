@@ -1,0 +1,13 @@
+# case04: gate=3 cancel
+must_match	^status: Cancelled$	status Cancelled
+must_match	^gate_choice: "3"$	gate 3
+must_match	^archive_targets: \[\]$	no archive
+must_match	^new_page_url: ""$	no page URL
+
+# §4 cancellation language
+must_match_in_section	4. PM Choice	cancelled	cancellation marker
+must_match_in_section	4. PM Choice	archive X	no archive language
+
+# Cancellation markers
+must_match_in_section	5. Report Body	취소됨	§5 cancelled
+must_match_in_section	6. Customer Confirmation	취소됨	§6 cancelled

@@ -1,0 +1,13 @@
+# case06: 합니다체 tone (Booktails)
+must_match	^client: booktails$	client booktails
+must_match	^tone: 합니다체$	합니다체 tone
+
+# 합니다체 verb forms
+must_match	완료하였습니다	합니다체 sample 1
+must_match	진행하고 있습니다	합니다체 sample 2
+must_match	예정입니다	합니다체 sample 3
+
+# 해요체 verb forms must NOT appear (audience separation)
+must_not_match	완료했어요	no 해요체 leak
+must_not_match	진행하고 있어요	no 해요체 leak
+must_not_match	예정이에요	no 해요체 leak

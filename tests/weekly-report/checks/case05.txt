@@ -1,0 +1,12 @@
+# case05: multi-match → archive most-recent only
+must_match	^existing_match_count: 3$	3 matches
+must_match	^gate_choice: "1"$	gate 1 (multi-match variant)
+must_match	^archive_targets: \[https://notion\.so/cigroio/dsa-weekly-A\]$	archive only most recent
+must_match	^preserved_pages:	preserved_pages frontmatter
+must_match	dsa-weekly-B	preserved B
+must_match	dsa-weekly-C	preserved C
+
+# Multi-match gate variant verbatim
+must_match	같은 주차에 주간 리포트 3개 발견	multi-match header
+must_match	가장 최근 1개만 archive	most-recent archive language
+must_match	나머지 2개는 유지	preserve remaining

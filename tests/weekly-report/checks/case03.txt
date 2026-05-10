@@ -1,0 +1,9 @@
+# case03: gate=2 (new, duplicate allowed)
+must_match	^status: Confirmed-2$	status Confirmed-2
+must_match	^gate_choice: "2"$	gate 2
+must_match	^archive_targets: \[\]$	no archive
+must_match	^new_page_url: https://notion\.so/	new page URL
+
+# §4 mentions duplicate-allowed
+must_match_in_section	4. PM Choice	중복 허용	duplicate allowed
+must_match_in_section	4. PM Choice	기존 mid 보고서 보존	preservation
