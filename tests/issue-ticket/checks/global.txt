@@ -1,0 +1,43 @@
+# /issue-ticket offline harness global checks (Wave 2-4)
+
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Cancelled)$	status enum (Linear ticket: created or not)
+must_match	^case: case[0-9]+$	case ID
+must_match	^client: 	client field
+must_match	^gate_choice: 	gate_choice present
+must_match	^linear_priority: (Urgent|High|Medium|Low)$	priority enum
+must_match	^linear_labels:	linear_labels list
+must_match	^has_original_request: (true|false)$	original_request flag
+
+# Required sections
+must_match	## 1\. Source Summary	section 1
+must_match	## 2\. Translation	section 2
+must_match	## 3\. Confirm Gate	section 3
+must_match	## 4\. PM Choice	section 4
+must_match	## 5\. Ticket Body	section 5
+must_match	## 7\. Notes	section 7
+
+# §5 Ticket Body required sub-fields (file-level since §5 has its own structure)
+must_match	^### Title$	Title sub-heading
+must_match	^### What$	What sub-heading
+must_match	^### Why$	Why sub-heading
+must_match	^### Acceptance Criteria$	AC sub-heading
+
+# Labels enum (one of bug/feature/improvement must appear if Confirmed)
+# (case-specific tests verify which one)
+
+# No auto-chain triggers
+must_not_match	^Running /(qa-plan|to-spec|client-chat|dev-chat|qa-feedback|issue-ticket)\b	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw API trace (Linear writes are abstracted in snapshot — no curl/mutation strings)
+must_not_match	mutation IssueCreate\(	no Linear GraphQL mutation trace
+must_not_match	curl -X POST.*linear	no curl Linear trace
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
+must_not_match	[0-9]+ ?(시간|hours?|hrs?)\b	no hour effort
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler

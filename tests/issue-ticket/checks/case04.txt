@@ -1,0 +1,9 @@
+# case04: Urgent priority — top of enum
+must_match	^linear_priority: Urgent$	priority Urgent
+must_match	^linear_labels: \[bug\]$	bug label
+must_match	^has_original_request: true$	original request
+
+# Urgent appears in §3 and §5
+must_match_in_section	3. Confirm Gate	Priority: Urgent	Urgent in gate
+must_match	^### Priority$	Priority sub-heading in §5
+must_match	^Urgent$	Urgent value in §5 priority field

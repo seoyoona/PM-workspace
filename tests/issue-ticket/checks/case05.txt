@@ -1,0 +1,9 @@
+# case05: improvement / Low / glossary applied
+must_match	^linear_priority: Low$	priority Low
+must_match	^linear_labels: \[improvement\]$	improvement label
+
+# Glossary mappings consistently used in ticket body
+must_match	Organization admin \(org_admin\)	glossary mapping 1
+must_match	Member	glossary mapping 2 (Member capitalized)
+must_match	Invite	glossary mapping 3
+must_match	Signup	glossary mapping 4

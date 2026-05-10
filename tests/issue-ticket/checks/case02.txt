@@ -1,0 +1,16 @@
+# case02: cancel — Linear 이슈 미생성
+must_match	^status: Cancelled$	status Cancelled
+must_match	^gate_choice: "3"$	gate 3
+must_match	^linear_issue_id: ""$	no issue ID
+must_match	^linear_issue_url: ""$	no issue URL
+must_match	^has_original_request: false$	no original request
+
+# Cancellation markers
+must_match_in_section	5. Ticket Body	취소됨	cancellation marker in §5
+
+# §4 cancellation language
+must_match_in_section	4. PM Choice	cancelled	cancellation
+must_match_in_section	4. PM Choice	Linear 이슈 미생성	no creation language
+
+# No fabricated Linear URL
+must_not_match	linear\.app/booktails/issue/BT-[0-9]	no fabricated Linear URL

@@ -1,0 +1,15 @@
+# case03: feature / Medium / no Korean original
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "1"$	gate 1
+must_match	^linear_priority: Medium$	priority Medium
+must_match	^linear_labels: \[feature\]$	feature label
+must_match	^has_original_request: false$	no original request
+
+# §6 absent (no Original Request section because input already English)
+must_not_match	^## 6\. Original Request	no §6 since EN input
+
+# Title with [Page] prefix
+must_match	^\[Member\] Export member list to CSV	Title format
+
+# Korean phrase NOT in Ticket Body (since EN input)
+must_not_match	"확인"	no Korean UI elements (clean EN ticket)

@@ -1,0 +1,20 @@
+# case01: bug / High / proceed
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^gate_choice: "1"$	gate 1
+must_match	^linear_priority: High$	priority High
+must_match	^linear_labels: \[bug\]$	bug label
+must_match	^linear_issue_id: BT-	Linear issue ID assigned
+must_match	^has_original_request: true$	original request preserved
+
+# Title format with [Page] prefix
+must_match	^### Title$	Title sub-heading
+must_match	^\[Payment\] Receipt screen freezes	Title content with [Page] prefix
+
+# AC checklist (- [ ] format)
+must_match	^- \[ \]	AC checklist format
+
+# §6 Original Request preserved (Korean)
+must_match_in_section	6. Original Request	결제 완료 후 영수증 화면	original Korean preserved
+
+# UI element preservation (Korean + English)
+must_match	"확인" \(Confirm\)	UI element bilingual
