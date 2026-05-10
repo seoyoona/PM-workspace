@@ -1,0 +1,18 @@
+# case05: multi-line mixed (some new, some skip)
+must_match	^status: Mixed$	status Mixed
+must_match	^mode: multi_line$	multi_line mode
+must_match	^input_lines_count: 3$	3 input lines
+must_match	^created_count: 2$	2 created
+must_match	^skipped_duplicate_count: 1$	1 skipped
+
+# Independent check rule reference
+must_match	라인별 개별 체크	per-line check language
+must_match	나머지는 정상 생성	independence rule
+
+# All 3 inputs cited
+must_match	\[Koboom\] admin figma update	line 1
+must_match	\[RCK\] timeline 정리	line 2
+must_match	\[BaraeCNP\] 문의내용 회신	line 3
+
+# Skip emoji marker
+must_match	⏭️ Skip: \[RCK\] timeline 정리	skip marker for line 2

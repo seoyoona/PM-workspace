@@ -1,0 +1,15 @@
+# case02: recent project select
+must_match	^mode: recent_project_select$	recent select mode
+must_match	^created_count: 1$	1 created
+
+# Number-prompt visible
+must_match	1\. 최근 사용 프로젝트	option 1
+must_match	2\. 전체 목록 보기	option 2
+must_match	3\. 취소	option 3
+must_match	추천: 1	recommendation
+
+# 상태 = 오늘 ("오늘" keyword detected)
+must_match	상태: 오늘	state today
+
+# 액션 유형 = 운영 체크
+must_match	액션 유형: 운영 체크	action type

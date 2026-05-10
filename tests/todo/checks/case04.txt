@@ -1,0 +1,13 @@
+# case04: C1 duplicate skip
+must_match	^status: Skipped-Duplicate$	status Skipped-Duplicate
+must_match	^created_count: 0$	zero created
+must_match	^skipped_duplicate_count: 1$	1 skipped
+
+# Skip notice
+must_match	⏭️ 같은 항목이 오늘 이미 등록됨	skip notice
+
+# C1 idempotency rule reference
+must_match	재시도 루프 대응	retry-loop guard mention
+
+# No new Notion URL fabricated
+must_not_match	notion\.so/cigroio/koboom-feedback-update-2026	no new URL (only existing referenced)

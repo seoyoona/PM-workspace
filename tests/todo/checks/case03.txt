@@ -1,0 +1,14 @@
+# case03: bracket present but not exact match → fallback
+must_match	^mode: full_list_select$	full_list_select mode
+
+# Recognition message MUST NOT appear (no auto-confirm)
+must_not_match	\[koboom\] 으로 인식했습니다	no auto-confirm for non-exact lowercase
+must_not_match	\[Koboom\] 으로 인식했습니다	no auto-confirm at all this case
+
+# Number-prompt fallback visible
+must_match	대소문자 완전 일치	exact-match rule reference (case-insensitive 금지)
+must_match	자동 확정 ❌	auto-confirm forbidden marker
+
+# Final saved with proper case
+must_match	제목: `\[Koboom\] 피드백 회신`	stored title with correct case
+must_match	프로젝트: Koboom$	project saved as proper case

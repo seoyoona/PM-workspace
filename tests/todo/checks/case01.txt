@@ -1,0 +1,14 @@
+# case01: exact bracket auto-confirm
+must_match	^status: Confirmed-1$	status Confirmed-1
+must_match	^mode: exact_bracket$	exact_bracket mode
+must_match	^created_count: 1$	1 created
+must_match	^skipped_duplicate_count: 0$	no duplicate
+
+# Recognition message present
+must_match	\[Koboom\] 으로 인식했습니다	recognition message verbatim
+
+# 상태 = 미착수 (no "오늘" keyword)
+must_match	상태: 미착수	state default
+
+# 액션 유형 = 고객 커뮤니케이션 ("전달" keyword)
+must_match	액션 유형: 고객 커뮤니케이션	action type detection

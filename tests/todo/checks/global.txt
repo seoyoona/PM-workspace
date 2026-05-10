@@ -1,0 +1,31 @@
+# /todo offline harness global checks (Wave 2-7)
+
+must_match	^---$	frontmatter delimiter
+must_match	^status: (Confirmed-1|Skipped-Duplicate|Cancelled|Mixed)$	status enum
+must_match	^case: case[0-9]+$	case ID
+must_match	^mode: (exact_bracket|recent_project_select|full_list_select|multi_line)$	mode enum
+must_match	^pm_action_hub_db: 	PM Action Hub DB ref
+must_match	^input_lines_count: [0-9]+$	input lines integer
+must_match	^created_count: [0-9]+$	created integer
+must_match	^skipped_duplicate_count: [0-9]+$	duplicate skip integer
+
+# Required sections
+must_match	## 1\. Input Summary	section 1
+must_match	## 2\. Project Detection	section 2
+must_match	## 3\. C1 Duplicate Check	section 3
+must_match	## 4\. Notion Write Result	section 4
+must_match	## 5\. Notes	section 5
+
+# No auto-chain triggers
+must_not_match	^Running /	no auto-chain
+must_not_match	→ 자동 실행	no auto-execution
+
+# No raw MCP write call traces
+must_not_match	mcp__notion-cigro__notion-create-pages\b	no raw create-pages trace
+
+# No filler English phrases
+must_not_match	(Please consider|It seems|There is a problem with)	no filler
+
+# No Mermaid / no AI effort estimate
+must_not_match	```mermaid	no Mermaid block
+must_not_match	[0-9]+ ?MD\b	no MD effort
